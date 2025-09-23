@@ -1,0 +1,14 @@
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #111;
+    color: #fff;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+#clock{
+    font-size: 3rem;
+    letter-spacing: 2px;
+}
