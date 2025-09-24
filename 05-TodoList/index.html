@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List</title>
+  <link rel="stylesheet" href="styles.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <h1>To-Do List</h1>
+
+  <div class="input-group">
+    <input type="text" id="todoInput" placeholder="Enter a new task..." />
+    <button id="addBtn">
+      <i class="fa-solid fa-plus"></i> Add
+    </button>
+  </div>
+
+  <div class="filters">
+    <button data-filter="all" class="active"><i class="fa-solid fa-list"></i> All</button>
+    <button data-filter="completed"><i class="fa-solid fa-check"></i> Completed</button>
+    <button data-filter="pending"><i class="fa-solid fa-clock"></i> Pending</button>
+  </div>
+
+  <ul id="todoList"></ul>
+
+  <div class="footer">
+    <span id="taskCounter">0 tasks left</span>
+    <button id="clearBtn">
+      <i class="fa-solid fa-trash"></i> Clear All
+    </button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
