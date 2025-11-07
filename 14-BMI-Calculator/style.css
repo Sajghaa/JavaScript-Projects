@@ -1,0 +1,76 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, #2b1055, #7597de);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+}
+
+.container {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 40px 60px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+  text-align: center;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+  margin-bottom: 25px;
+  text-shadow: 0 0 10px #000;
+}
+
+.input-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  font-size: 16px;
+}
+
+button {
+  margin-top: 15px;
+  padding: 12px 30px;
+  background: #ff8a00;
+  border: none;
+  color: white;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #ff0059;
+  transform: scale(1.05);
+}
+
+.result {
+  margin-top: 20px;
+}
+
+#bmi-result {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+#bmi-status {
+  font-size: 18px;
+}
