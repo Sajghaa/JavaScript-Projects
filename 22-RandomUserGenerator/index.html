@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Random User Gallery</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1> Random User Gallery</h1>
+
+    <div class="controls">
+      <button id="generateBtn">Generate Users</button>
+      <input type="text" id="searchInput" placeholder="Search by name..." />
+      <select id="genderFilter">
+        <option value="">All Genders</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+      <select id="natFilter">
+        <option value="">All Countries</option>
+        <option value="US">US</option>
+        <option value="GB">GB</option>
+        <option value="FR">FR</option>
+        <option value="CA">CA</option>
+        <option value="AU">AU</option>
+      </select>
+      <select id="ageSort">
+        <option value="">Sort by Age</option>
+        <option value="asc">Youngest → Oldest</option>
+        <option value="desc">Oldest → Youngest</option>
+      </select>
+    </div>
+
+    <div id="userContainer" class="user-container">
+      <p>Click "Generate Users" to start </p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
