@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IP Geolocation Tracker Premium</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <h1>IP Geolocation Tracker Premium</h1>
+    </header>
+
+    <div class="input-box">
+        <input type="text" id="ipInput" placeholder="Enter IP address or domain">
+        <button id="searchBtn">Search</button>
+    </div>
+
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <span>Fetching data...</span>
+    </div>
+
+    <div class="result-box">
+        <div id="ipInfo" class="info-cards"></div>
+        <div class="extra">
+            <img id="flag" class="flag hidden" alt="Country Flag">
+            <span id="countryFull"></span>
+        </div>
+    </div>
+
+    <div class="history">
+        <h3>Search History</h3>
+        <ul id="historyList"></ul>
+        <button id="clearHistory">Clear History</button>
+    </div>
+
+    <div id="map" class="map"></div>
+
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
