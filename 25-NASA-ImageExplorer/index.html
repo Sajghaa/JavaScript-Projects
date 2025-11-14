@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NASA Image Explorer Pro</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>NASA Image Explorer Pro</h1>
+    </header>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search for space images...">
+        <button id="searchBtn">Search</button>
+    </div>
+
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <span>Loading images...</span>
+    </div>
+
+    <div class="gallery" id="gallery"></div>
+
+    <h2>Favorites</h2>
+    <div class="gallery" id="favorites"></div>
+</div>
+
+<div id="modal" class="modal hidden">
+    <span class="close">&times;</span>
+    <img id="modalImg" src="" alt="">
+    <div id="modalTitle"></div>
+    <button id="favoriteBtn">Add to Favorites</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
