@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Country Info App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1> Country Info</h1>
+
+    <div class="controls">
+      <input id="searchInput" type="search" placeholder="Search country (e.g. Rwanda, united)..." aria-label="Search country">
+      <select id="regionSelect" aria-label="Filter by region">
+        <option value="">All regions</option>
+        <option value="Africa">Africa</option>
+        <option value="Americas">Americas</option>
+        <option value="Asia">Asia</option>
+        <option value="Europe">Europe</option>
+        <option value="Oceania">Oceania</option>
+        <option value="Antarctic">Antarctic</option>
+      </select>
+      <select id="countrySelect" aria-label="Select country">
+        <option value="">Select a country...</option>
+      </select>
+      <button id="refreshBtn" title="Reload country list">⟳</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="listArea" class="list-area">
+     
+      <div id="grid" class="grid"></div>
+      <div id="empty" class="empty hidden">No countries found.</div>
+    </section>
+
+    <aside id="detail" class="detail hidden" aria-live="polite">
+     
+    </aside>
+  </main>
+
+  <template id="cardTpl">
+    <article class="card">
+      <div class="flagWrap"><img class="flag" alt=""></div>
+      <div class="cardBody">
+        <h2 class="name"></h2>
+        <p class="region"></p>
+        <div class="stats">
+          <div><strong>Capital</strong><span class="capital"></span></div>
+          <div><strong>Population</strong><span class="population"></span></div>
+        </div>
+        <button class="viewBtn">View</button>
+      </div>
+    </article>
+  </template>
+
+  <template id="detailTpl">
+    <div class="detail-card">
+      <button id="closeDetail" class="closeBtn" title="Close">✕</button>
+      <div class="detail-flag"><img alt=""></div>
+      <h2 class="d-name"></h2>
+      <p class="d-region"></p>
+
+      <div class="info-grid">
+        <div><strong>Capital</strong><div class="d-capital"></div></div>
+        <div><strong>Population</strong><div class="d-population"></div></div>
+        <div><strong>Area</strong><div class="d-area"></div></div>
+        <div><strong>Timezones</strong><div class="d-timezones"></div></div>
+        <div><strong>Languages</strong><div class="d-langs"></div></div>
+        <div><strong>Currencies</strong><div class="d-currs"></div></div>
+        <div><strong>Borders</strong><div class="d-borders"></div></div>
+        <div><strong>Calling</strong><div class="d-calling"></div></div>
+      </div>
+
+      <div class="links">
+        <a class="mapsLink" target="_blank" rel="noopener">Open on Google Maps</a>
+        <a class="wikiLink" target="_blank" rel="noopener">Open Wiki (if available)</a>
+      </div>
+    </div>
+  </template>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
