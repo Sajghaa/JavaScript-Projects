@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Next-Level News — Hybrid (Light + Dark)</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="" alt="" class="logo" aria-hidden="true">
+      <h1> News Web</h1>
+    </div>
+
+    <div class="controls">
+      <div class="tabs" role="tablist" aria-label="Categories" id="categoryTabs">
+      
+      </div>
+
+      <div class="actions">
+        <button id="voiceBtn" title="Voice search (press to speak)">🎤</button>
+        <input id="searchInput" type="search" placeholder="Search headlines, topics..." />
+        <button id="searchBtn">Search</button>
+        <button id="themeToggle" aria-pressed="false">Dark</button>
+        <button id="favoritesBtn" title="Show favorites">★</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h2 id="heroTitle">Top Headlines</h2>
+      <p id="heroSub">Browse latest stories. Scroll to load more.</p>
+    </section>
+
+    <section id="newsContainer" class="news-grid" aria-live="polite">
+     
+    </section>
+
+    <div id="loader" class="loader hidden">Loading...</div>
+  </main>
+
+  <aside id="favPanel" class="fav-panel hidden" aria-hidden="true">
+    <header>
+      <h3>Saved Favorites</h3>
+      <button id="closeFav">✕</button>
+    </header>
+    <div id="favList"></div>
+  </aside>
+
+  <template id="cardTemplate">
+    <article class="card">
+      <div class="media">
+        <img class="thumb" alt="">
+      </div>
+      <div class="body">
+        <h3 class="title"></h3>
+        <p class="desc"></p>
+        <div class="meta">
+          <span class="source"></span>
+          <span class="time"></span>
+        </div>
+        <div class="card-actions">
+          <a class="read-more" target="_blank" rel="noopener">Read</a>
+          <button class="save-btn" title="Save to favorites">☆</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
