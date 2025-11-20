@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Exchange Rate Converter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1> Exchange Rate Converter</h1>
+
+        <div class="box">
+
+            <div class="input-section">
+                <div class="flag-box">
+                    <img id="fromFlag" src="" />
+                </div>
+
+                <div class="input-group">
+                    <label>From:</label>
+                    <select id="fromCurrency"></select>
+                    <input type="number" id="fromAmount" value="1" min="0"/>
+                </div>
+            </div>
+
+            <div id="swapBtn" class="swap">🔄</div>
+
+            <div class="input-section">
+                <div class="flag-box">
+                    <img id="toFlag" src="" />
+                </div>
+
+                <div class="input-group">
+                    <label>To:</label>
+                    <select id="toCurrency"></select>
+                    <input type="number" id="toAmount" disabled />
+                </div>
+            </div>
+
+        </div>
+
+        <p class="rate fade" id="rateText">Fetching rate...</p>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
