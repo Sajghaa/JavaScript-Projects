@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit Client (Basic Demo)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fab fa-reddit"></i>
+                    <span>Reddit Client</span>
+                </div>
+                
+                <div class="search-container">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search posts...">
+                        <button id="searchBtn"><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Add this inside the .controls div in header -->
+        <div class="controls">
+            <select id="subredditSelect" class="subreddit-select">
+                <option value="popular">Popular</option>
+                <option value="javascript">JavaScript</option>
+                <option value="programming">Programming</option>
+                <option value="webdev">WebDev</option>
+                <option value="reactjs">ReactJS</option>
+                <option value="funny">Funny</option>
+                <option value="gaming">Gaming</option>
+                <option value="news">News</option>
+                <option value="technology">Technology</option>
+                <option value="science">Science</option>
+                <option value="pics">Pics</option>
+                <option value="videos">Videos</option>
+            </select>
+            
+            <button id="refreshBtn" title="Refresh posts">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+        </div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div id="errorContainer" class="error" style="display: none;"></div>
+        
+        <div class="main-content">
+            <div id="postsContainer" class="posts-container">
+                <div class="loading" id="loadingIndicator">
+                    <i class="fas fa-spinner fa-spin"></i> Loading posts from Reddit...
+                </div>
+            </div>
+        </div>
+        
+        <div class="pagination">
+            <button id="prevBtn" disabled>Previous</button>
+            <span class="page-info">Page <span id="currentPage">1</span></span>
+            <button id="nextBtn">Next</button>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>Reddit Client (Basic) - A demonstration of async fetch, search, and pagination</p>
+            <p>Data sourced from Reddit JSON API</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
