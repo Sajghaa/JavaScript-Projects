@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Repository Explorer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fab fa-github"></i>
+                    <h1>GitHub Repo Explorer</h1>
+                </div>
+                <p class="subtitle">Explore trending GitHub repositories</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="search-box">
+                <div class="search-input-group">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search repositories...">
+                    <button id="searchBtn" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                <div class="search-tips">
+                    <small>Try: "react", "vue", "machine learning" or leave empty for trending repos</small>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters Section -->
+        <section class="filters-section">
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label for="languageFilter"><i class="fas fa-code"></i> Language</label>
+                    <select id="languageFilter" class="filter-select">
+                        <option value="">All Languages</option>
+                        <!-- Languages will be populated dynamically -->
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="starsFilter"><i class="fas fa-star"></i> Minimum Stars</label>
+                    <select id="starsFilter" class="filter-select">
+                        <option value="0">Any</option>
+                        <option value="1000">1,000+</option>
+                        <option value="5000">5,000+</option>
+                        <option value="10000">10,000+</option>
+                        <option value="50000">50,000+</option>
+                        <option value="100000">100,000+</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="sortFilter"><i class="fas fa-sort"></i> Sort By</label>
+                    <select id="sortFilter" class="filter-select">
+                        <option value="stars">Most Stars</option>
+                        <option value="forks">Most Forks</option>
+                        <option value="updated">Recently Updated</option>
+                        <option value="name">Name (A-Z)</option>
+                    </select>
+                </div>
+                
+                <button id="resetFilters" class="btn btn-secondary">
+                    <i class="fas fa-redo"></i> Reset Filters
+                </button>
+            </div>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <i class="fas fa-database"></i>
+                    <div>
+                        <span class="stat-number" id="totalRepos">0</span>
+                        <span class="stat-label">Repositories</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-star"></i>
+                    <div>
+                        <span class="stat-number" id="avgStars">0</span>
+                        <span class="stat-label">Avg Stars</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-code-branch"></i>
+                    <div>
+                        <span class="stat-number" id="avgForks">0</span>
+                        <span class="stat-label">Avg Forks</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading & Error -->
+        <div id="loading" class="loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading repositories...</p>
+        </div>
+        
+        <div id="errorContainer" class="error-container" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Error Loading Data</h3>
+            <p id="errorMessage"></p>
+            <button id="retryBtn" class="btn btn-primary">Try Again</button>
+        </div>
+
+        <!-- Repositories Grid -->
+        <section class="repos-section">
+            <div class="section-header">
+                <h2><i class="fas fa-list"></i> Repositories</h2>
+                <div class="view-controls">
+                    <button id="gridView" class="view-btn active" title="Grid View">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button id="listView" class="view-btn" title="List View">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="reposContainer" class="repos-grid">
+                <!-- Repositories will be loaded here -->
+            </div>
+            
+            <div id="noResults" class="no-results" style="display: none;">
+                <i class="fas fa-search"></i>
+                <h3>No repositories found</h3>
+                <p>Try adjusting your search or filters</p>
+            </div>
+        </section>
+
+        <!-- Pagination -->
+        <section class="pagination-section">
+            <div class="pagination">
+                <button id="prevPage" class="btn btn-secondary" disabled>
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                
+                <div class="page-info">
+                    Page <span id="currentPage">1</span> of <span id="totalPages">1</span>
+                    <span class="results-count">(<span id="totalResults">0</span> results)</span>
+                </div>
+                
+                <button id="nextPage" class="btn btn-secondary">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>GitHub Repository Explorer &copy; 2023 | Built with GitHub API</p>
+            <p class="footer-note">
+                <i class="fas fa-info-circle"></i> 
+                Data is fetched from the public GitHub API. Rate limited to 60 requests per hour.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Repository Detail Modal -->
+    <div id="repoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
