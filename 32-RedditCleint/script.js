@@ -1,4 +1,3 @@
-// Reddit Client Application - Enhanced Version
 class RedditClient {
     constructor() {
         this.currentSubreddit = 'popular';
