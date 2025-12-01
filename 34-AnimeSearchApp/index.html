@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Search - Discover Your Next Favorite Anime</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <i class="fas fa-tv anime-icon"></i>
+                    <h1>Anime<span>Search</span></h1>
+                </div>
+                <div class="nav-links">
+                    <a href="#" class="nav-link active" data-filter="all"><i class="fas fa-fire"></i> Trending</a>
+                    <a href="#" class="nav-link" data-filter="tv"><i class="fas fa-tv"></i> TV Series</a>
+                    <a href="#" class="nav-link" data-filter="movie"><i class="fas fa-film"></i> Movies</a>
+                    <a href="#" class="nav-link" data-filter="ova"><i class="fas fa-compact-disc"></i> OVA</a>
+                </div>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="hero-title">Discover Your Next Favorite Anime</h2>
+                <p class="hero-subtitle">Search through thousands of anime series and movies from MyAnimeList</p>
+                
+                <div class="search-container">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="searchInput" placeholder="Search for anime... (e.g., Naruto, Attack on Titan, Demon Slayer)">
+                        <button id="searchBtn" class="search-btn">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                    <div class="search-tips">
+                        <p><i class="fas fa-lightbulb"></i> Try: "one piece", "my hero academia", or "studio ghibli"</p>
+                    </div>
+                </div>
+                
+                <div class="quick-filters">
+                    <button class="quick-filter active" data-filter="airing">Currently Airing</button>
+                    <button class="quick-filter" data-filter="upcoming">Upcoming</button>
+                    <button class="quick-filter" data-filter="bypopularity">Most Popular</button>
+                    <button class="quick-filter" data-filter="favorite">Most Favorited</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="container main-content">
+        <!-- Loading & Error States -->
+        <div id="loading" class="loading-container">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+            </div>
+            <p class="loading-text">Searching the anime universe...</p>
+        </div>
+        
+        <div id="errorContainer" class="error-container" style="display: none;">
+            <div class="error-content">
+                <i class="fas fa-exclamation-triangle error-icon"></i>
+                <h3 class="error-title">Oops! Something went wrong</h3>
+                <p id="errorMessage" class="error-message"></p>
+                <button id="retryBtn" class="btn btn-primary">
+                    <i class="fas fa-redo"></i> Try Again
+                </button>
+            </div>
+        </div>
+
+        <!-- Anime Results Section -->
+        <section class="results-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-list"></i>
+                    <span id="resultsTitle">Popular Anime</span>
+                    <span class="results-count" id="resultsCount">(0 results)</span>
+                </h2>
+                
+                <div class="view-controls">
+                    <button id="gridView" class="view-btn active" title="Grid View">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button id="listView" class="view-btn" title="List View">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Filters Bar -->
+            <div class="filters-bar">
+                <div class="filter-group">
+                    <label for="typeFilter"><i class="fas fa-filter"></i> Type</label>
+                    <select id="typeFilter" class="filter-select">
+                        <option value="all">All Types</option>
+                        <option value="tv">TV</option>
+                        <option value="movie">Movie</option>
+                        <option value="ova">OVA</option>
+                        <option value="special">Special</option>
+                        <option value="ona">ONA</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="statusFilter"><i class="fas fa-signal"></i> Status</label>
+                    <select id="statusFilter" class="filter-select">
+                        <option value="all">All Status</option>
+                        <option value="airing">Currently Airing</option>
+                        <option value="complete">Finished Airing</option>
+                        <option value="upcoming">Upcoming</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="ratingFilter"><i class="fas fa-star"></i> Rating</label>
+                    <select id="ratingFilter" class="filter-select">
+                        <option value="all">All Ratings</option>
+                        <option value="g">G - All Ages</option>
+                        <option value="pg">PG - Children</option>
+                        <option value="pg13">PG-13 - Teens 13+</option>
+                        <option value="r17">R - 17+ (violence & profanity)</option>
+                        <option value="r">R+ - Mild Nudity</option>
+                        <option value="rx">Rx - Hentai</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="sortFilter"><i class="fas fa-sort"></i> Sort By</label>
+                    <select id="sortFilter" class="filter-select">
+                        <option value="score">Highest Score</option>
+                        <option value="members">Most Members</option>
+                        <option value="favorites">Most Favorites</option>
+                        <option value="title">Title A-Z</option>
+                        <option value="start_date">Release Date</option>
+                        <option value="episodes">Episode Count</option>
+                    </select>
+                </div>
+                
+                <button id="clearFilters" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Clear Filters
+                </button>
+            </div>
+            
+            <!-- Anime Grid -->
+            <div id="animeContainer" class="anime-grid">
+                <!-- Anime cards will be loaded here -->
+            </div>
+            
+            <div id="noResults" class="no-results" style="display: none;">
+                <div class="no-results-content">
+                    <i class="fas fa-search"></i>
+                    <h3>No anime found</h3>
+                    <p>Try adjusting your search or filters</p>
+                    <button id="resetSearch" class="btn btn-primary">
+                        <i class="fas fa-home"></i> Show Popular Anime
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            <div class="pagination-container">
+                <div class="pagination">
+                    <button id="prevPage" class="pagination-btn" disabled>
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                    
+                    <div class="page-info">
+                        Page <span id="currentPage">1</span> of <span id="totalPages">1</span>
+                    </div>
+                    
+                    <button id="nextPage" class="pagination-btn">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <section id="featuredSection" class="featured-section" style="display: none;">
+            <h2 class="section-title">
+                <i class="fas fa-crown"></i> Featured Anime
+            </h2>
+            <div id="featuredContainer" class="featured-slider">
+                <!-- Featured anime will be loaded here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Anime Detail Modal -->
+    <div id="animeModal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-container">
+            <div class="modal-header">
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Anime details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-tv"></i>
+                    <h3>Anime<span>Search</span></h3>
+                </div>
+                <p class="footer-text">
+                    Powered by Jikan API - Unofficial MyAnimeList API<br>
+                    This site is for educational purposes only
+                </p>
+                <div class="footer-links">
+                    <a href="https://jikan.moe" target="_blank" class="footer-link">
+                        <i class="fas fa-external-link-alt"></i> Jikan API
+                    </a>
+                    <a href="https://myanimelist.net" target="_blank" class="footer-link">
+                        <i class="fas fa-external-link-alt"></i> MyAnimeList
+                    </a>
+                    <button id="backToTop" class="footer-link">
+                        <i class="fas fa-arrow-up"></i> Back to Top
+                    </button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
