@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS MUSIC | Immersive 3D Audio Experience 🎵</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎵</text></svg>">
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <!-- Animated Background Elements -->
+    <div class="background-effects">
+        <div class="particles-container" id="particles"></div>
+        <div class="light-grid"></div>
+        <div class="pulse-waves"></div>
+        <div class="glow-orbs">
+            <div class="glow-orb orb-1"></div>
+            <div class="glow-orb orb-2"></div>
+            <div class="glow-orb orb-3"></div>
+        </div>
+    </div>
+    
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+        <input type="checkbox" id="theme-switch" class="theme-checkbox">
+        <label for="theme-switch" class="theme-label">
+            <span class="theme-icon">
+                <i class="fas fa-moon"></i>
+                <i class="fas fa-sun"></i>
+            </span>
+            <span class="theme-ball"></span>
+        </label>
+    </div>
+    
+    <!-- Voice Command Indicator -->
+    <div class="voice-indicator" id="voice-indicator">
+        <i class="fas fa-microphone"></i>
+        <div class="voice-pulse"></div>
+    </div>
+    
+    <!-- Mini Player (Hidden by default) -->
+    <div class="mini-player" id="mini-player">
+        <div class="mini-album-art">
+            <img id="mini-album-art" src="" alt="Album Art">
+        </div>
+        <div class="mini-track-info">
+            <div class="mini-track-title" id="mini-track-title"></div>
+            <div class="mini-track-artist" id="mini-track-artist"></div>
+        </div>
+        <div class="mini-controls">
+            <button class="mini-control-btn" id="mini-prev-btn">
+                <i class="fas fa-step-backward"></i>
+            </button>
+            <button class="mini-control-btn" id="mini-play-btn">
+                <i class="fas fa-play"></i>
+            </button>
+            <button class="mini-control-btn" id="mini-next-btn">
+                <i class="fas fa-step-forward"></i>
+            </button>
+        </div>
+        <button class="mini-expand-btn" id="mini-expand-btn">
+            <i class="fas fa-expand-alt"></i>
+        </button>
+    </div>
+    
+    <div class="container">
+        <!-- 3D Album Art Container -->
+        <div class="album-3d-container" id="album-3d-container">
+            <canvas id="album-3d-canvas"></canvas>
+            <div class="album-3d-controls">
+                <button class="3d-control-btn" id="rotate-toggle">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="3d-control-btn" id="zoom-in-btn">
+                    <i class="fas fa-search-plus"></i>
+                </button>
+                <button class="3d-control-btn" id="zoom-out-btn">
+                    <i class="fas fa-search-minus"></i>
+                </button>
+                <button class="3d-control-btn" id="reset-view-btn">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+        </div>
+        
+        <header class="animate__animated animate__fadeInDown">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-waves"></i>
+                    </div>
+                    <h1>NEXUS <span class="logo-highlight">MUSIC</span></h1>
+                    <div class="ai-status">
+                        <span class="ai-indicator active"></span>
+                        <span class="ai-text">AI Active</span>
+                    </div>
+                </div>
+                
+                <div class="header-controls">
+                    <button class="header-btn" id="lyrics-btn" title="Lyrics">
+                        <i class="fas fa-scroll"></i>
+                        <span class="btn-badge">Lyrics</span>
+                    </button>
+                    <button class="header-btn" id="sleep-timer-btn" title="Sleep Timer">
+                        <i class="fas fa-moon"></i>
+                        <span class="btn-badge">Sleep</span>
+                    </button>
+                    <button class="header-btn" id="stats-btn" title="Listening Statistics">
+                        <i class="fas fa-chart-line"></i>
+                        <span class="btn-badge">Stats</span>
+                    </button>
+                    <button class="header-btn" id="voice-btn" title="Voice Commands">
+                        <i class="fas fa-microphone"></i>
+                        <span class="btn-badge">Voice</span>
+                    </button>
+                </div>
+            </div>
+            
+            <p class="subtitle">
+                <span class="typing-text" id="typing-text"></span>
+                <span class="cursor">|</span>
+            </p>
+        </header>
+        
+        <main>
+            <div class="player-container glass-effect">
+                <!-- Advanced Album Section -->
+                <div class="album-section">
+                    <div class="album-art-container">
+                        <div class="album-art-wrapper">
+                            <img id="album-art" class="album-image" src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Album Art">
+                            <div class="album-glow"></div>
+                            <div class="vinyl-record">
+                                <div class="vinyl-center"></div>
+                                <div class="vinyl-label">
+                                    <span>NEXUS</span>
+                                </div>
+                            </div>
+                            <div class="audio-wave-3d">
+                                <div class="wave-3d-bar" style="--delay: 0"></div>
+                                <div class="wave-3d-bar" style="--delay: 1"></div>
+                                <div class="wave-3d-bar" style="--delay: 2"></div>
+                                <div class="wave-3d-bar" style="--delay: 3"></div>
+                                <div class="wave-3d-bar" style="--delay: 4"></div>
+                                <div class="wave-3d-bar" style="--delay: 5"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="track-info">
+                        <div class="track-title-wrapper">
+                            <h2 id="track-title" class="track-title">Electric Dreams</h2>
+                            <div class="mood-indicator" id="mood-indicator">
+                                <span class="mood-icon">⚡</span>
+                                <span class="mood-text">Energetic</span>
+                            </div>
+                        </div>
+                        <p id="track-artist" class="track-artist">Neon Waves</p>
+                        
+                        <div class="album-meta">
+                            <div class="album-info">
+                                <span id="track-album" class="album-name">Cyberpunk Symphony</span>
+                                <span class="year">2023</span>
+                            </div>
+                            <div class="track-stats">
+                                <span class="stat">
+                                    <i class="fas fa-heart"></i>
+                                    <span id="like-count">2.4K</span>
+                                </span>
+                                <span class="stat">
+                                    <i class="fas fa-play-circle"></i>
+                                    <span id="play-count">45.2K</span>
+                                </span>
+                                <span class="stat">
+                                    <i class="fas fa-clock"></i>
+                                    <span id="track-duration">3:45</span>
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <!-- AI Recommendations -->
+                        <div class="ai-recommendations">
+                            <div class="ai-header">
+                                <i class="fas fa-robot"></i>
+                                <span>AI Recommends</span>
+                            </div>
+                            <div class="recommendation-tags">
+                                <span class="tag">Synthwave</span>
+                                <span class="tag">Retro</span>
+                                <span class="tag">Dance</span>
+                                <span class="tag">Cyberpunk</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Enhanced Progress Section -->
+                <div class="progress-section">
+                    <div class="time-display">
+                        <span id="current-time" class="time-current">0:00</span>
+                        <div class="time-segment">
+                            <div class="segments" id="time-segments">
+                                <!-- Dynamic time segments will be added -->
+                            </div>
+                        </div>
+                        <span id="total-time" class="time-total">0:00</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar">
+                            <div class="progress-bg" id="progress-bg">
+                                <div class="progress-fill" id="progress-fill"></div>
+                                <div class="progress-glow"></div>
+                                <div class="progress-handle" id="progress-handle">
+                                    <div class="handle-glow"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="buffer-bar" id="buffer-bar"></div>
+                    </div>
+                </div>
+                
+                <!-- Enhanced Controls Section -->
+                <div class="controls-section">
+                    <div class="control-group">
+                        <button class="control-btn advanced-btn" id="shuffle-btn" title="Shuffle">
+                            <i class="fas fa-random"></i>
+                            <div class="btn-effect"></div>
+                        </button>
+                        <button class="control-btn advanced-btn" id="prev-btn" title="Previous">
+                            <i class="fas fa-step-backward"></i>
+                            <div class="btn-effect"></div>
+                        </button>
+                        <button class="control-btn play-btn advanced-btn" id="play-btn" title="Play">
+                            <div class="play-btn-inner">
+                                <i class="fas fa-play" id="play-icon"></i>
+                                <div class="pulse-ring"></div>
+                            </div>
+                        </button>
+                        <button class="control-btn advanced-btn" id="next-btn" title="Next">
+                            <i class="fas fa-step-forward"></i>
+                            <div class="btn-effect"></div>
+                        </button>
+                        <button class="control-btn advanced-btn" id="repeat-btn" title="Repeat">
+                            <i class="fas fa-redo"></i>
+                            <div class="btn-effect"></div>
+                        </button>
+                    </div>
+                    
+                    <div class="secondary-controls">
+                        <button class="secondary-btn" id="favorite-btn" title="Add to Favorites">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <button class="secondary-btn" id="playlist-add-btn" title="Add to Playlist">
+                            <i class="fas fa-plus-circle"></i>
+                        </button>
+                        <button class="secondary-btn" id="download-btn" title="Download">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="secondary-btn" id="share-btn" title="Share">
+                            <i class="fas fa-share-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Enhanced Volume Section with EQ -->
+                <div class="volume-section">
+                    <div class="volume-controls">
+                        <i class="fas fa-volume-mute volume-icon" id="mute-btn"></i>
+                        <div class="volume-bar-container">
+                            <div class="volume-bar">
+                                <div class="volume-bg">
+                                    <div class="volume-fill" id="volume-fill"></div>
+                                    <div class="volume-handle" id="volume-handle"></div>
+                                </div>
+                            </div>
+                            <div class="volume-level" id="volume-level">70%</div>
+                        </div>
+                        <i class="fas fa-volume-up volume-icon"></i>
+                    </div>
+                    
+                    <!-- Quick EQ Controls -->
+                    <div class="quick-eq">
+                        <button class="eq-preset" data-preset="bass">Bass Boost</button>
+                        <button class="eq-preset" data-preset="vocal">Vocal</button>
+                        <button class="eq-preset" data-preset="flat">Flat</button>
+                        <button class="eq-preset active" data-preset="normal">Normal</button>
+                    </div>
+                </div>
+                
+                <!-- Playback Speed & Advanced Controls -->
+                <div class="advanced-playback-controls">
+                    <div class="speed-control">
+                        <span class="control-label">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Speed:
+                        </span>
+                        <div class="speed-slider">
+                            <input type="range" id="speed-range" min="50" max="200" value="100">
+                            <span class="speed-value" id="speed-value">1.0x</span>
+                        </div>
+                    </div>
+                    
+                    <div class="crossfade-control">
+                        <span class="control-label">
+                            <i class="fas fa-exchange-alt"></i>
+                            Crossfade:
+                        </span>
+                        <div class="crossfade-slider">
+                            <input type="range" id="crossfade-range" min="0" max="10" value="0">
+                            <span class="crossfade-value" id="crossfade-value">0s</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pitch-control">
+                        <span class="control-label">
+                            <i class="fas fa-sliders-h"></i>
+                            Pitch:
+                        </span>
+                        <div class="pitch-slider">
+                            <input type="range" id="pitch-range" min="80" max="120" value="100">
+                            <span class="pitch-value" id="pitch-value">0%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Enhanced Track List -->
+                <div class="playlist-section">
+                    <div class="playlist-header">
+                        <h3>
+                            <i class="fas fa-list-music"></i>
+                            Playlist
+                            <span id="playlist-count" class="count-badge">5 tracks</span>
+                        </h3>
+                        <div class="playlist-actions">
+                            <button class="action-btn" id="clear-playlist-btn">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            <button class="action-btn" id="save-playlist-btn">
+                                <i class="fas fa-save"></i>
+                            </button>
+                            <button class="action-btn" id="import-playlist-btn">
+                                <i class="fas fa-file-import"></i>
+                            </button>
+                            <button class="action-btn" id="export-playlist-btn">
+                                <i class="fas fa-file-export"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="playlist-container">
+                        <div class="playlist" id="playlist">
+                            <!-- Tracks will be added here by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="playlist-info">
+                        <div class="playlist-stats">
+                            <span class="stat">
+                                <i class="fas fa-clock"></i>
+                                <span id="total-duration">18:30</span>
+                            </span>
+                            <span class="stat">
+                                <i class="fas fa-hdd"></i>
+                                <span id="playlist-size">45 MB</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Visualizer Mode Selector -->
+                <div class="visualizer-mode">
+                    <h4><i class="fas fa-wave-square"></i> Visualizer</h4>
+                    <div class="viz-mode-buttons">
+                        <button class="viz-mode-btn active" data-mode="bars">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Bars</span>
+                        </button>
+                        <button class="viz-mode-btn" data-mode="wave">
+                            <i class="fas fa-water"></i>
+                            <span>Wave</span>
+                        </button>
+                        <button class="viz-mode-btn" data-mode="particles">
+                            <i class="fas fa-atom"></i>
+                            <span>Particles</span>
+                        </button>
+                        <button class="viz-mode-btn" data-mode="spectrum">
+                            <i class="fas fa-project-diagram"></i>
+                            <span>Spectrum</span>
+                        </button>
+                        <button class="viz-mode-btn" data-mode="matrix">
+                            <i class="fas fa-code"></i>
+                            <span>Matrix</span>
+                        </button>
+                        <button class="viz-mode-btn" data-mode="voronoi">
+                            <i class="fas fa-bezier-curve"></i>
+                            <span>Voronoi</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Enhanced Visualizer -->
+            <div class="visualizer-container glass-effect">
+                <div class="visualizer-header">
+                    <h3>
+                        <i class="fas fa-eye"></i>
+                        Live Audio Visualizer
+                        <span class="viz-intensity">
+                            <i class="fas fa-fire"></i>
+                            <span id="viz-intensity">Medium</span>
+                        </span>
+                    </h3>
+                    <div class="viz-controls">
+                        <button class="viz-control-btn" id="viz-fullscreen-btn">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                        <button class="viz-control-btn" id="viz-screenshot-btn">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                        <button class="viz-control-btn" id="viz-record-btn">
+                            <i class="fas fa-video"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="visualizer">
+                    <canvas id="visualizer-canvas"></canvas>
+                    <div class="viz-overlay">
+                        <div class="viz-info">
+                            <div class="viz-freq" id="viz-freq">440 Hz</div>
+                            <div class="viz-beat" id="viz-beat">120 BPM</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="visualizer-settings">
+                    <div class="viz-setting">
+                        <span>Intensity</span>
+                        <input type="range" id="viz-intensity-range" min="1" max="10" value="5">
+                    </div>
+                    <div class="viz-setting">
+                        <span>Color Mode</span>
+                        <select id="viz-color-mode">
+                            <option value="rainbow">Rainbow</option>
+                            <option value="neon" selected>Neon</option>
+                            <option value="monochrome">Monochrome</option>
+                            <option value="heatmap">Heatmap</option>
+                            <option value="psychedelic">Psychedelic</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Lyrics Display (Hidden by default) -->
+            <div class="lyrics-container glass-effect" id="lyrics-container">
+                <div class="lyrics-header">
+                    <h3><i class="fas fa-scroll"></i> Live Lyrics</h3>
+                    <button class="close-btn" id="close-lyrics-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="lyrics-content" id="lyrics-content">
+                    <div class="lyrics-line active">I'm living in electric dreams</div>
+                    <div class="lyrics-line">Neon lights and midnight scenes</div>
+                    <div class="lyrics-line">Futuristic hearts and digital schemes</div>
+                    <div class="lyrics-line">Lost in these electric dreams</div>
+                </div>
+                <div class="lyrics-sync">
+                    <span class="sync-status">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>Auto-synced</span>
+                    </span>
+                    <button class="sync-btn" id="sync-lyrics-btn">
+                        <i class="fas fa-magic"></i>
+                        Sync Lyrics
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Statistics Panel (Hidden by default) -->
+            <div class="stats-container glass-effect" id="stats-container">
+                <div class="stats-header">
+                    <h3><i class="fas fa-chart-line"></i> Listening Statistics</h3>
+                    <button class="close-btn" id="close-stats-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="stats-content">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-value" id="total-listening-time">124h</div>
+                            <div class="stat-label">Total Listening</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-music"></i>
+                            </div>
+                            <div class="stat-value" id="total-tracks-played">2,458</div>
+                            <div class="stat-label">Tracks Played</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="stat-value" id="total-favorites">187</div>
+                            <div class="stat-label">Favorites</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="stat-value" id="top-genre">Synthwave</div>
+                            <div class="stat-label">Top Genre</div>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="listening-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sleep Timer Panel (Hidden by default) -->
+            <div class="sleep-timer-container glass-effect" id="sleep-timer-container">
+                <div class="sleep-timer-header">
+                    <h3><i class="fas fa-moon"></i> Sleep Timer</h3>
+                    <button class="close-btn" id="close-sleep-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="sleep-timer-content">
+                    <div class="timer-options">
+                        <button class="timer-option" data-minutes="15">15 min</button>
+                        <button class="timer-option" data-minutes="30">30 min</button>
+                        <button class="timer-option" data-minutes="45">45 min</button>
+                        <button class="timer-option" data-minutes="60">1 hour</button>
+                        <button class="timer-option" data-minutes="90">1.5 hours</button>
+                    </div>
+                    <div class="custom-timer">
+                        <input type="number" id="custom-minutes" min="1" max="300" value="30">
+                        <span>minutes</span>
+                        <button class="set-timer-btn" id="set-custom-timer">Set Timer</button>
+                    </div>
+                    <div class="timer-display" id="timer-display">
+                        <div class="timer-countdown">
+                            <span id="timer-minutes">00</span>:<span id="timer-seconds">00</span>
+                        </div>
+                        <div class="timer-status" id="timer-status">Timer not set</div>
+                    </div>
+                    <div class="timer-controls">
+                        <button class="timer-btn" id="start-timer-btn">
+                            <i class="fas fa-play"></i> Start
+                        </button>
+                        <button class="timer-btn" id="pause-timer-btn" disabled>
+                            <i class="fas fa-pause"></i> Pause
+                        </button>
+                        <button class="timer-btn" id="reset-timer-btn">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="animate__animated animate__fadeInUp">
+            <div class="footer-content">
+                <div class="player-status">
+                    <div class="status-indicator" id="player-status">
+                        <div class="status-dot online"></div>
+                        <span class="status-text">Connected</span>
+                    </div>
+                    <div class="bitrate-display">
+                        <i class="fas fa-broadcast-tower"></i>
+                        <span id="bitrate">320 kbps</span>
+                    </div>
+                </div>
+                
+                <div class="footer-middle">
+                    <p class="footer-message">
+                        <span class="message-text">Now playing: </span>
+                        <span id="now-playing" class="now-playing">Electric Dreams - Neon Waves</span>
+                    </p>
+                    <div class="social-share">
+                        <button class="social-btn" id="share-twitter">
+                            <i class="fab fa-twitter"></i>
+                        </button>
+                        <button class="social-btn" id="share-facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </button>
+                        <button class="social-btn" id="share-whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                        </button>
+                        <button class="social-btn" id="copy-link">
+                            <i class="fas fa-link"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="footer-right">
+                    <div class="version">v3.2.1</div>
+                    <div class="credits">
+                        <span>Powered by </span>
+                        <span class="tech">Web Audio API</span>
+                        <span class="tech">Three.js</span>
+                        <span class="tech">AI</span>
+                    </div>
+                    <p class="copyright">
+                        Created with <i class="fas fa-heart pulse"></i> | 
+                        <span id="live-time">00:00:00</span> |
+                        <span id="listeners-count">1,245 online</span>
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Audio Elements -->
+    <audio id="audio-player" crossorigin="anonymous"></audio>
+    
+    <!-- Notification System -->
+    <div class="notification-container" id="notification-container"></div>
+    
+    <!-- Context Menu -->
+    <div class="context-menu" id="context-menu">
+        <div class="context-item" data-action="play">
+            <i class="fas fa-play"></i> Play
+        </div>
+        <div class="context-item" data-action="add-to-playlist">
+            <i class="fas fa-plus"></i> Add to Playlist
+        </div>
+        <div class="context-item" data-action="favorite">
+            <i class="far fa-heart"></i> Add to Favorites
+        </div>
+        <div class="context-divider"></div>
+        <div class="context-item" data-action="download">
+            <i class="fas fa-download"></i> Download
+        </div>
+        <div class="context-item" data-action="share">
+            <i class="fas fa-share-alt"></i> Share
+        </div>
+        <div class="context-divider"></div>
+        <div class="context-item" data-action="view-info">
+            <i class="fas fa-info-circle"></i> Track Info
+        </div>
+    </div>
+    
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <div class="loading-icon">
+                    <i class="fas fa-waves"></i>
+                </div>
+                <h2>NEXUS MUSIC</h2>
+            </div>
+            <div class="loading-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="loading-progress"></div>
+                </div>
+                <div class="loading-text" id="loading-text">Initializing Audio Engine...</div>
+            </div>
+            <div class="loading-tip">
+                <i class="fas fa-lightbulb"></i>
+                <span id="loading-tip">Tip: Use voice commands by saying "Hey Nexus"</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Import Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/howler@2.2.3/dist/howler.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
