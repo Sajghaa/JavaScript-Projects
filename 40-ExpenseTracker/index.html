@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker 💸</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="app-header">
+            <div class="header-content">
+                <h1><i class="fas fa-wallet"></i> Expense Tracker</h1>
+                <p class="subtitle">Track your spending, manage your budget</p>
+            </div>
+            <div class="header-stats">
+                <div class="stat-box">
+                    <span class="stat-label">Total Balance</span>
+                    <span class="stat-value" id="total-balance">$0.00</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">This Month</span>
+                    <span class="stat-value income" id="month-income">$0.00</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">This Month</span>
+                    <span class="stat-value expense" id="month-expense">$0.00</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="app-main">
+            <div class="left-panel">
+                <section class="add-expense-section card">
+                    <h2><i class="fas fa-plus-circle"></i> Add New Expense</h2>
+                    <form id="expense-form">
+                        <div class="form-group">
+                            <label for="expense-name"><i class="fas fa-tag"></i> Expense Name</label>
+                            <input type="text" id="expense-name" placeholder="e.g., Groceries, Rent, Coffee" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="expense-amount"><i class="fas fa-dollar-sign"></i> Amount</label>
+                            <input type="number" id="expense-amount" min="0.01" step="0.01" placeholder="0.00" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="expense-category"><i class="fas fa-folder"></i> Category</label>
+                            <select id="expense-category" required>
+                                <option value="">Select a category</option>
+                                <option value="Food">Food & Dining</option>
+                                <option value="Transport">Transportation</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Housing">Housing</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Education">Education</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="expense-date"><i class="fas fa-calendar"></i> Date</label>
+                            <input type="date" id="expense-date" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="expense-type"><i class="fas fa-exchange-alt"></i> Type</label>
+                            <div class="type-toggle">
+                                <button type="button" class="type-btn active" data-type="expense">Expense</button>
+                                <button type="button" class="type-btn" data-type="income">Income</button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="expense-notes"><i class="fas fa-sticky-note"></i> Notes (Optional)</label>
+                            <textarea id="expense-notes" placeholder="Add any additional notes..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Add Transaction
+                        </button>
+                    </form>
+                </section>
+                
+                <section class="recent-expenses card">
+                    <h2><i class="fas fa-history"></i> Recent Transactions</h2>
+                    <div class="expenses-list" id="expenses-list">
+                        <!-- Transactions will be dynamically inserted here -->
+                        <div class="empty-state">
+                            <i class="fas fa-receipt"></i>
+                            <h3>No transactions yet</h3>
+                            <p>Add your first expense or income using the form above</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <div class="right-panel">
+                <section class="summary-section card">
+                    <h2><i class="fas fa-chart-pie"></i> Expense Summary</h2>
+                    <div class="chart-container">
+                        <canvas id="category-chart"></canvas>
+                    </div>
+                    <div class="category-breakdown" id="category-breakdown">
+                        <!-- Category breakdown will be dynamically inserted here -->
+                    </div>
+                </section>
+                
+                <section class="stats-section card">
+                    <h2><i class="fas fa-chart-line"></i> Monthly Overview</h2>
+                    <div class="chart-container">
+                        <canvas id="monthly-chart"></canvas>
+                    </div>
+                    <div class="monthly-stats">
+                        <div class="month-stat">
+                            <span class="month-stat-label">Highest Expense</span>
+                            <span class="month-stat-value" id="highest-expense">$0.00</span>
+                        </div>
+                        <div class="month-stat">
+                            <span class="month-stat-label">Avg Daily Expense</span>
+                            <span class="month-stat-value" id="avg-daily-expense">$0.00</span>
+                        </div>
+                        <div class="month-stat">
+                            <span class="month-stat-label">Transactions</span>
+                            <span class="month-stat-value" id="total-transactions">0</span>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="filters-section card">
+                    <h2><i class="fas fa-filter"></i> Filters</h2>
+                    <div class="filters">
+                        <div class="filter-group">
+                            <label for="filter-category">Category</label>
+                            <select id="filter-category">
+                                <option value="all">All Categories</option>
+                                <option value="Food">Food & Dining</option>
+                                <option value="Transport">Transportation</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Housing">Housing</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Education">Education</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="filter-month">Month</label>
+                            <select id="filter-month">
+                                <option value="all">All Months</option>
+                                <!-- Months will be dynamically populated -->
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="filter-type">Type</label>
+                            <select id="filter-type">
+                                <option value="all">All Types</option>
+                                <option value="expense">Expenses Only</option>
+                                <option value="income">Income Only</option>
+                            </select>
+                        </div>
+                        
+                        <button id="clear-filters" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Clear Filters
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </main>
+        
+        <footer class="app-footer">
+            <p>Your data is stored locally in your browser. Export feature coming soon!</p>
+            <div class="footer-actions">
+                <button id="export-data" class="btn btn-outline">
+                    <i class="fas fa-download"></i> Export Data
+                </button>
+                <button id="clear-data" class="btn btn-outline">
+                    <i class="fas fa-trash"></i> Clear All Data
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Transaction Item Template (hidden) -->
+    <template id="transaction-template">
+        <div class="transaction-item">
+            <div class="transaction-icon">
+                <i class="fas fa-receipt"></i>
+            </div>
+            <div class="transaction-details">
+                <div class="transaction-header">
+                    <h3 class="transaction-name">Expense Name</h3>
+                    <span class="transaction-amount expense">$0.00</span>
+                </div>
+                <div class="transaction-footer">
+                    <span class="transaction-category">Category</span>
+                    <span class="transaction-date">Date</span>
+                    <span class="transaction-notes">Notes</span>
+                </div>
+            </div>
+            <div class="transaction-actions">
+                <button class="btn-edit" title="Edit">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn-delete" title="Delete">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <script src="script.js"></script>
+</body>
+</html>
