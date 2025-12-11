@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Library App </title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="app-header">
+            <div class="header-content">
+                <h1><i class="fas fa-book-open"></i> My Book Library</h1>
+                <p class="subtitle">Track your reading journey</p>
+            </div>
+            <div class="header-stats">
+                <div class="stat-box">
+                    <span class="stat-label">Total Books</span>
+                    <span class="stat-value" id="total-books">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Read</span>
+                    <span class="stat-value read" id="read-books">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Reading</span>
+                    <span class="stat-value reading" id="reading-books">0</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Unread</span>
+                    <span class="stat-value unread" id="unread-books">0</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="app-main">
+            <div class="sidebar">
+                <section class="add-book-section card">
+                    <h2><i class="fas fa-plus-circle"></i> Add New Book</h2>
+                    <form id="book-form">
+                        <div class="form-group">
+                            <label for="book-title"><i class="fas fa-heading"></i> Title *</label>
+                            <input type="text" id="book-title" placeholder="Enter book title" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="book-author"><i class="fas fa-user-pen"></i> Author *</label>
+                            <input type="text" id="book-author" placeholder="Enter author name" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="book-year"><i class="fas fa-calendar"></i> Year</label>
+                                <input type="number" id="book-year" min="1000" max="2025" placeholder="YYYY">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="book-pages"><i class="fas fa-file-lines"></i> Pages</label>
+                                <input type="number" id="book-pages" min="1" placeholder="0">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="book-genre"><i class="fas fa-tag"></i> Genre</label>
+                            <select id="book-genre">
+                                <option value="">Select Genre</option>
+                                <option value="fiction">Fiction</option>
+                                <option value="non-fiction">Non-Fiction</option>
+                                <option value="fantasy">Fantasy</option>
+                                <option value="sci-fi">Science Fiction</option>
+                                <option value="mystery">Mystery</option>
+                                <option value="biography">Biography</option>
+                                <option value="history">History</option>
+                                <option value="self-help">Self Help</option>
+                                <option value="romance">Romance</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="book-status"><i class="fas fa-bookmark"></i> Reading Status</label>
+                            <select id="book-status">
+                                <option value="unread">Not Read</option>
+                                <option value="reading">Currently Reading</option>
+                                <option value="read">Read</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="book-rating"><i class="fas fa-star"></i> Rating (1-5)</label>
+                            <div class="rating-input">
+                                <div class="stars">
+                                    <i class="far fa-star" data-rating="1"></i>
+                                    <i class="far fa-star" data-rating="2"></i>
+                                    <i class="far fa-star" data-rating="3"></i>
+                                    <i class="far fa-star" data-rating="4"></i>
+                                    <i class="far fa-star" data-rating="5"></i>
+                                </div>
+                                <input type="hidden" id="book-rating" value="0">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="book-notes"><i class="fas fa-sticky-note"></i> Notes</label>
+                            <textarea id="book-notes" placeholder="Add your thoughts about the book..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Add Book
+                        </button>
+                        <button type="button" id="clear-form" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Clear Form
+                        </button>
+                    </form>
+                </section>
+                
+                <section class="library-stats card">
+                    <h2><i class="fas fa-chart-pie"></i> Library Stats</h2>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-title">Total Pages</span>
+                                <span class="stat-count" id="total-pages">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-title">Avg Rating</span>
+                                <span class="stat-count" id="avg-rating">0.0</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-title">Authors</span>
+                                <span class="stat-count" id="total-authors">0</span>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">
+                                <i class="fas fa-tags"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-title">Genres</span>
+                                <span class="stat-count" id="total-genres">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <div class="main-content">
+                <div class="content-header">
+                    <div class="search-section">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-books" placeholder="Search books by title, author, or genre...">
+                        </div>
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="grid" title="Grid View">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button class="view-btn" data-view="list" title="List View">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="filters-section">
+                        <div class="filter-group">
+                            <label for="filter-status">Status</label>
+                            <select id="filter-status">
+                                <option value="all">All Books</option>
+                                <option value="read">Read</option>
+                                <option value="reading">Reading</option>
+                                <option value="unread">Unread</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="filter-genre">Genre</label>
+                            <select id="filter-genre">
+                                <option value="all">All Genres</option>
+                                <!-- Genres will be dynamically populated -->
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="filter-rating">Rating</label>
+                            <select id="filter-rating">
+                                <option value="all">All Ratings</option>
+                                <option value="5">5 Stars</option>
+                                <option value="4">4+ Stars</option>
+                                <option value="3">3+ Stars</option>
+                                <option value="2">2+ Stars</option>
+                                <option value="1">1+ Stars</option>
+                                <option value="0">Unrated</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="sort-by">Sort By</label>
+                            <select id="sort-by">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                                <option value="title-asc">Title (A-Z)</option>
+                                <option value="title-desc">Title (Z-A)</option>
+                                <option value="author">Author</option>
+                                <option value="rating">Rating</option>
+                                <option value="pages">Pages</option>
+                            </select>
+                        </div>
+                        
+                        <button id="clear-filters" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Clear Filters
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="books-container">
+                    <div class="books-header">
+                        <h2><i class="fas fa-books"></i> Your Books</h2>
+                        <div class="books-actions">
+                            <button id="export-books" class="btn btn-outline">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                            <button id="import-books" class="btn btn-outline">
+                                <i class="fas fa-upload"></i> Import
+                            </button>
+                            <button id="clear-library" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> Clear All
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="books-grid" id="books-grid">
+                        <!-- Books will be dynamically inserted here -->
+                        <div class="empty-state">
+                            <i class="fas fa-book-open-reader"></i>
+                            <h3>Your library is empty</h3>
+                            <p>Add your first book using the form on the left</p>
+                        </div>
+                    </div>
+                    
+                    <div class="books-footer">
+                        <div class="books-summary">
+                            Showing <span id="showing-count">0</span> of <span id="total-count">0</span> books
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="recent-books card">
+                    <h2><i class="fas fa-history"></i> Recently Added</h2>
+                    <div class="recent-list" id="recent-list">
+                        <!-- Recent books will be dynamically inserted here -->
+                        <div class="empty-state small">
+                            <i class="fas fa-clock-rotate-left"></i>
+                            <p>No books added yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="app-footer">
+            <p>Your book collection is automatically saved to your browser's localStorage</p>
+            <div class="footer-info">
+                <span><i class="fas fa-database"></i> Data is stored locally on your device</span>
+                <span><i class="fas fa-mobile"></i> Works offline</span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Book Card Template (hidden) -->
+    <template id="book-template">
+        <div class="book-card">
+            <div class="book-cover">
+                <div class="book-cover-placeholder">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="book-status-badge">
+                    <span class="status-unread">Unread</span>
+                </div>
+            </div>
+            <div class="book-info">
+                <h3 class="book-title">Book Title</h3>
+                <p class="book-author">By Author Name</p>
+                
+                <div class="book-meta">
+                    <span class="book-year"><i class="fas fa-calendar"></i> 2023</span>
+                    <span class="book-pages"><i class="fas fa-file-lines"></i> 320 pages</span>
+                    <span class="book-genre">Fiction</span>
+                </div>
+                
+                <div class="book-rating">
+                    <div class="stars">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                    <span class="rating-text">3.0</span>
+                </div>
+                
+                <div class="book-notes">
+                    <p>Book notes or description...</p>
+                </div>
+                
+                <div class="book-actions">
+                    <button class="btn-action btn-toggle-status" title="Change Status">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                    <button class="btn-action btn-edit" title="Edit Book">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-action btn-delete" title="Delete Book">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Recent Book Template (hidden) -->
+    <template id="recent-template">
+        <div class="recent-item">
+            <div class="recent-cover">
+                <i class="fas fa-book"></i>
+            </div>
+            <div class="recent-info">
+                <h4 class="recent-title">Book Title</h4>
+                <p class="recent-author">Author Name</p>
+                <div class="recent-meta">
+                    <span class="recent-status status-read">Read</span>
+                    <span class="recent-rating">⭐ 4.5</span>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Import Modal -->
+    <div class="modal" id="import-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-upload"></i> Import Books</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="import-file">Select JSON file to import</label>
+                    <input type="file" id="import-file" accept=".json">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="import-overwrite"> Overwrite existing books
+                    </label>
+                </div>
+                <p class="help-text">File must be in JSON format exported from this app</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary modal-cancel">Cancel</button>
+                <button class="btn btn-primary" id="confirm-import">Import Books</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
