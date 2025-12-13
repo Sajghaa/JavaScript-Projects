@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Saver </title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <header class="hero-section">
+            <div class="hero-content">
+                <h1><i class="fas fa-utensils"></i> Recipe Saver</h1>
+                <p class="tagline">Discover, cook, and save your favorite recipes</p>
+                <div class="hero-search">
+                    <div class="search-container">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-input" placeholder="Search recipes... (e.g., pasta, chicken, dessert)">
+                        <button id="search-btn" class="btn btn-primary">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                    <div class="search-tags">
+                        <span class="search-tag" data-search="pasta">Pasta</span>
+                        <span class="search-tag" data-search="chicken">Chicken</span>
+                        <span class="search-tag" data-search="dessert">Dessert</span>
+                        <span class="search-tag" data-search="vegetarian">Vegetarian</span>
+                        <span class="search-tag" data-search="breakfast">Breakfast</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="floating-ingredients">
+                    <i class="fas fa-carrot"></i>
+                    <i class="fas fa-apple-alt"></i>
+                    <i class="fas fa-lemon"></i>
+                    <i class="fas fa-pepper-hot"></i>
+                    <i class="fas fa-cheese"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-utensil-spoon"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Recipes Found</span>
+                        <span class="stat-value" id="recipes-found">0</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Favorites</span>
+                        <span class="stat-value" id="favorites-count">0</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Avg Prep Time</span>
+                        <span class="stat-value" id="avg-time">0 min</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Avg Calories</span>
+                        <span class="stat-value" id="avg-calories">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Tabs -->
+            <div class="content-tabs">
+                <button class="tab-btn active" data-tab="search">
+                    <i class="fas fa-search"></i> Search Recipes
+                </button>
+                <button class="tab-btn" data-tab="favorites">
+                    <i class="fas fa-heart"></i> My Favorites
+                </button>
+                <button class="tab-btn" data-tab="filters">
+                    <i class="fas fa-filter"></i> Filters
+                </button>
+            </div>
+
+            <!-- Filters Section -->
+            <div class="filters-section card" id="filters-section">
+                <h2><i class="fas fa-filter"></i> Filter Recipes</h2>
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="diet-filter"><i class="fas fa-leaf"></i> Diet</label>
+                        <select id="diet-filter">
+                            <option value="">All Diets</option>
+                            <option value="vegetarian">Vegetarian</option>
+                            <option value="vegan">Vegan</option>
+                            <option value="gluten-free">Gluten Free</option>
+                            <option value="dairy-free">Dairy Free</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="meal-type"><i class="fas fa-utensils"></i> Meal Type</label>
+                        <select id="meal-type">
+                            <option value="">All Types</option>
+                            <option value="main course">Main Course</option>
+                            <option value="side dish">Side Dish</option>
+                            <option value="dessert">Dessert</option>
+                            <option value="appetizer">Appetizer</option>
+                            <option value="breakfast">Breakfast</option>
+                            <option value="beverage">Beverage</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="max-time"><i class="fas fa-clock"></i> Max Time (min)</label>
+                        <input type="range" id="max-time" min="5" max="180" value="60">
+                        <span class="range-value" id="time-value">60 min</span>
+                    </div>
+                    <div class="filter-group">
+                        <label for="max-calories"><i class="fas fa-fire"></i> Max Calories</label>
+                        <input type="range" id="max-calories" min="50" max="1500" value="500">
+                        <span class="range-value" id="calories-value">500 cal</span>
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button id="apply-filters" class="btn btn-primary">
+                        <i class="fas fa-check"></i> Apply Filters
+                    </button>
+                    <button id="clear-filters" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Clear All
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recipes Grid -->
+            <div class="tab-content active" id="search-tab">
+                <div class="recipes-header">
+                    <h2><i class="fas fa-search"></i> Search Results</h2>
+                    <div class="results-info">
+                        <span id="results-count">0 results</span>
+                        <div class="sort-options">
+                            <select id="sort-options">
+                                <option value="relevance">Relevance</option>
+                                <option value="time">Preparation Time</option>
+                                <option value="calories">Calories</option>
+                                <option value="popularity">Popularity</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="recipes-grid" id="recipes-grid">
+                    <!-- Recipes will be loaded here -->
+                    <div class="empty-state">
+                        <i class="fas fa-utensil-spoon"></i>
+                        <h3>Start Your Culinary Journey</h3>
+                        <p>Search for recipes above or try our popular tags</p>
+                    </div>
+                </div>
+                <div class="pagination" id="pagination">
+                    <!-- Pagination will be added here -->
+                </div>
+            </div>
+
+            <!-- Favorites Tab -->
+            <div class="tab-content" id="favorites-tab">
+                <div class="favorites-header">
+                    <h2><i class="fas fa-heart"></i> My Favorite Recipes</h2>
+                    <div class="favorites-actions">
+                        <button id="clear-favorites" class="btn btn-danger">
+                            <i class="fas fa-trash"></i> Clear All Favorites
+                        </button>
+                    </div>
+                </div>
+                <div class="favorites-grid" id="favorites-grid">
+                    <!-- Favorites will be loaded here -->
+                    <div class="empty-state">
+                        <i class="fas fa-heart"></i>
+                        <h3>No favorites yet</h3>
+                        <p>Click the heart icon on any recipe to save it here</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Recipe Modal -->
+        <div class="modal" id="recipe-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-title">Recipe Title</h2>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="recipe-header">
+                        <div class="recipe-image">
+                            <img id="modal-image" src="" alt="Recipe">
+                            <div class="image-overlay">
+                                <button class="btn-favorite" id="modal-favorite">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="recipe-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-clock"></i>
+                                <span id="modal-time">0 min</span>
+                                <small>Prep Time</small>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-users"></i>
+                                <span id="modal-servings">0</span>
+                                <small>Servings</small>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-fire"></i>
+                                <span id="modal-calories">0</span>
+                                <small>Calories</small>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-utensils"></i>
+                                <span id="modal-type">Main Course</span>
+                                <small>Meal Type</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="recipe-content">
+                        <div class="recipe-section">
+                            <h3><i class="fas fa-list"></i> Ingredients</h3>
+                            <ul id="modal-ingredients">
+                                <!-- Ingredients will be added here -->
+                            </ul>
+                        </div>
+                        
+                        <div class="recipe-section">
+                            <h3><i class="fas fa-mortar-pestle"></i> Instructions</h3>
+                            <ol id="modal-instructions">
+                                <!-- Instructions will be added here -->
+                            </ol>
+                        </div>
+                        
+                        <div class="recipe-section">
+                            <h3><i class="fas fa-info-circle"></i> Nutritional Info</h3>
+                            <div class="nutrition-grid" id="modal-nutrition">
+                                <!-- Nutrition info will be added here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary modal-close-btn">Close</button>
+                    <button class="btn btn-primary" id="print-recipe">
+                        <i class="fas fa-print"></i> Print Recipe
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loading-overlay">
+            <div class="loading-content">
+                <div class="spinner">
+                    <i class="fas fa-utensils fa-spin"></i>
+                </div>
+                <p>Finding delicious recipes...</p>
+            </div>
+        </div>
+
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-utensils"></i> Recipe Saver</h3>
+                    <p>Your personal digital cookbook</p>
+                </div>
+                <div class="footer-section">
+                    <p>Powered by Spoonacular API</p>
+                    <p class="disclaimer">Recipes are fetched from external API. Favorites are saved locally.</p>
+                </div>
+                <div class="footer-section">
+                    <div class="footer-actions">
+                        <button id="export-favorites" class="btn btn-outline">
+                            <i class="fas fa-download"></i> Export Favorites
+                        </button>
+                        <button id="import-favorites" class="btn btn-outline">
+                            <i class="fas fa-upload"></i> Import Favorites
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Recipe Saver. All recipe data from Spoonacular API.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Recipe Card Template -->
+    <template id="recipe-template">
+        <div class="recipe-card">
+            <div class="recipe-image">
+                <img src="" alt="Recipe" class="recipe-img">
+                <div class="recipe-overlay">
+                    <button class="btn-favorite">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <span class="recipe-time">
+                        <i class="fas fa-clock"></i> <span class="time-value">0</span> min
+                    </span>
+                </div>
+            </div>
+            <div class="recipe-info">
+                <h3 class="recipe-title">Recipe Title</h3>
+                <div class="recipe-meta">
+                    <span class="recipe-calories">
+                        <i class="fas fa-fire"></i> <span class="calories-value">0</span> cal
+                    </span>
+                    <span class="recipe-servings">
+                        <i class="fas fa-users"></i> <span class="servings-value">0</span> servings
+                    </span>
+                </div>
+                <div class="recipe-diet-tags">
+                    <!-- Diet tags will be added here -->
+                </div>
+                <p class="recipe-summary">Recipe summary will appear here...</p>
+                <div class="recipe-actions">
+                    <button class="btn btn-outline view-recipe">
+                        <i class="fas fa-eye"></i> View Recipe
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="script.js"></script>
+</body>
+</html>
