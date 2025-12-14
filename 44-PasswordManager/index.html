@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecurePass Manager </title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Security Header -->
+        <div class="security-header">
+            <div class="security-status">
+                <i class="fas fa-shield-alt"></i>
+                <span class="status-text">Vault Locked</span>
+                <div class="status-indicator locked"></div>
+            </div>
+            <div class="last-backup">
+                <i class="fas fa-history"></i>
+                Last backup: <span id="last-backup">Never</span>
+            </div>
+        </div>
+
+        <!-- Main App -->
+        <main class="app-main">
+            <!-- Left Panel - Vault & Generator -->
+            <div class="left-panel">
+                <!-- Master Password Section -->
+                <section class="vault-section card">
+                    <div class="vault-header">
+                        <h2><i class="fas fa-lock"></i> Secure Vault</h2>
+                        <div class="vault-actions">
+                            <button id="lock-vault" class="btn btn-secondary">
+                                <i class="fas fa-lock"></i> Lock
+                            </button>
+                            <button id="change-master" class="btn btn-outline">
+                                <i class="fas fa-key"></i> Change Master
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="vault-status" id="vault-status">
+                        <div class="status-message">
+                            <i class="fas fa-lock"></i>
+                            <h3>Vault is Locked</h3>
+                            <p>Enter your master password to access saved passwords</p>
+                        </div>
+                        
+                        <div class="master-password-form">
+                            <div class="form-group">
+                                <label for="master-password">
+                                    <i class="fas fa-key"></i> Master Password
+                                </label>
+                                <div class="password-input">
+                                    <input type="password" id="master-password" placeholder="Enter master password">
+                                    <button type="button" class="toggle-password" data-target="master-password">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button id="unlock-vault" class="btn btn-primary">
+                                <i class="fas fa-unlock"></i> Unlock Vault
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="vault-content" id="vault-content" style="display: none;">
+                        <div class="vault-stats">
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="fas fa-key"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <span class="stat-label">Total Passwords</span>
+                                    <span class="stat-value" id="total-passwords">0</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <span class="stat-label">Security Score</span>
+                                    <span class="stat-value" id="security-score">0%</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <span class="stat-label">Last Updated</span>
+                                    <span class="stat-value" id="last-updated">--</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="search-section">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="search-passwords" placeholder="Search passwords...">
+                            </div>
+                            <button id="add-password" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Add New
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Password Generator -->
+                <section class="generator-section card">
+                    <h2><i class="fas fa-magic"></i> Password Generator</h2>
+                    
+                    <div class="generator-preview">
+                        <div class="password-display" id="generated-password">
+                            Click Generate
+                        </div>
+                        <div class="password-actions">
+                            <button id="copy-password" class="btn-action" title="Copy to clipboard">
+                                <i class="far fa-copy"></i>
+                            </button>
+                            <button id="refresh-password" class="btn-action" title="Generate new">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                            <button id="save-generated" class="btn-action" title="Save password">
+                                <i class="far fa-save"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="generator-controls">
+                        <div class="control-group">
+                            <label for="password-length">
+                                <i class="fas fa-ruler"></i> Length: <span id="length-value">12</span>
+                            </label>
+                            <input type="range" id="password-length" min="8" max="32" value="12">
+                        </div>
+
+                        <div class="control-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="include-uppercase" checked>
+                                <span class="checkmark"></span>
+                                <i class="fas fa-text-height"></i> Uppercase (A-Z)
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="include-lowercase" checked>
+                                <span class="checkmark"></span>
+                                <i class="fas fa-text-width"></i> Lowercase (a-z)
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="include-numbers" checked>
+                                <span class="checkmark"></span>
+                                <i class="fas fa-hashtag"></i> Numbers (0-9)
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="include-symbols" checked>
+                                <span class="checkmark"></span>
+                                <i class="fas fa-asterisk"></i> Symbols (!@#$%)
+                            </label>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="exclude-similar">
+                                <span class="checkmark"></span>
+                                <i class="fas fa-ban"></i> Exclude similar (i, l, 1, o, 0)
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="exclude-ambiguous">
+                                <span class="checkmark"></span>
+                                <i class="fas fa-eye-slash"></i> Exclude ambiguous ({ } [ ] ( ) / \ ' " ` ~)
+                            </label>
+                        </div>
+
+                        <div class="strength-meter">
+                            <div class="strength-label">
+                                <i class="fas fa-bolt"></i> Password Strength
+                            </div>
+                            <div class="meter">
+                                <div class="meter-bar" id="strength-meter-bar"></div>
+                            </div>
+                            <div class="strength-text" id="strength-text">Very Weak</div>
+                        </div>
+
+                        <button id="generate-password" class="btn btn-primary">
+                            <i class="fas fa-bolt"></i> Generate Password
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Security Tips -->
+                <section class="tips-section card">
+                    <h2><i class="fas fa-lightbulb"></i> Security Tips</h2>
+                    <ul class="tips-list">
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Use a unique master password</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Enable two-factor authentication where possible</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Regularly update your passwords</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Never reuse passwords across sites</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <span>Export backups regularly</span>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+
+            <!-- Right Panel - Passwords List & Details -->
+            <div class="right-panel">
+                <!-- Passwords List -->
+                <section class="passwords-section card">
+                    <div class="passwords-header">
+                        <h2><i class="fas fa-keychain"></i> Saved Passwords</h2>
+                        <div class="password-filters">
+                            <select id="category-filter">
+                                <option value="all">All Categories</option>
+                                <option value="social">Social Media</option>
+                                <option value="work">Work</option>
+                                <option value="finance">Finance</option>
+                                <option value="shopping">Shopping</option>
+                                <option value="entertainment">Entertainment</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <button id="export-passwords" class="btn btn-outline">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                            <button id="import-passwords" class="btn btn-outline">
+                                <i class="fas fa-upload"></i> Import
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="passwords-list" id="passwords-list">
+                        <!-- Passwords will be loaded here -->
+                        <div class="empty-state">
+                            <i class="fas fa-lock"></i>
+                            <h3>No passwords saved</h3>
+                            <p>Add your first password or unlock the vault</p>
+                        </div>
+                    </div>
+
+                    <div class="passwords-footer">
+                        <div class="pagination" id="pagination">
+                            <!-- Pagination will be added here -->
+                        </div>
+                        <div class="summary">
+                            Showing <span id="showing-count">0</span> of <span id="total-count">0</span> passwords
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Password Details / Form -->
+                <section class="details-section card">
+                    <div class="details-header">
+                        <h2><i class="fas fa-edit"></i> Password Details</h2>
+                        <div class="details-actions" id="details-actions" style="display: none;">
+                            <button id="save-password" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                            <button id="cancel-edit" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="details-content">
+                        <div class="empty-details" id="empty-details">
+                            <i class="fas fa-key"></i>
+                            <h3>Select a password</h3>
+                            <p>Choose a password from the list to view or edit details</p>
+                            <p>Or click "Add New" to create a new password entry</p>
+                        </div>
+
+                        <form id="password-form" class="password-form" style="display: none;">
+                            <input type="hidden" id="password-id">
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="password-title">
+                                        <i class="fas fa-tag"></i> Title *
+                                    </label>
+                                    <input type="text" id="password-title" placeholder="e.g., Gmail, Facebook, Bank" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password-category">
+                                        <i class="fas fa-folder"></i> Category
+                                    </label>
+                                    <select id="password-category">
+                                        <option value="social">Social Media</option>
+                                        <option value="work">Work</option>
+                                        <option value="finance">Finance</option>
+                                        <option value="shopping">Shopping</option>
+                                        <option value="entertainment">Entertainment</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="password-username">
+                                        <i class="fas fa-user"></i> Username/Email
+                                    </label>
+                                    <input type="text" id="password-username" placeholder="username or email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="password-url">
+                                        <i class="fas fa-link"></i> Website URL
+                                    </label>
+                                    <input type="url" id="password-url" placeholder="https://example.com">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password-value">
+                                    <i class="fas fa-key"></i> Password *
+                                </label>
+                                <div class="password-input">
+                                    <input type="password" id="password-value" placeholder="Enter password" required>
+                                    <button type="button" class="toggle-password" data-target="password-value">
+                                        <i class="far fa-eye"></i>
+                                    </button>
+                                    <button type="button" class="generate-from-details" title="Generate password">
+                                        <i class="fas fa-magic"></i>
+                                    </button>
+                                </div>
+                                <div class="password-strength">
+                                    <span class="strength-label">Strength:</span>
+                                    <div class="strength-indicator">
+                                        <div class="strength-bar" id="detail-strength-bar"></div>
+                                    </div>
+                                    <span class="strength-text" id="detail-strength-text">Very Weak</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password-notes">
+                                    <i class="fas fa-sticky-note"></i> Notes
+                                </label>
+                                <textarea id="password-notes" placeholder="Additional notes or hints..."></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="password-favorite">
+                                    <span class="checkmark"></span>
+                                    <i class="far fa-star"></i> Mark as favorite
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="password-expires">
+                                    <span class="checkmark"></span>
+                                    <i class="far fa-clock"></i> Set expiration date
+                                </label>
+                            </div>
+
+                            <div class="expiration-date" id="expiration-date" style="display: none;">
+                                <label for="password-expiration">
+                                    <i class="far fa-calendar"></i> Expires on
+                                </label>
+                                <input type="date" id="password-expiration">
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Password
+                                </button>
+                                <button type="button" id="delete-password" class="btn btn-danger">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Security Audit -->
+                <section class="audit-section card">
+                    <h2><i class="fas fa-shield-alt"></i> Security Audit</h2>
+                    <div class="audit-results" id="audit-results">
+                        <div class="audit-item">
+                            <div class="audit-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="audit-info">
+                                <span class="audit-label">Weak Passwords</span>
+                                <span class="audit-value" id="weak-passwords">0</span>
+                            </div>
+                        </div>
+                        <div class="audit-item">
+                            <div class="audit-icon">
+                                <i class="fas fa-redo"></i>
+                            </div>
+                            <div class="audit-info">
+                                <span class="audit-label">Reused Passwords</span>
+                                <span class="audit-value" id="reused-passwords">0</span>
+                            </div>
+                        </div>
+                        <div class="audit-item">
+                            <div class="audit-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="audit-info">
+                                <span class="audit-label">Expired Soon</span>
+                                <span class="audit-value" id="expiring-passwords">0</span>
+                            </div>
+                        </div>
+                        <div class="audit-item">
+                            <div class="audit-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="audit-info">
+                                <span class="audit-label">Favorites</span>
+                                <span class="audit-value" id="favorite-passwords">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="run-audit" class="btn btn-secondary">
+                        <i class="fas fa-search"></i> Run Security Audit
+                    </button>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <h3><i class="fas fa-shield-alt"></i> SecurePass Manager</h3>
+                    <p>Your passwords are encrypted and stored locally in your browser</p>
+                </div>
+                <div class="footer-stats">
+                    <span><i class="fas fa-database"></i> Data stored locally</span>
+                    <span><i class="fas fa-lock"></i> No internet transmission</span>
+                    <span><i class="fas fa-user-secret"></i> Complete privacy</span>
+                </div>
+                <div class="footer-actions">
+                    <button id="export-backup" class="btn btn-outline">
+                        <i class="fas fa-download"></i> Full Backup
+                    </button>
+                    <button id="clear-data" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Clear All Data
+                    </button>
+                </div>
+            </div>
+            <div class="footer-warning">
+                <p><i class="fas fa-exclamation-triangle"></i> Warning: This app stores data locally. Clearing browser data will delete all passwords. Export regular backups!</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Password Item Template -->
+    <template id="password-template">
+        <div class="password-item">
+            <div class="password-icon">
+                <i class="fas fa-key"></i>
+            </div>
+            <div class="password-info">
+                <div class="password-header">
+                    <h3 class="password-title">Title</h3>
+                    <div class="password-meta">
+                        <span class="password-category">Category</span>
+                        <span class="password-date">Added: Today</span>
+                    </div>
+                </div>
+                <div class="password-footer">
+                    <div class="password-user">
+                        <i class="fas fa-user"></i>
+                        <span class="username">username</span>
+                    </div>
+                    <div class="password-strength-indicator">
+                        <div class="strength-dot"></div>
+                        <span class="strength-label">Strength</span>
+                    </div>
+                </div>
+            </div>
+            <div class="password-actions">
+                <button class="btn-action btn-view" title="View password">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn-action btn-copy" title="Copy password">
+                    <i class="far fa-copy"></i>
+                </button>
+                <button class="btn-action btn-favorite" title="Toggle favorite">
+                    <i class="far fa-star"></i>
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <!-- Master Password Setup Modal -->
+    <div class="modal" id="setup-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-key"></i> Set Master Password</h2>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">
+                    Create a strong master password to encrypt your password vault.
+                    <strong>This password cannot be recovered if forgotten.</strong>
+                </p>
+                
+                <form id="setup-form">
+                    <div class="form-group">
+                        <label for="new-master-password">
+                            <i class="fas fa-key"></i> Master Password
+                        </label>
+                        <div class="password-input">
+                            <input type="password" id="new-master-password" placeholder="Create master password" required>
+                            <button type="button" class="toggle-password" data-target="new-master-password">
+                                <i class="far fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-hints">
+                            <div class="hint-item" id="length-hint">
+                                <i class="far fa-circle"></i> At least 12 characters
+                            </div>
+                            <div class="hint-item" id="uppercase-hint">
+                                <i class="far fa-circle"></i> Contains uppercase
+                            </div>
+                            <div class="hint-item" id="lowercase-hint">
+                                <i class="far fa-circle"></i> Contains lowercase
+                            </div>
+                            <div class="hint-item" id="number-hint">
+                                <i class="far fa-circle"></i> Contains number
+                            </div>
+                            <div class="hint-item" id="symbol-hint">
+                                <i class="far fa-circle"></i> Contains symbol
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-master-password">
+                            <i class="fas fa-key"></i> Confirm Master Password
+                        </label>
+                        <div class="password-input">
+                            <input type="password" id="confirm-master-password" placeholder="Confirm master password" required>
+                            <button type="button" class="toggle-password" data-target="confirm-master-password">
+                                <i class="far fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="password-match" id="password-match">
+                            <i class="far fa-circle"></i> Passwords match
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hint-question">
+                            <i class="fas fa-question-circle"></i> Security Hint (Optional)
+                        </label>
+                        <input type="text" id="hint-question" placeholder="e.g., Name of first pet">
+                        <small class="help-text">This hint will help you remember your master password</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="save-master" class="btn btn-primary">
+                    <i class="fas fa-lock"></i> Create Vault
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Master Password Modal -->
+    <div class="modal" id="change-master-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-key"></i> Change Master Password</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="change-master-form">
+                    <div class="form-group">
+                        <label for="current-master">
+                            <i class="fas fa-key"></i> Current Master Password
+                        </label>
+                        <div class="password-input">
+                            <input type="password" id="current-master" placeholder="Enter current password" required>
+                            <button type="button" class="toggle-password" data-target="current-master">
+                                <i class="far fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new-master">
+                            <i class="fas fa-key"></i> New Master Password
+                        </label>
+                        <div class="password-input">
+                            <input type="password" id="new-master" placeholder="Create new password" required>
+                            <button type="button" class="toggle-password" data-target="new-master">
+                                <i class="far fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-new-master">
+                            <i class="fas fa-key"></i> Confirm New Password
+                        </label>
+                        <div class="password-input">
+                            <input type="password" id="confirm-new-master" placeholder="Confirm new password" required>
+                            <button type="button" class="toggle-password" data-target="confirm-new-master">
+                                <i class="far fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary modal-close-btn">Cancel</button>
+                <button id="confirm-change-master" class="btn btn-primary">
+                    <i class="fas fa-sync"></i> Change Master Password
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal" id="import-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-upload"></i> Import Passwords</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="import-options">
+                    <div class="option-card" data-type="json">
+                        <div class="option-icon">
+                            <i class="fas fa-file-code"></i>
+                        </div>
+                        <div class="option-info">
+                            <h4>JSON File</h4>
+                            <p>Import from SecurePass export file</p>
+                        </div>
+                    </div>
+                    <div class="option-card" data-type="csv">
+                        <div class="option-icon">
+                            <i class="fas fa-file-csv"></i>
+                        </div>
+                        <div class="option-info">
+                            <h4>CSV File</h4>
+                            <p>Import from spreadsheet export</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="import-form" id="json-import" style="display: none;">
+                    <div class="form-group">
+                        <label for="import-file">Select JSON file</label>
+                        <input type="file" id="import-file" accept=".json">
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="import-overwrite">
+                            <span class="checkmark"></span>
+                            Overwrite existing passwords
+                        </label>
+                    </div>
+                </div>
+
+                <div class="import-form" id="csv-import" style="display: none;">
+                    <div class="form-group">
+                        <label for="csv-file">Select CSV file</label>
+                        <input type="file" id="csv-file" accept=".csv">
+                    </div>
+                    <div class="form-group">
+                        <label for="csv-delimiter">Delimiter</label>
+                        <select id="csv-delimiter">
+                            <option value=",">Comma (,)</option>
+                            <option value=";">Semicolon (;)</option>
+                            <option value="\t">Tab</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary modal-close-btn">Cancel</button>
+                <button id="confirm-import" class="btn btn-primary" disabled>
+                    <i class="fas fa-upload"></i> Import
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirm-modal">
+        <div class="modal-content small">
+            <div class="modal-body">
+                <div class="confirm-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <h3 id="confirm-title">Are you sure?</h3>
+                <p id="confirm-message">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="confirm-cancel">Cancel</button>
+                <button class="btn btn-danger" id="confirm-ok">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
