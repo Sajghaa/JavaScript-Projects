@@ -1,6 +1,6 @@
-// app.js - Secure Password Manager
+
 document.addEventListener('DOMContentLoaded', function() {
-    // DOM Elements
+ 
     const vaultStatus = document.getElementById('vault-status');
     const vaultContent = document.getElementById('vault-content');
     const masterPasswordInput = document.getElementById('master-password');
@@ -1448,11 +1448,10 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(notificationStyles);
     
-    // Expose functions to window for pagination
     window.passwordManager = {
         changePage
     };
     
-    // Initialize the application
+    
     init();
 });
