@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Flashcards - Master Vocabulary</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;500;700&family=Noto+Sans+Devanagari:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <h1><i class="fas fa-language"></i> Language Flashcards</h1>
+                <p class="subtitle">Master vocabulary in any language</p>
+            </div>
+            <div class="header-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Decks</span>
+                        <span class="stat-value" id="total-decks">0</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-cards"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Cards</span>
+                        <span class="stat-value" id="total-cards">0</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Mastered</span>
+                        <span class="stat-value" id="mastered-cards">0</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Streak</span>
+                        <span class="stat-value" id="current-streak">0 days</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            <!-- Left Panel - Card Management -->
+            <div class="left-panel">
+                <!-- Current Deck Info -->
+                <section class="deck-info card">
+                    <div class="deck-header">
+                        <h2><i class="fas fa-folder"></i> Current Deck</h2>
+                        <div class="deck-actions">
+                            <button id="create-deck" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus"></i> New Deck
+                            </button>
+                        </div>
+                    </div>
+                    <div class="deck-selector" id="deck-selector">
+                        <!-- Decks will be populated here -->
+                        <div class="empty-deck">
+                            <i class="fas fa-inbox"></i>
+                            <p>No decks available. Create your first deck!</p>
+                        </div>
+                    </div>
+                    <div class="deck-details" id="deck-details" style="display: none;">
+                        <div class="deck-meta">
+                            <h3 id="current-deck-name">Deck Name</h3>
+                            <div class="deck-stats">
+                                <span class="deck-stat">
+                                    <i class="fas fa-cards"></i>
+                                    <span id="deck-card-count">0</span> cards
+                                </span>
+                                <span class="deck-stat">
+                                    <i class="fas fa-star"></i>
+                                    <span id="deck-mastered-count">0</span> mastered
+                                </span>
+                            </div>
+                        </div>
+                        <div class="deck-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="deck-progress-fill" style="width: 0%"></div>
+                            </div>
+                            <span class="progress-text" id="deck-progress-text">0% mastered</span>
+                        </div>
+                        <div class="deck-actions-full">
+                            <button id="edit-deck" class="btn btn-outline btn-sm">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button id="export-deck" class="btn btn-outline btn-sm">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                            <button id="delete-deck" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Card Creator -->
+                <section class="card-creator card">
+                    <div class="creator-header">
+                        <h2><i class="fas fa-plus-circle"></i> Create New Card</h2>
+                        <div class="creator-actions">
+                            <button id="clear-form" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-times"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <form id="card-form">
+                        <div class="form-group">
+                            <label for="card-front">
+                                <i class="fas fa-language"></i> Front (Question/Word)
+                            </label>
+                            <textarea id="card-front" placeholder="Enter word, phrase, or question..." rows="3"></textarea>
+                            <div class="language-selector">
+                                <select id="front-language">
+                                    <option value="en">English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="ja">Japanese</option>
+                                    <option value="ko">Korean</option>
+                                    <option value="zh">Chinese</option>
+                                    <option value="ar">Arabic</option>
+                                    <option value="hi">Hindi</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                                <input type="text" id="custom-front-language" placeholder="Language name" style="display: none;">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="card-back">
+                                <i class="fas fa-language"></i> Back (Answer/Definition)
+                            </label>
+                            <textarea id="card-back" placeholder="Enter translation, definition, or answer..." rows="3"></textarea>
+                            <div class="language-selector">
+                                <select id="back-language">
+                                    <option value="en">English</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="ja">Japanese</option>
+                                    <option value="ko">Korean</option>
+                                    <option value="zh">Chinese</option>
+                                    <option value="ar">Arabic</option>
+                                    <option value="hi">Hindi</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                                <input type="text" id="custom-back-language" placeholder="Language name" style="display: none;">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="card-category">
+                                    <i class="fas fa-tag"></i> Category
+                                </label>
+                                <select id="card-category">
+                                    <option value="vocabulary">Vocabulary</option>
+                                    <option value="grammar">Grammar</option>
+                                    <option value="phrases">Phrases</option>
+                                    <option value="verbs">Verbs</option>
+                                    <option value="nouns">Nouns</option>
+                                    <option value="adjectives">Adjectives</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="card-difficulty">
+                                    <i class="fas fa-signal"></i> Difficulty
+                                </label>
+                                <select id="card-difficulty">
+                                    <option value="easy">Easy</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="hard">Hard</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="card-example">
+                                <i class="fas fa-comment-alt"></i> Example Sentence (Optional)
+                            </label>
+                            <textarea id="card-example" placeholder="Add an example sentence..." rows="2"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="card-notes">
+                                <i class="fas fa-sticky-note"></i> Notes (Optional)
+                            </label>
+                            <textarea id="card-notes" placeholder="Additional notes..." rows="2"></textarea>
+                        </div>
+                        
+                        <div class="form-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="auto-advance">
+                                <span class="checkmark"></span>
+                                Auto-advance after flip
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="auto-play">
+                                <span class="checkmark"></span>
+                                Auto-play pronunciation
+                            </label>
+                        </div>
+                        
+                        <div class="form-buttons">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Add Card
+                            </button>
+                            <button type="button" id="add-another" class="btn btn-outline">
+                                <i class="fas fa-plus"></i> Add & New
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- Import/Export -->
+                <section class="import-export card">
+                    <h2><i class="fas fa-exchange-alt"></i> Import & Export</h2>
+                    <div class="import-export-grid">
+                        <div class="import-export-option">
+                            <div class="option-icon">
+                                <i class="fas fa-file-import"></i>
+                            </div>
+                            <div class="option-info">
+                                <h4>Import Cards</h4>
+                                <p>Import from CSV or JSON</p>
+                            </div>
+                            <input type="file" id="import-file" accept=".csv,.json" style="display: none;">
+                            <button class="btn btn-outline" onclick="document.getElementById('import-file').click()">
+                                Choose File
+                            </button>
+                        </div>
+                        <div class="import-export-option">
+                            <div class="option-icon">
+                                <i class="fas fa-file-export"></i>
+                            </div>
+                            <div class="option-info">
+                                <h4>Export Deck</h4>
+                                <p>Export current deck as JSON</p>
+                            </div>
+                            <button id="export-current" class="btn btn-outline">
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Panel - Flashcards & Practice -->
+            <div class="right-panel">
+                <!-- Flashcard Viewer -->
+                <section class="flashcard-viewer card">
+                    <div class="viewer-header">
+                        <h2><i class="fas fa-eye"></i> Flashcard Viewer</h2>
+                        <div class="viewer-controls">
+                            <div class="card-counter">
+                                <span id="current-card-number">0</span>/<span id="total-cards-viewer">0</span>
+                            </div>
+                            <div class="view-toggle">
+                                <button class="view-btn active" data-view="practice">
+                                    <i class="fas fa-graduation-cap"></i> Practice
+                                </button>
+                                <button class="view-btn" data-view="browse">
+                                    <i class="fas fa-list"></i> Browse
+                                </button>
+                                <button class="view-btn" data-view="quiz">
+                                    <i class="fas fa-question-circle"></i> Quiz
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flashcard-container">
+                        <!-- Flashcard -->
+                        <div class="flashcard" id="flashcard">
+                            <div class="flashcard-inner">
+                                <div class="flashcard-front">
+                                    <div class="card-language">
+                                        <span class="language-badge" id="front-language-badge">English</span>
+                                    </div>
+                                    <div class="card-content" id="front-content">
+                                        <p>Select a deck and start practicing!</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="card-category" id="front-category">Vocabulary</div>
+                                        <div class="card-hint">
+                                            <i class="fas fa-hand-point-up"></i> Click to flip
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flashcard-back">
+                                    <div class="card-language">
+                                        <span class="language-badge" id="back-language-badge">Spanish</span>
+                                    </div>
+                                    <div class="card-content" id="back-content">
+                                        <p>Translation will appear here</p>
+                                    </div>
+                                    <div class="card-details">
+                                        <div class="example-sentence" id="example-sentence">
+                                            <strong>Example:</strong> This is an example sentence.
+                                        </div>
+                                        <div class="card-notes" id="card-notes-view">
+                                            <strong>Notes:</strong> Additional notes go here.
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="card-difficulty" id="difficulty-badge">
+                                            <span class="difficulty-easy">Easy</span>
+                                        </div>
+                                        <div class="card-actions">
+                                            <button class="btn-action btn-audio" title="Listen">
+                                                <i class="fas fa-volume-up"></i>
+                                            </button>
+                                            <button class="btn-action btn-edit" title="Edit Card">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Flashcard Controls -->
+                        <div class="flashcard-controls">
+                            <div class="control-group">
+                                <button id="prev-card" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> Previous
+                                </button>
+                                <button id="flip-card" class="btn btn-primary">
+                                    <i class="fas fa-sync-alt"></i> Flip Card
+                                </button>
+                                <button id="next-card" class="btn btn-secondary">
+                                    Next <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                            <div class="control-group">
+                                <button id="shuffle-cards" class="btn btn-outline">
+                                    <i class="fas fa-random"></i> Shuffle
+                                </button>
+                                <button id="mark-mastered" class="btn btn-outline">
+                                    <i class="fas fa-star"></i> Mark Mastered
+                                </button>
+                                <button id="reset-progress" class="btn btn-outline">
+                                    <i class="fas fa-redo"></i> Reset Progress
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Progress Indicators -->
+                        <div class="progress-indicators">
+                            <div class="progress-section">
+                                <span class="progress-label">Mastery Level</span>
+                                <div class="progress-bar-small">
+                                    <div class="progress-fill" style="width: 25%"></div>
+                                </div>
+                                <span class="progress-value">25%</span>
+                            </div>
+                            <div class="progress-section">
+                                <span class="progress-label">Current Session</span>
+                                <div class="session-stats">
+                                    <span class="stat-item">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span id="session-correct">0</span> correct
+                                    </span>
+                                    <span class="stat-item">
+                                        <i class="fas fa-times-circle"></i>
+                                        <span id="session-incorrect">0</span> incorrect
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Cards List -->
+                <section class="cards-list card">
+                    <div class="list-header">
+                        <h2><i class="fas fa-list"></i> Cards in Deck</h2>
+                        <div class="list-actions">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="search-cards" placeholder="Search cards...">
+                            </div>
+                            <div class="filter-group">
+                                <select id="filter-status">
+                                    <option value="all">All Cards</option>
+                                    <option value="unmastered">Unmastered</option>
+                                    <option value="mastered">Mastered</option>
+                                    <option value="difficult">Difficult</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="cards-table-container">
+                        <table class="cards-table">
+                            <thead>
+                                <tr>
+                                    <th width="40">
+                                        <input type="checkbox" id="select-all-cards">
+                                    </th>
+                                    <th>Front</th>
+                                    <th>Back</th>
+                                    <th width="100">Category</th>
+                                    <th width="80">Difficulty</th>
+                                    <th width="80">Status</th>
+                                    <th width="100">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cards-table-body">
+                                <tr class="empty-row">
+                                    <td colspan="7">
+                                        <div class="empty-cards">
+                                            <i class="fas fa-cards"></i>
+                                            <p>No cards in this deck. Add your first card!</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="cards-footer">
+                        <div class="bulk-actions">
+                            <button id="bulk-mastered" class="btn btn-outline btn-sm" disabled>
+                                <i class="fas fa-star"></i> Mark as Mastered
+                            </button>
+                            <button id="bulk-delete" class="btn btn-danger btn-sm" disabled>
+                                <i class="fas fa-trash"></i> Delete Selected
+                            </button>
+                        </div>
+                        <div class="pagination" id="cards-pagination">
+                            <!-- Pagination will be added here -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Study Statistics -->
+                <section class="study-stats card">
+                    <div class="stats-header">
+                        <h2><i class="fas fa-chart-line"></i> Study Statistics</h2>
+                        <div class="time-period">
+                            <select id="stats-period">
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                                <option value="all">All Time</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-icon-small">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-title">Study Time</div>
+                                <div class="stat-value" id="study-time">0h 0m</div>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-icon-small">
+                                <i class="fas fa-cards"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-title">Cards Reviewed</div>
+                                <div class="stat-value" id="cards-reviewed">0</div>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-icon-small">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-title">Accuracy Rate</div>
+                                <div class="stat-value" id="accuracy-rate">0%</div>
+                            </div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-icon-small">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-title">Best Streak</div>
+                                <div class="stat-value" id="best-streak">0 days</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-chart">
+                        <canvas id="study-chart"></canvas>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <h3><i class="fas fa-language"></i> Language Flashcards</h3>
+                    <p>Master vocabulary with spaced repetition and smart learning</p>
+                </div>
+                <div class="footer-stats">
+                    <span><i class="fas fa-database"></i> Data stored locally</span>
+                    <span><i class="fas fa-brain"></i> Spaced repetition enabled</span>
+                    <span><i class="fas fa-volume-up"></i> Text-to-speech available</span>
+                </div>
+                <div class="footer-actions">
+                    <button id="backup-all" class="btn btn-outline">
+                        <i class="fas fa-download"></i> Backup All Data
+                    </button>
+                    <button id="restore-backup" class="btn btn-outline">
+                        <i class="fas fa-upload"></i> Restore Backup
+                    </button>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 Language Flashcards. All your study data stays on your device.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Deck Template -->
+    <template id="deck-template">
+        <div class="deck-item">
+            <div class="deck-icon">
+                <i class="fas fa-folder"></i>
+            </div>
+            <div class="deck-info">
+                <h4 class="deck-name">Deck Name</h4>
+                <div class="deck-meta">
+                    <span class="deck-card-count">0 cards</span>
+                    <span class="deck-language">Language</span>
+                </div>
+            </div>
+            <div class="deck-progress-small">
+                <div class="progress-bar-tiny">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+                <span class="progress-percent">0%</span>
+            </div>
+        </div>
+    </template>
+
+    <!-- Card Template for Table -->
+    <template id="card-row-template">
+        <tr class="card-row">
+            <td>
+                <input type="checkbox" class="card-select">
+            </td>
+            <td>
+                <div class="card-front-cell">
+                    <div class="card-text">Front Text</div>
+                    <div class="card-language-small">Language</div>
+                </div>
+            </td>
+            <td>
+                <div class="card-back-cell">
+                    <div class="card-text">Back Text</div>
+                    <div class="card-language-small">Language</div>
+                </div>
+            </td>
+            <td>
+                <span class="card-category-badge">Category</span>
+            </td>
+            <td>
+                <span class="difficulty-badge difficulty-easy">Easy</span>
+            </td>
+            <td>
+                <span class="status-badge status-unmastered">Learning</span>
+            </td>
+            <td>
+                <div class="card-actions-cell">
+                    <button class="btn-action btn-edit" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-action btn-delete" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    <button class="btn-action btn-preview" title="Preview">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    </template>
+
+    <!-- Create Deck Modal -->
+    <div class="modal" id="create-deck-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-folder-plus"></i> Create New Deck</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="new-deck-name">Deck Name</label>
+                    <input type="text" id="new-deck-name" placeholder="e.g., Spanish Vocabulary, French Verbs">
+                </div>
+                <div class="form-group">
+                    <label for="new-deck-description">Description (Optional)</label>
+                    <textarea id="new-deck-description" placeholder="Describe what this deck contains..." rows="2"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="new-deck-language">Primary Language</label>
+                        <select id="new-deck-language">
+                            <option value="en">English</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                            <option value="ja">Japanese</option>
+                            <option value="ko">Korean</option>
+                            <option value="zh">Chinese</option>
+                            <option value="ar">Arabic</option>
+                            <option value="hi">Hindi</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-deck-target-language">Target Language</label>
+                        <select id="new-deck-target-language">
+                            <option value="es">Spanish</option>
+                            <option value="en">English</option>
+                            <option value="fr">French</option>
+                            <option value="de">German</option>
+                            <option value="ja">Japanese</option>
+                            <option value="ko">Korean</option>
+                            <option value="zh">Chinese</option>
+                            <option value="ar">Arabic</option>
+                            <option value="hi">Hindi</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="new-deck-color">Deck Color</label>
+                    <div class="color-picker">
+                        <div class="color-option" style="background-color: #4361ee;" data-color="#4361ee"></div>
+                        <div class="color-option" style="background-color: #7209b7;" data-color="#7209b7"></div>
+                        <div class="color-option" style="background-color: #f72585;" data-color="#f72585"></div>
+                        <div class="color-option" style="background-color: #4cc9f0;" data-color="#4cc9f0"></div>
+                        <div class="color-option" style="background-color: #f8961e;" data-color="#f8961e"></div>
+                        <div class="color-option" style="background-color: #2ecc71;" data-color="#2ecc71"></div>
+                    </div>
+                    <input type="hidden" id="selected-deck-color" value="#4361ee">
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="new-deck-public">
+                        <span class="checkmark"></span>
+                        Make deck public (visible in exports)
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary modal-close-btn">Cancel</button>
+                <button id="save-deck" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Create Deck
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Deck Modal -->
+    <div class="modal" id="edit-deck-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> Edit Deck</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary modal-close-btn">Cancel</button>
+                <button id="update-deck" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Update Deck
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="card-preview-modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2><i class="fas fa-eye"></i> Card Preview</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="card-preview-container">
+                    <div class="card-preview">
+                        <div class="card-preview-inner">
+                            <div class="card-preview-front">
+                                <div class="preview-language">
+                                    <span class="language-badge" id="preview-front-language">English</span>
+                                </div>
+                                <div class="preview-content" id="preview-front-content">
+                                    Card front content
+                                </div>
+                            </div>
+                            <div class="card-preview-back">
+                                <div class="preview-language">
+                                    <span class="language-badge" id="preview-back-language">Spanish</span>
+                                </div>
+                                <div class="preview-content" id="preview-back-content">
+                                    Card back content
+                                </div>
+                                <div class="preview-details">
+                                    <div class="preview-example" id="preview-example">
+                                        <strong>Example:</strong> Example sentence
+                                    </div>
+                                    <div class="preview-notes" id="preview-notes">
+                                        <strong>Notes:</strong> Additional notes
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="preview-controls">
+                        <button id="flip-preview" class="btn btn-primary">
+                            <i class="fas fa-sync-alt"></i> Flip Card
+                        </button>
+                        <button id="edit-from-preview" class="btn btn-outline">
+                            <i class="fas fa-edit"></i> Edit Card
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirm-modal">
+        <div class="modal-content small">
+            <div class="modal-body">
+                <div class="confirm-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3 id="confirm-title">Are you sure?</h3>
+                <p id="confirm-message">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="confirm-cancel">Cancel</button>
+                <button class="btn btn-danger" id="confirm-ok">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Instructions Modal -->
+    <div class="modal" id="import-instructions-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-file-import"></i> Import Instructions</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="instructions">
+                    <h3>Supported Formats:</h3>
+                    <div class="format-option">
+                        <h4><i class="fas fa-file-csv"></i> CSV Format</h4>
+                        <p>Expected columns: front,back,frontLanguage,backLanguage,category,difficulty,example,notes</p>
+                        <pre>hello,hola,en,es,vocabulary,easy,"Hello world!",Greeting</pre>
+                    </div>
+                    <div class="format-option">
+                        <h4><i class="fas fa-file-code"></i> JSON Format</h4>
+                        <pre>[
+  {
+    "front": "hello",
+    "back": "hola",
+    "frontLanguage": "en",
+    "backLanguage": "es",
+    "category": "vocabulary",
+    "difficulty": "easy",
+    "example": "Hello world!",
+    "notes": "Greeting"
+  }
+]</pre>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary modal-close-btn">Got it!</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
