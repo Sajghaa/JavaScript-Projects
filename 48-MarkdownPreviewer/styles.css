@@ -146,7 +146,6 @@ textarea::placeholder {
   margin: 1em 0;
 }
 
-/* FOOTER */
 footer {
   text-align: center;
   padding: 10px;
@@ -154,7 +153,6 @@ footer {
   color: var(--muted);
 }
 
-/* RESPONSIVE */
 @media (max-width: 900px) {
   .container {
     grid-template-columns: 1fr;
