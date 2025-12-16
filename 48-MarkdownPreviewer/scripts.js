@@ -13,7 +13,7 @@ editor.addEventListener("input", () => {
 
 function render() {
   preview.innerHTML = marked.parse(
-    editor.value || "✨ Start typing markdown to see the magic..."
+    editor.value || " Start typing markdown to see the magic..."
   );
 }
 
