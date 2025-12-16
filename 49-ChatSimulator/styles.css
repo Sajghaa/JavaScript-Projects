@@ -1,0 +1,148 @@
+:root {
+  --bg: #0e1621;
+  --panel: #17212b;
+  --accent: #2a9df4;
+  --bubble-a: #2a9df4;
+  --bubble-b: #202c33;
+  --text: #e9edef;
+  --muted: #8696a0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  display: flex;
+}
+
+.layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+}
+
+.rooms {
+  background: var(--panel);
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.room {
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--muted);
+}
+
+.room.active {
+  background: rgba(255,255,255,0.08);
+  color: var(--text);
+}
+
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 260px;
+  right: 0;
+  height: 60px;
+  background: var(--panel);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 10;
+}
+
+.profile {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00ffd5, #7c7cff);
+}
+
+.controls button {
+  background: transparent;
+  color: var(--text);
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.chat-wrapper {
+  padding-top: 70px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat {
+  flex: 1;
+  padding: 14px 20px;
+  overflow-y: auto;
+}
+
+.message {
+  max-width: 65%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  position: relative;
+}
+
+.message.A {
+  margin-left: auto;
+  background: var(--bubble-a);
+  color: #fff;
+  border-bottom-right-radius: 2px;
+}
+
+.message.B {
+  background: var(--bubble-b);
+  border-bottom-left-radius: 2px;
+}
+
+.meta {
+  font-size: 0.65rem;
+  color: var(--muted);
+  text-align: right;
+}
+
+.typing {
+  height: 18px;
+  padding-left: 20px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.input-area {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  background: var(--panel);
+}
+
+.input-area input {
+  flex: 1;
+  background: #0e1621;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  color: var(--text);
+}
+
+.input-area button {
+  background: var(--accent);
+  border: none;
+  color: white;
+  width: 44px;
+  border-radius: 8px;
+  font-size: 18px;
+}
