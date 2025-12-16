@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title> Lavish Markdown Previewer</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
+
+  <!-- Markdown parser -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="top-bar">
+    <h1> <span>Markdown</span> Previewer</h1>
+    <div class="actions">
+      <button onclick="saveDraft()">Save Draft</button>
+      <button class="danger" onclick="clearDraft()">Clear</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="panel">
+      <div class="panel-title">WRITE MARKDOWN</div>
+      <textarea id="editor" placeholder="# Welcome
+
+Write **Markdown** here...
+
+- Live preview
+- Auto save
+- Lavish UI"></textarea>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">LIVE PREVIEW</div>
+      <div id="preview" class="preview"></div>
+    </div>
+  </main>
+
+  <footer>
+    Built with Sajghaa Dev using pure JavaScript · Drafts stored locally
+  </footer>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
