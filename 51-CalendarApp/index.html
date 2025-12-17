@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sajghaa Calendar </title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="calendar-app">
+        <!-- Header with Gradient Background -->
+        <header class="calendar-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1 class="app-logo">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Sajghaa</span>Calendar
+                    </h1>
+                    <p class="app-tagline">Elegant time management for the modern era</p>
+                </div>
+                
+                <div class="date-display">
+                    <div class="current-date">
+                        <div class="date-day" id="current-day">Monday</div>
+                        <div class="date-full" id="current-date">January 1, 2024</div>
+                    </div>
+                    <div class="time-display" id="current-time">12:00:00 PM</div>
+                </div>
+                
+                <div class="user-actions">
+                    <button class="action-btn theme-toggle" id="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                        <span>Dark Mode</span>
+                    </button>
+                    <button class="action-btn export-btn" id="export-calendar">
+                        <i class="fas fa-download"></i>
+                        <span>Export</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Navigation Controls -->
+            <div class="calendar-controls">
+                <button class="nav-btn" id="prev-year">
+                    <i class="fas fa-angle-double-left"></i>
+                    Year
+                </button>
+                <button class="nav-btn" id="prev-month">
+                    <i class="fas fa-chevron-left"></i>
+                    Month
+                </button>
+                
+                <div class="month-year-display">
+                    <h2 id="display-month-year">January 2024</h2>
+                    <button class="today-btn" id="today-btn">
+                        <i class="fas fa-calendar-day"></i>
+                        Today
+                    </button>
+                </div>
+                
+                <button class="nav-btn" id="next-month">
+                    Month
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <button class="nav-btn" id="next-year">
+                    Year
+                    <i class="fas fa-angle-double-right"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="calendar-container">
+            <!-- Left Sidebar - Event Form & Mini Calendar -->
+            <aside class="calendar-sidebar">
+                <!-- Mini Calendar -->
+                <div class="sidebar-card mini-calendar">
+                    <h3 class="sidebar-title">
+                        <i class="fas fa-calendar-week"></i>
+                        Quick View
+                    </h3>
+                    <div class="mini-calendar-header">
+                        <button class="mini-nav-btn" id="mini-prev-month">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <h4 id="mini-month-year">Jan 2024</h4>
+                        <button class="mini-nav-btn" id="mini-next-month">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="mini-calendar-grid" id="mini-calendar-grid">
+                   
+                    </div>
+                </div>
+                
+                <!-- Add Event Form -->
+                <div class="sidebar-card event-form">
+                    <h3 class="sidebar-title">
+                        <i class="fas fa-plus-circle"></i>
+                        New Event
+                    </h3>
+                    
+                    <form id="event-form">
+                        <div class="form-group">
+                            <label for="event-title">
+                                <i class="fas fa-heading"></i>
+                                Event Title
+                            </label>
+                            <input type="text" id="event-title" placeholder="Meeting, Birthday, etc." required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="event-date">
+                                    <i class="fas fa-calendar-day"></i>
+                                    Date
+                                </label>
+                                <input type="date" id="event-date" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="event-time">
+                                    <i class="fas fa-clock"></i>
+                                    Time
+                                </label>
+                                <input type="time" id="event-time">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="event-category">
+                                <i class="fas fa-tags"></i>
+                                Category
+                            </label>
+                            <div class="category-selector">
+                                <select id="event-category">
+                                    <option value="meeting">Meeting</option>
+                                    <option value="personal">Personal</option>
+                                    <option value="work">Work</option>
+                                    <option value="birthday">Birthday</option>
+                                    <option value="holiday">Holiday</option>
+                                    <option value="other">Other</option>
+                                </select>
+                                <div class="category-color" id="category-color-preview"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="event-description">
+                                <i class="fas fa-align-left"></i>
+                                Description (Optional)
+                            </label>
+                            <textarea id="event-description" placeholder="Add details about your event..." rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-calendar-plus"></i>
+                                Add Event
+                            </button>
+                            <button type="button" id="clear-event-form" class="btn btn-secondary">
+                                <i class="fas fa-eraser"></i>
+                                Clear
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Upcoming Events -->
+                <div class="sidebar-card upcoming-events">
+                    <h3 class="sidebar-title">
+                        <i class="fas fa-bell"></i>
+                        Upcoming
+                        <span class="event-count" id="upcoming-count">0</span>
+                    </h3>
+                    <div class="upcoming-list" id="upcoming-events">
+                        <!-- Upcoming events will be loaded here -->
+                        <div class="empty-upcoming">
+                            <i class="fas fa-calendar-check"></i>
+                            <p>No upcoming events</p>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            
+            <!-- Main Calendar Area -->
+            <section class="calendar-main">
+                <!-- Weekday Headers -->
+                <div class="calendar-weekdays">
+                    <div class="weekday">Sunday</div>
+                    <div class="weekday">Monday</div>
+                    <div class="weekday">Tuesday</div>
+                    <div class="weekday">Wednesday</div>
+                    <div class="weekday">Thursday</div>
+                    <div class="weekday">Friday</div>
+                    <div class="weekday">Saturday</div>
+                </div>
+                
+                <!-- Calendar Grid -->
+                <div class="calendar-grid" id="calendar-grid">
+                    <!-- Calendar days will be generated here -->
+                </div>
+                
+                <!-- Calendar Stats -->
+                <div class="calendar-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4 class="stat-value" id="total-events">0</h4>
+                            <p class="stat-label">Total Events</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-day"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4 class="stat-value" id="month-events">0</h4>
+                            <p class="stat-label">This Month</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-week"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4 class="stat-value" id="week-events">0</h4>
+                            <p class="stat-label">This Week</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-birthday-cake"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4 class="stat-value" id="today-events">0</h4>
+                            <p class="stat-label">Today</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Right Sidebar - Event Details -->
+            <aside class="event-sidebar">
+                <div class="sidebar-card selected-day-events">
+                    <h3 class="sidebar-title">
+                        <i class="fas fa-calendar-day"></i>
+                        Day Events
+                        <span class="selected-date" id="selected-date-display">Jan 1</span>
+                    </h3>
+                    <div class="day-events-list" id="day-events-list">
+                        <div class="empty-day-events">
+                            <i class="fas fa-calendar-plus"></i>
+                            <p>No events for this day</p>
+                            <p class="hint">Click on a day to view or add events</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Category Legend -->
+                <div class="sidebar-card category-legend">
+                    <h3 class="sidebar-title">
+                        <i class="fas fa-palette"></i>
+                        Categories
+                    </h3>
+                    <div class="legend-list">
+                        <div class="legend-item" data-category="meeting">
+                            <span class="legend-color" style="background-color: #7c3aed;"></span>
+                            <span class="legend-label">Meeting</span>
+                        </div>
+                        <div class="legend-item" data-category="personal">
+                            <span class="legend-color" style="background-color: #06b6d4;"></span>
+                            <span class="legend-label">Personal</span>
+                        </div>
+                        <div class="legend-item" data-category="work">
+                            <span class="legend-color" style="background-color: #f59e0b;"></span>
+                            <span class="legend-label">Work</span>
+                        </div>
+                        <div class="legend-item" data-category="birthday">
+                            <span class="legend-color" style="background-color: #ef4444;"></span>
+                            <span class="legend-label">Birthday</span>
+                        </div>
+                        <div class="legend-item" data-category="holiday">
+                            <span class="legend-color" style="background-color: #10b981;"></span>
+                            <span class="legend-label">Holiday</span>
+                        </div>
+                        <div class="legend-item" data-category="other">
+                            <span class="legend-color" style="background-color: #8b5cf6;"></span>
+                            <span class="legend-label">Other</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="sidebar-card quick-actions">
+                    <h3 class="sidebar-title">
+                        <i class="fas fa-bolt"></i>
+                        Quick Actions
+                    </h3>
+                    <div class="action-buttons">
+                        <button class="quick-action-btn" id="add-today-event">
+                            <i class="fas fa-plus"></i>
+                            Add for Today
+                        </button>
+                        <button class="quick-action-btn" id="add-tomorrow-event">
+                            <i class="fas fa-forward"></i>
+                            Add for Tomorrow
+                        </button>
+                        <button class="quick-action-btn" id="view-all-events">
+                            <i class="fas fa-list"></i>
+                            View All Events
+                        </button>
+                        <button class="quick-action-btn" id="clear-old-events">
+                            <i class="fas fa-trash"></i>
+                            Clear Old Events
+                        </button>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Event Details Modal -->
+        <div class="modal" id="event-details-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-event-title">Event Details</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="event-details">
+                        <div class="detail-row">
+                            <i class="fas fa-calendar-day"></i>
+                            <div>
+                                <p class="detail-label">Date</p>
+                                <p id="modal-event-date">January 1, 2024</p>
+                            </div>
+                        </div>
+                        <div class="detail-row">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <p class="detail-label">Time</p>
+                                <p id="modal-event-time">All day</p>
+                            </div>
+                        </div>
+                        <div class="detail-row">
+                            <i class="fas fa-tags"></i>
+                            <div>
+                                <p class="detail-label">Category</p>
+                                <p>
+                                    <span class="event-category-badge" id="modal-event-category">Meeting</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="detail-row full-width">
+                            <i class="fas fa-align-left"></i>
+                            <div>
+                                <p class="detail-label">Description</p>
+                                <p id="modal-event-description">No description provided.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-secondary close-modal">Close</button>
+                        <button class="btn btn-danger" id="delete-event-btn">Delete Event</button>
+                        <button class="btn btn-primary" id="edit-event-btn">Edit Event</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Events Modal -->
+        <div class="modal" id="all-events-modal">
+            <div class="modal-content wide-modal">
+                <div class="modal-header">
+                    <h3>
+                        <i class="fas fa-list-alt"></i>
+                        All Events
+                    </h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="events-filter">
+                        <input type="text" id="events-search" placeholder="Search events...">
+                        <select id="events-category-filter">
+                            <option value="all">All Categories</option>
+                            <option value="meeting">Meeting</option>
+                            <option value="personal">Personal</option>
+                            <option value="work">Work</option>
+                            <option value="birthday">Birthday</option>
+                            <option value="holiday">Holiday</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="events-list" id="all-events-list">
+                        <!-- All events will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div class="toast" id="toast">
+            <div class="toast-content">
+                <i class="fas fa-check-circle"></i>
+                <span class="toast-message">Event added successfully!</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="calendar-footer">
+            <p>Sajghaa Calendar &copy; <span id="current-year"></span> • Your events are stored locally in your browser</p>
+            <div class="footer-info">
+                <span class="storage-info">
+                    <i class="fas fa-database"></i>
+                    <span id="storage-usage">0 events stored</span>
+                </span>
+                <button class="footer-btn" id="clear-all-events">
+                    <i class="fas fa-trash-alt"></i>
+                    Clear All Data
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
