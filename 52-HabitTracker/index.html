@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ascend Habit Tracker </title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;700&family=Inter:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="habit-app">
+        <!-- Animated Background Elements -->
+        <div class="background-animation">
+            <div class="bg-circle circle-1"></div>
+            <div class="bg-circle circle-2"></div>
+            <div class="bg-circle circle-3"></div>
+            <div class="bg-gradient"></div>
+        </div>
+
+        <div class="app-container">
+            <header class="app-header">
+                <div class="header-content">
+                    <div class="logo-section">
+                        <h1 class="app-logo">
+                            <i class="fas fa-mountain"></i>
+                            <span>Ascend</span>Tracker
+                        </h1>
+                        <p class="app-tagline">Elevate your daily habits, master your routine</p>
+                </div>
+                
+                <div class="date-display">
+                    <div class="current-date">
+                        <div class="date-day" id="current-day">Monday</div>
+                        <div class="date-full" id="current-date">January 1, 2024</div>
+                    </div>
+                    <div class="current-streak">
+                        <i class="fas fa-fire"></i>
+                        <span id="current-streak-count">0</span>
+                        day streak
+                    </div>
+                </div>
+                
+                <div class="user-stats">
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-value" id="today-completion">0%</h3>
+                            <p class="stat-label">Today</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-week"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-value" id="week-completion">0%</h3>
+                            <p class="stat-label">This Week</p>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 class="stat-value" id="active-habits">0</h3>
+                            <p class="stat-label">Active Habits</p>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                
+                <!-- Navigation Tabs -->
+                <nav class="app-navigation">
+                    <button class="nav-btn active" data-view="dashboard">
+                        <i class="fas fa-th-large"></i>
+                        Dashboard
+                    </button>
+                    <button class="nav-btn" data-view="habits">
+                        <i class="fas fa-tasks"></i>
+                        My Habits
+                    </button>
+                    <button class="nav-btn" data-view="analytics">
+                        <i class="fas fa-chart-line"></i>
+                        Analytics
+                    </button>
+                    <button class="nav-btn" data-view="achievements">
+                        <i class="fas fa-medal"></i>
+                        Achievements
+                    </button>
+                    <div class="nav-actions">
+                        <button class="action-btn theme-toggle" id="theme-toggle">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                        <button class="action-btn export-btn" id="export-data">
+                            <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+                </nav>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <!-- Dashboard View (Default) -->
+                <section class="content-view active" id="dashboard-view">
+                    <div class="dashboard-container">
+                        <!-- Welcome Card -->
+                        <div class="dashboard-card welcome-card">
+                            <div class="welcome-content">
+                                <h2>Welcome back, <span id="user-name">Striver</span>!</h2>
+                                <p id="motivation-text">Your dedication today builds the success of tomorrow. Keep going!</p>
+                                <div class="motivation-meter">
+                                    <div class="meter-label">Today's Motivation</div>
+                                    <div class="meter-bar">
+                                        <div class="meter-fill" id="motivation-meter"></div>
+                                    </div>
+                                    <div class="meter-value">85%</div>
+                                </div>
+                            </div>
+                            <div class="welcome-illustration">
+                                <i class="fas fa-chart-network"></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Today's Habits -->
+                        <div class="dashboard-card today-habits">
+                            <div class="card-header">
+                                <h3>
+                                    <i class="fas fa-sun"></i>
+                                    Today's Habits
+                                </h3>
+                                <div class="card-actions">
+                                    <span class="completion-badge" id="today-progress">0/0</span>
+                                    <button class="icon-btn" id="mark-all-today">
+                                        <i class="fas fa-check-double"></i>
+                                        Mark All
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="habits-list" id="today-habits-list">
+                                <!-- Today's habits will be loaded here -->
+                                <div class="empty-state">
+                                    <i class="fas fa-clipboard-list"></i>
+                                    <h4>No habits scheduled for today</h4>
+                                    <p>Add habits to start tracking your progress</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Streaks & Stats -->
+                        <div class="dashboard-card streaks-card">
+                            <div class="card-header">
+                                <h3>
+                                    <i class="fas fa-fire"></i>
+                                    Current Streaks
+                                </h3>
+                                <div class="view-toggle">
+                                    <button class="toggle-btn active" data-period="week">Week</button>
+                                    <button class="toggle-btn" data-period="month">Month</button>
+                                    <button class="toggle-btn" data-period="all">All Time</button>
+                                </div>
+                            </div>
+                            <div class="streaks-container">
+                                <div class="streak-display">
+                                    <div class="streak-item main-streak">
+                                        <div class="streak-icon">
+                                            <i class="fas fa-fire"></i>
+                                        </div>
+                                        <div class="streak-info">
+                                            <h4 class="streak-value" id="longest-streak">0 days</h4>
+                                            <p class="streak-label">Longest Streak</p>
+                                        </div>
+                                    </div>
+                                    <div class="streak-item">
+                                        <div class="streak-icon">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </div>
+                                        <div class="streak-info">
+                                            <h4 class="streak-value" id="current-streak">0 days</h4>
+                                            <p class="streak-label">Current Streak</p>
+                                        </div>
+                                    </div>
+                                    <div class="streak-item">
+                                        <div class="streak-icon">
+                                            <i class="fas fa-percentage"></i>
+                                        </div>
+                                        <div class="streak-info">
+                                            <h4 class="streak-value" id="success-rate">0%</h4>
+                                            <p class="streak-label">Success Rate</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="streak-calendar" id="streak-calendar">
+                                    <!-- Streak calendar will be generated here -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Quick Stats -->
+                        <div class="dashboard-card quick-stats">
+                            <div class="card-header">
+                                <h3>
+                                    <i class="fas fa-chart-pie"></i>
+                                    Quick Stats
+                                </h3>
+                            </div>
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h4 id="total-completions">0</h4>
+                                        <p>Total Completions</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h4 id="best-day">N/A</h4>
+                                        <p>Best Day</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h4 id="avg-completion">0%</h4>
+                                        <p>Avg. Completion</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h4 id="perfect-days">0</h4>
+                                        <p>Perfect Days</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Upcoming Habits -->
+                        <div class="dashboard-card upcoming-habits">
+                            <div class="card-header">
+                                <h3>
+                                    <i class="fas fa-calendar-plus"></i>
+                                    Upcoming
+                                </h3>
+                                <div class="time-filter">
+                                    <select id="upcoming-filter">
+                                        <option value="tomorrow">Tomorrow</option>
+                                        <option value="week">This Week</option>
+                                        <option value="month">This Month</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="upcoming-list" id="upcoming-habits-list">
+                                <!-- Upcoming habits will be loaded here -->
+                                <div class="empty-state">
+                                    <i class="fas fa-calendar"></i>
+                                    <h4>No upcoming habits</h4>
+                                    <p>Add more habits to see upcoming schedule</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Motivation & Tips -->
+                        <div class="dashboard-card motivation-card">
+                            <div class="card-header">
+                                <h3>
+                                    <i class="fas fa-lightbulb"></i>
+                                    Daily Tip
+                                </h3>
+                                <button class="icon-btn" id="new-tip">
+                                    <i class="fas fa-redo"></i>
+                                    New Tip
+                                </button>
+                            </div>
+                            <div class="tip-content">
+                                <div class="tip-icon">
+                                    <i class="fas fa-quote-left"></i>
+                                </div>
+                                <p id="daily-tip">Consistency is more important than perfection. Even small daily progress leads to significant results over time.</p>
+                                <div class="tip-author">— Habit Mastery Principle</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Habits Management View -->
+                <section class="content-view" id="habits-view">
+                    <div class="habits-container">
+                        <!-- Add Habit Form -->
+                        <div class="habits-card add-habit-card">
+                            <div class="card-header">
+                                <h3>
+                                    <i class="fas fa-plus-circle"></i>
+                                    Create New Habit
+                                </h3>
+                            </div>
+                            <form id="add-habit-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="habit-name">
+                                            <i class="fas fa-heading"></i>
+                                            Habit Name
+                                        </label>
+                                        <input type="text" id="habit-name" placeholder="e.g., Morning Meditation" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="habit-category">
+                                            <i class="fas fa-tag"></i>
+                                            Category
+                                        </label>
+                                        <select id="habit-category">
+                                            <option value="health">Health & Fitness</option>
+                                            <option value="productivity">Productivity</option>
+                                            <option value="learning">Learning</option>
+                                            <option value="mindfulness">Mindfulness</option>
+                                            <option value="finance">Finance</option>
+                                            <option value="social">Social</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="habit-frequency">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            Frequency
+                                        </label>
+                                        <div class="frequency-selector">
+                                            <div class="frequency-options">
+                                                <label class="frequency-option">
+                                                    <input type="radio" name="frequency" value="daily" checked>
+                                                    <span class="option-label">Daily</span>
+                                                </label>
+                                                <label class="frequency-option">
+                                                    <input type="radio" name="frequency" value="weekly">
+                                                    <span class="option-label">Weekly</span>
+                                                </label>
+                                                <label class="frequency-option">
+                                                    <input type="radio" name="frequency" value="custom">
+                                                    <span class="option-label">Custom</span>
+                                                </label>
+                                            </div>
+                                            <div class="custom-frequency" id="custom-frequency" style="display: none;">
+                                                <div class="day-selector">
+                                                    <label class="day-option">
+                                                        <input type="checkbox" name="custom-days" value="0">
+                                                        <span>S</span>
+                                                    </label>
+                                                    <label class="day-option">
+                                                        <input type="checkbox" name="custom-days" value="1">
+                                                        <span>M</span>
+                                                    </label>
+                                                    <label class="day-option">
+                                                        <input type="checkbox" name="custom-days" value="2">
+                                                        <span>T</span>
+                                                    </label>
+                                                    <label class="day-option">
+                                                        <input type="checkbox" name="custom-days" value="3">
+                                                        <span>W</span>
+                                                    </label>
+                                                    <label class="day-option">
+                                                        <input type="checkbox" name="custom-days" value="4">
+                                                        <span>T</span>
+                                                    </label>
+                                                    <label class="day-option">
+                                                        <input type="checkbox" name="custom-days" value="5">
+                                                        <span>F</span>
+                                                    </label>
+                                                    <label class="day-option">
+                                                        <input type="checkbox" name="custom-days" value="6">
+                                                        <span>S</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="habit-time">
+                                            <i class="fas fa-clock"></i>
+                                            Preferred Time
+                                        </label>
+                                        <select id="habit-time">
+                                            <option value="any">Any Time</option>
+                                            <option value="morning">Morning (5AM-12PM)</option>
+                                            <option value="afternoon">Afternoon (12PM-5PM)</option>
+                                            <option value="evening">Evening (5PM-9PM)</option>
+                                            <option value="night">Night (9PM-12AM)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="habit-notes">
+                                        <i class="fas fa-sticky-note"></i>
+                                        Notes (Optional)
+                                    </label>
+                                    <textarea id="habit-notes" placeholder="Add motivation, reminders, or details about this habit..." rows="2"></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>
+                                        <i class="fas fa-palette"></i>
+                                        Habit Color
+                                    </label>
+                                    <div class="color-palette">
+                                        <div class="color-option" style="background-color: #7c3aed;" data-color="#7c3aed"></div>
+                                        <div class="color-option" style="background-color: #06b6d4;" data-color="#06b6d4"></div>
+                                        <div class="color-option" style="background-color: #10b981;" data-color="#10b981"></div>
+                                        <div class="color-option" style="background-color: #f59e0b;" data-color="#f59e0b"></div>
+                                        <div class="color-option" style="background-color: #ef4444;" data-color="#ef4444"></div>
+                                        <div class="color-option" style="background-color: #8b5cf6;" data-color="#8b5cf6"></div>
+                                        <div class="color-option" style="background-color: #3b82f6;" data-color="#3b82f6"></div>
+                                        <div class="color-option" style="background-color: #ec4899;" data-color="#ec4899"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-plus"></i>
+                                        Add Habit
+                                    </button>
+                                    <button type="button" id="clear-form" class="btn btn-secondary">
+                                        <i class="fas fa-eraser"></i>
+                                        Clear Form
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- All Habits List -->
+                        <div class="habits-card all-habits-card">
+                            <div class="card-header">
+                                <h3>
+                                    <i class="fas fa-list"></i>
+                                    All Habits
+                                    <span class="badge" id="habits-count">0</span>
+                                </h3>
+                                <div class="card-actions">
+                                    <div class="search-box">
+                                        <i class="fas fa-search"></i>
+                                        <input type="text" id="search-habits" placeholder="Search habits...">
+                                    </div>
+                                    <select id="habits-filter">
+                                        <option value="all">All Habits</option>
+                                        <option value="active">Active</option>
+                                        <option value="archived">Archived</option>
+                                        <option value="health">Health & Fitness</option>
+                                        <option value="productivity">Productivity</option>
+                                        <option value="learning">Learning</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="habits-list-container">
+                                <div class="habits-list" id="all-habits-list">
+                                    <!-- All habits will be loaded here -->
+                                    <div class="empty-state">
+                                        <i class="fas fa-seedling"></i>
+                                        <h4>No habits yet</h4>
+                                        <p>Create your first habit to start tracking</p>
+                                        <button class="btn btn-primary" id="create-first-habit">
+                                            <i class="fas fa-plus"></i>
+                                            Create First Habit
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Analytics View -->
+                <section class="content-view" id="analytics-view">
+                    <div class="analytics-container">
+                        <!-- Analytics Header -->
+                        <div class="analytics-header">
+                            <h2>
+                                <i class="fas fa-chart-line"></i>
+                                Habit Analytics
+                            </h2>
+                            <div class="time-range">
+                                <select id="analytics-period">
+                                    <option value="week">Last 7 Days</option>
+                                    <option value="month" selected>Last 30 Days</option>
+                                    <option value="quarter">Last 90 Days</option>
+                                    <option value="year">Last Year</option>
+                                    <option value="all">All Time</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Key Metrics -->
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <div class="metric-icon">
+                                    <i class="fas fa-fire"></i>
+                                </div>
+                                <div class="metric-content">
+                                    <h3 id="analytics-streak">0</h3>
+                                    <p>Current Streak</p>
+                                    <div class="metric-trend up">
+                                        <i class="fas fa-arrow-up"></i>
+                                        <span>12% from last period</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-icon">
+                                    <i class="fas fa-percentage"></i>
+                                </div>
+                                <div class="metric-content">
+                                    <h3 id="analytics-success">0%</h3>
+                                    <p>Success Rate</p>
+                                    <div class="metric-trend up">
+                                        <i class="fas fa-arrow-up"></i>
+                                        <span>8% from last period</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-icon">
+                                    <i class="fas fa-calendar-check"></i>
+                                </div>
+                                <div class="metric-content">
+                                    <h3 id="analytics-perfect">0</h3>
+                                    <p>Perfect Days</p>
+                                    <div class="metric-trend neutral">
+                                        <i class="fas fa-minus"></i>
+                                        <span>Same as last period</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="metric-card">
+                                <div class="metric-icon">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                                <div class="metric-content">
+                                    <h3 id="analytics-best">0</h3>
+                                    <p>Best Streak</p>
+                                    <div class="metric-trend up">
+                                        <i class="fas fa-arrow-up"></i>
+                                        <span>New record!</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Charts Container -->
+                        <div class="charts-container">
+                            <div class="chart-card">
+                                <div class="chart-header">
+                                    <h4>
+                                        <i class="fas fa-chart-bar"></i>
+                                        Completion Trends
+                                    </h4>
+                                    <div class="chart-controls">
+                                        <button class="chart-btn active" data-chart="line">Line</button>
+                                        <button class="chart-btn" data-chart="bar">Bar</button>
+                                    </div>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="completion-chart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-card">
+                                <div class="chart-header">
+                                    <h4>
+                                        <i class="fas fa-chart-pie"></i>
+                                        Category Breakdown
+                                    </h4>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="category-chart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-card">
+                                <div class="chart-header">
+                                    <h4>
+                                        <i class="fas fa-calendar-week"></i>
+                                        Weekly Heatmap
+                                    </h4>
+                                </div>
+                                <div class="heatmap-container" id="heatmap">
+                                    <!-- Heatmap will be generated here -->
+                                </div>
+                            </div>
+                            
+                            <div class="chart-card">
+                                <div class="chart-header">
+                                    <h4>
+                                        <i class="fas fa-star"></i>
+                                        Top Performing Habits
+                                    </h4>
+                                </div>
+                                <div class="top-habits-list" id="top-habits">
+                                    <!-- Top habits will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Achievements View -->
+                <section class="content-view" id="achievements-view">
+                    <div class="achievements-container">
+                        <div class="achievements-header">
+                            <h2>
+                                <i class="fas fa-medal"></i>
+                                Your Achievements
+                            </h2>
+                            <div class="achievements-summary">
+                                <div class="summary-item">
+                                    <div class="summary-icon">
+                                        <i class="fas fa-trophy"></i>
+                                    </div>
+                                    <div class="summary-content">
+                                        <h3 id="achievements-earned">0</h3>
+                                        <p>Achievements Earned</p>
+                                    </div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-icon">
+                                        <i class="fas fa-gem"></i>
+                                    </div>
+                                    <div class="summary-content">
+                                        <h3 id="total-points">0</h3>
+                                        <p>Total Points</p>
+                                    </div>
+                                </div>
+                                <div class="summary-item">
+                                    <div class="summary-icon">
+                                        <i class="fas fa-crown"></i>
+                                    </div>
+                                    <div class="summary-content">
+                                        <h3 id="achievement-level">Beginner</h3>
+                                        <p>Current Level</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="achievements-grid">
+                
+                        </div>
+                        
+                        <div class="upcoming-achievements">
+                            <h3>
+                                <i class="fas fa-bullseye"></i>
+                                Upcoming Goals
+                            </h3>
+                            <div class="goals-list" id="upcoming-goals">
+                                <!-- Upcoming goals will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <!-- Bottom Navigation (Mobile) -->
+            <nav class="mobile-nav">
+                <button class="mobile-nav-btn active" data-view="dashboard">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button class="mobile-nav-btn" data-view="habits">
+                    <i class="fas fa-tasks"></i>
+                    <span>Habits</span>
+                </button>
+                <button class="mobile-nav-btn add-habit-btn" id="mobile-add-habit">
+                    <i class="fas fa-plus"></i>
+                    <span>Add</span>
+                </button>
+                <button class="mobile-nav-btn" data-view="analytics">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </button>
+                <button class="mobile-nav-btn" data-view="achievements">
+                    <i class="fas fa-medal"></i>
+                    <span>Achievements</span>
+                </button>
+            </nav>
+
+            <!-- Habit Details Modal -->
+            <div class="modal" id="habit-details-modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 id="modal-habit-name">Habit Details</h3>
+                        <button class="close-modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="habit-details">
+                            <div class="detail-row">
+                                <i class="fas fa-tag"></i>
+                                <div>
+                                    <p class="detail-label">Category</p>
+                                    <p id="modal-habit-category">Health & Fitness</p>
+                                </div>
+                            </div>
+                            <div class="detail-row">
+                                <i class="fas fa-calendar-alt"></i>
+                                <div>
+                                    <p class="detail-label">Frequency</p>
+                                    <p id="modal-habit-frequency">Daily</p>
+                                </div>
+                            </div>
+                            <div class="detail-row">
+                                <i class="fas fa-fire"></i>
+                                <div>
+                                    <p class="detail-label">Current Streak</p>
+                                    <p id="modal-habit-streak">0 days</p>
+                                </div>
+                            </div>
+                            <div class="detail-row">
+                                <i class="fas fa-percentage"></i>
+                                <div>
+                                    <p class="detail-label">Success Rate</p>
+                                    <p id="modal-habit-success">0%</p>
+                                </div>
+                            </div>
+                            <div class="detail-row full-width">
+                                <i class="fas fa-sticky-note"></i>
+                                <div>
+                                    <p class="detail-label">Notes</p>
+                                    <p id="modal-habit-notes">No notes added.</p>
+                                </div>
+                            </div>
+                            <div class="detail-row full-width">
+                                <i class="fas fa-history"></i>
+                                <div>
+                                    <p class="detail-label">Recent Activity</p>
+                                    <div class="activity-log" id="modal-activity-log">
+                                        <!-- Activity log will be loaded here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn btn-secondary close-modal">Close</button>
+                            <button class="btn btn-danger" id="archive-habit-btn">Archive</button>
+                            <button class="btn btn-primary" id="edit-habit-btn">Edit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toast Notification -->
+            <div class="toast" id="toast">
+                <div class="toast-content">
+                    <i class="fas fa-check-circle"></i>
+                    <span class="toast-message">Habit completed successfully!</span>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="app-footer">
+                <p>Ascend Habit Tracker &copy; <span id="current-year"></span> • Your progress is saved locally</p>
+                <div class="footer-info">
+                    <span class="storage-info">
+                        <i class="fas fa-database"></i>
+                        <span id="storage-usage">0 habits tracked</span>
+                    </span>
+                    <button class="footer-btn" id="reset-data">
+                        <i class="fas fa-trash-alt"></i>
+                        Reset All Data
+                    </button>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
