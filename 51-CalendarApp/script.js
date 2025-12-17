@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.getElementById('current-year').textContent = new Date().getFullYear();
     
-    // Update time display every second
     updateTime();
     setInterval(updateTime, 1000);
 });
@@ -25,13 +24,11 @@ const state = {
     currentTheme: localStorage.getItem('chronosTheme') || 'dark'
 };
 
-// Initialize the application
 function initCalendar() {
     // Set theme
     document.documentElement.setAttribute('data-theme', state.currentTheme);
     updateThemeButton();
     
-    // Render everything
     renderCalendar();
     renderMiniCalendar();
     updateDisplayDate();
@@ -39,53 +36,42 @@ function initCalendar() {
     loadUpcomingEvents();
     updateStorageInfo();
     
-    // Set today's date in event form
     document.getElementById('event-date').valueAsDate = new Date();
     updateCategoryColorPreview();
     
-    // Setup event listeners
     setupEventListeners();
 }
 
-// Set up event listeners
 function setupEventListeners() {
-    // Navigation buttons
+
     document.getElementById('prev-year').addEventListener('click', () => navigateYear(-1));
     document.getElementById('prev-month').addEventListener('click', () => navigateMonth(-1));
     document.getElementById('next-month').addEventListener('click', () => navigateMonth(1));
     document.getElementById('next-year').addEventListener('click', () => navigateYear(1));
     document.getElementById('today-btn').addEventListener('click', goToToday);
     
-    // Mini calendar navigation
     document.getElementById('mini-prev-month').addEventListener('click', () => navigateMiniMonth(-1));
     document.getElementById('mini-next-month').addEventListener('click', () => navigateMiniMonth(1));
     
-    // Event form
     document.getElementById('event-form').addEventListener('submit', saveEvent);
     document.getElementById('clear-event-form').addEventListener('click', clearEventForm);
     document.getElementById('event-category').addEventListener('change', updateCategoryColorPreview);
     
-    // Quick action buttons
     document.getElementById('add-today-event').addEventListener('click', addEventForToday);
     document.getElementById('add-tomorrow-event').addEventListener('click', addEventForTomorrow);
     document.getElementById('view-all-events').addEventListener('click', showAllEvents);
     document.getElementById('clear-old-events').addEventListener('click', clearOldEvents);
     
-    // Theme toggle
     document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
     
-    // Export button
     document.getElementById('export-calendar').addEventListener('click', exportCalendar);
     
-    // Clear all events
     document.getElementById('clear-all-events').addEventListener('click', clearAllEvents);
     
-    // Modal close buttons
     document.querySelectorAll('.close-modal').forEach(btn => {
         btn.addEventListener('click', closeModals);
     });
     
-    // Close modal when clicking outside
     document.querySelectorAll('.modal').forEach(modal => {
         modal.addEventListener('click', function(e) {
             if (e.target === this) {
@@ -94,13 +80,11 @@ function setupEventListeners() {
         });
     });
     
-    // Event date change
     document.getElementById('event-date').addEventListener('change', function() {
         updateCategoryColorPreview();
     });
 }
 
-// Update time display
 function updateTime() {
     const now = new Date();
     const timeString = now.toLocaleTimeString('en-US', {
@@ -112,7 +96,6 @@ function updateTime() {
     
     document.getElementById('current-time').textContent = timeString;
     
-    // Update day and date
     const dayString = now.toLocaleDateString('en-US', { weekday: 'long' });
     const dateString = now.toLocaleDateString('en-US', {
         year: 'numeric',
@@ -124,7 +107,6 @@ function updateTime() {
     document.getElementById('current-date').textContent = dateString;
 }
 
-// Render main calendar
 function renderCalendar() {
     const calendarGrid = document.getElementById('calendar-grid');
     calendarGrid.innerHTML = '';
@@ -132,23 +114,19 @@ function renderCalendar() {
     const year = state.currentDate.getFullYear();
     const month = state.currentDate.getMonth();
     
-    // Update month/year display
     const monthYearString = state.currentDate.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long'
     });
     document.getElementById('display-month-year').textContent = monthYearString;
     
-    // Get first day of month and total days
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
     const startingDay = firstDay.getDay();
     
-    // Previous month days
     const prevMonthLastDay = new Date(year, month, 0).getDate();
     
-    // Create calendar days
     for (let i = 0; i < 42; i++) { // 6 weeks
         const dayElement = document.createElement('div');
         dayElement.className = 'calendar-day';
@@ -173,13 +151,11 @@ function renderCalendar() {
             date = new Date(year, month, dayNumber);
         }
         
-        // Check if today
         const today = new Date();
         const isToday = date.getDate() === today.getDate() &&
                        date.getMonth() === today.getMonth() &&
                        date.getFullYear() === today.getFullYear();
         
-        // Check if selected
         const isSelected = date.getDate() === state.selectedDate.getDate() &&
                           date.getMonth() === state.selectedDate.getMonth() &&
                           date.getFullYear() === state.selectedDate.getFullYear();
@@ -188,17 +164,14 @@ function renderCalendar() {
         if (isToday) dayElement.classList.add('today');
         if (isSelected) dayElement.classList.add('selected');
         
-        // Day number
         const dayNumberElement = document.createElement('div');
         dayNumberElement.className = 'day-number';
         dayNumberElement.textContent = dayNumber;
         
-        // Events for this day
         const dayEvents = getEventsForDate(date);
         const dayEventsElement = document.createElement('div');
         dayEventsElement.className = 'day-events';
         
-        // Show up to 3 events
         const eventsToShow = dayEvents.slice(0, 3);
         eventsToShow.forEach(event => {
             const eventElement = document.createElement('div');
@@ -215,7 +188,6 @@ function renderCalendar() {
             dayEventsElement.appendChild(eventElement);
         });
         
-        // Show "more" indicator if there are more events
         if (dayEvents.length > 3) {
             const moreElement = document.createElement('div');
             moreElement.className = 'event-more';
@@ -226,7 +198,6 @@ function renderCalendar() {
         dayElement.appendChild(dayNumberElement);
         dayElement.appendChild(dayEventsElement);
         
-        // Click event to select date
         dayElement.addEventListener('click', () => {
             state.selectedDate = date;
             renderCalendar();
@@ -237,11 +208,10 @@ function renderCalendar() {
         calendarGrid.appendChild(dayElement);
     }
     
-    // Load events for selected day
+    
     loadDayEvents();
 }
 
-// Render mini calendar
 function renderMiniCalendar() {
     const miniGrid = document.getElementById('mini-calendar-grid');
     miniGrid.innerHTML = '';
