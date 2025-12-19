@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowBoard - Kanban Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-animation">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+        <div class="bg-shape shape-4"></div>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-columns"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>Flow<span>Board</span></h1>
+                        <p class="tagline">Visual workflow management</p>
+                    </div>
+                </div>
+                
+                <div class="board-info">
+                    <div class="board-stats">
+                        <div class="stat">
+                            <i class="fas fa-tasks"></i>
+                            <span id="total-tasks">0</span> tasks
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-columns"></i>
+                            <span id="total-columns">4</span> columns
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-users"></i>
+                            <span id="team-count">1</span> member
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="user-actions">
+                    <button class="action-btn" id="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                        <span>Theme</span>
+                    </button>
+                    <button class="action-btn" id="export-board">
+                        <i class="fas fa-download"></i>
+                        <span>Export</span>
+                    </button>
+                    <button class="action-btn primary" id="add-task-global">
+                        <i class="fas fa-plus"></i>
+                        <span>New Task</span>
+                    </button>
+                    <div class="user-avatar">
+                        <img src="https://ui-avatars.com/api/?name=You&background=7c3aed&color=fff" alt="User Avatar">
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Board Controls -->
+            <div class="board-controls">
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-tasks" placeholder="Search tasks...">
+                    <div class="search-actions">
+                        <button class="search-clear" id="clear-search">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label for="filter-priority">
+                            <i class="fas fa-flag"></i>
+                            Priority
+                        </label>
+                        <select id="filter-priority">
+                            <option value="all">All Priorities</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-assignee">
+                            <i class="fas fa-user"></i>
+                            Assignee
+                        </label>
+                        <select id="filter-assignee">
+                            <option value="all">Everyone</option>
+                            <option value="me">Assigned to me</option>
+                            <option value="unassigned">Unassigned</option>
+                        </select>
+                    </div>
+                    
+                    <div class="view-toggle">
+                        <button class="view-btn active" data-view="board">
+                            <i class="fas fa-columns"></i>
+                            Board
+                        </button>
+                        <button class="view-btn" data-view="list">
+                            <i class="fas fa-list"></i>
+                            List
+                        </button>
+                        <button class="view-btn" data-view="calendar">
+                            <i class="fas fa-calendar"></i>
+                            Calendar
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kanban Board -->
+            <div class="kanban-container" id="kanban-board">
+                <!-- Columns will be dynamically generated here -->
+                <div class="empty-board" id="empty-board">
+                    <div class="empty-illustration">
+                        <i class="fas fa-columns"></i>
+                    </div>
+                    <h3>Your board is empty</h3>
+                    <p>Create your first column to start organizing tasks</p>
+                    <button class="btn btn-primary" id="create-first-column">
+                        <i class="fas fa-plus"></i>
+                        Create First Column
+                    </button>
+                </div>
+            </div>
+            
+            <!-- List View (Hidden by default) -->
+            <div class="list-container" id="list-view" style="display: none;">
+                <div class="list-header">
+                    <h3>
+                        <i class="fas fa-list"></i>
+                        All Tasks
+                    </h3>
+                    <div class="list-actions">
+                        <button class="btn btn-secondary" id="add-task-list">
+                            <i class="fas fa-plus"></i>
+                            Add Task
+                        </button>
+                    </div>
+                </div>
+                <div class="list-content" id="task-list">
+                    <!-- Tasks will be dynamically added here -->
+                </div>
+            </div>
+            
+            <!-- Calendar View (Hidden by default) -->
+            <div class="calendar-container" id="calendar-view" style="display: none;">
+                <div class="calendar-header">
+                    <h3>
+                        <i class="fas fa-calendar"></i>
+                        Task Calendar
+                    </h3>
+                    <div class="calendar-controls">
+                        <button class="btn btn-secondary" id="prev-month">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <h4 id="current-month">January 2024</h4>
+                        <button class="btn btn-secondary" id="next-month">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="calendar-grid" id="calendar-grid">
+                    <!-- Calendar will be dynamically generated here -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Task Detail Modal -->
+        <div class="modal" id="task-detail-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-task-title">Task Details</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="task-details">
+                        <div class="detail-section">
+                            <h4>
+                                <i class="fas fa-align-left"></i>
+                                Description
+                            </h4>
+                            <p id="modal-task-description">No description provided.</p>
+                        </div>
+                        
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <i class="fas fa-columns"></i>
+                                <div>
+                                    <p class="detail-label">Column</p>
+                                    <p id="modal-task-column">Todo</p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-flag"></i>
+                                <div>
+                                    <p class="detail-label">Priority</p>
+                                    <p id="modal-task-priority">Medium</p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-user"></i>
+                                <div>
+                                    <p class="detail-label">Assignee</p>
+                                    <p id="modal-task-assignee">Unassigned</p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-calendar"></i>
+                                <div>
+                                    <p class="detail-label">Due Date</p>
+                                    <p id="modal-task-due">No due date</p>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-tag"></i>
+                                <div>
+                                    <p class="detail-label">Labels</p>
+                                    <div class="label-container" id="modal-task-labels">
+                                        <!-- Labels will be added here -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-clock"></i>
+                                <div>
+                                    <p class="detail-label">Created</p>
+                                    <p id="modal-task-created">Today</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <h4>
+                                <i class="fas fa-comment"></i>
+                                Activity
+                            </h4>
+                            <div class="activity-log" id="modal-activity-log">
+                                <!-- Activity log will be added here -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-secondary close-modal">Close</button>
+                        <button class="btn btn-danger" id="delete-task-btn">Delete</button>
+                        <button class="btn btn-primary" id="edit-task-btn">Edit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add/Edit Task Modal -->
+        <div class="modal" id="task-form-modal">
+            <div class="modal-content wide-modal">
+                <div class="modal-header">
+                    <h3 id="task-form-title">
+                        <i class="fas fa-plus"></i>
+                        Add New Task
+                    </h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="task-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="task-title">
+                                    <i class="fas fa-heading"></i>
+                                    Task Title
+                                </label>
+                                <input type="text" id="task-title" placeholder="Enter task title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="task-column">
+                                    <i class="fas fa-columns"></i>
+                                    Column
+                                </label>
+                                <select id="task-column" required>
+                                    <!-- Columns will be dynamically added -->
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="task-description">
+                                <i class="fas fa-align-left"></i>
+                                Description
+                            </label>
+                            <textarea id="task-description" placeholder="Describe the task..." rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="task-priority">
+                                    <i class="fas fa-flag"></i>
+                                    Priority
+                                </label>
+                                <div class="priority-selector">
+                                    <div class="priority-option" data-priority="high">
+                                        <span class="priority-dot high"></span>
+                                        <span>High</span>
+                                    </div>
+                                    <div class="priority-option active" data-priority="medium">
+                                        <span class="priority-dot medium"></span>
+                                        <span>Medium</span>
+                                    </div>
+                                    <div class="priority-option" data-priority="low">
+                                        <span class="priority-dot low"></span>
+                                        <span>Low</span>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="task-priority" value="medium">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="task-assignee">
+                                    <i class="fas fa-user"></i>
+                                    Assignee
+                                </label>
+                                <select id="task-assignee">
+                                    <option value="">Unassigned</option>
+                                    <option value="me">Assign to me</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="task-due-date">
+                                    <i class="fas fa-calendar"></i>
+                                    Due Date
+                                </label>
+                                <input type="date" id="task-due-date">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-tags"></i>
+                                Labels
+                            </label>
+                            <div class="label-selector">
+                                <div class="label-options">
+                                    <div class="label-option" data-label="bug" style="background-color: #ef4444;">
+                                        <i class="fas fa-bug"></i>
+                                        <span>Bug</span>
+                                    </div>
+                                    <div class="label-option" data-label="feature" style="background-color: #10b981;">
+                                        <i class="fas fa-star"></i>
+                                        <span>Feature</span>
+                                    </div>
+                                    <div class="label-option" data-label="improvement" style="background-color: #3b82f6;">
+                                        <i class="fas fa-wrench"></i>
+                                        <span>Improvement</span>
+                                    </div>
+                                    <div class="label-option" data-label="documentation" style="background-color: #8b5cf6;">
+                                        <i class="fas fa-file-alt"></i>
+                                        <span>Documentation</span>
+                                    </div>
+                                    <div class="label-option" data-label="design" style="background-color: #ec4899;">
+                                        <i class="fas fa-paint-brush"></i>
+                                        <span>Design</span>
+                                    </div>
+                                </div>
+                                <div class="selected-labels" id="selected-labels">
+                                    <!-- Selected labels will appear here -->
+                                </div>
+                                <input type="hidden" id="task-labels" value="">
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i>
+                                Save Task
+                            </button>
+                            <button type="button" class="btn btn-secondary close-modal">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Column Modal -->
+        <div class="modal" id="column-form-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>
+                        <i class="fas fa-columns"></i>
+                        Add New Column
+                    </h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="column-form">
+                        <div class="form-group">
+                            <label for="column-title">
+                                <i class="fas fa-heading"></i>
+                                Column Title
+                            </label>
+                            <input type="text" id="column-title" placeholder="e.g., In Progress" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="column-color">
+                                <i class="fas fa-palette"></i>
+                                Color
+                            </label>
+                            <div class="color-palette">
+                                <div class="color-option" data-color="#3b82f6" style="background-color: #3b82f6;"></div>
+                                <div class="color-option" data-color="#10b981" style="background-color: #10b981;"></div>
+                                <div class="color-option" data-color="#f59e0b" style="background-color: #f59e0b;"></div>
+                                <div class="color-option" data-color="#ef4444" style="background-color: #ef4444;"></div>
+                                <div class="color-option" data-color="#8b5cf6" style="background-color: #8b5cf6;"></div>
+                                <div class="color-option" data-color="#06b6d4" style="background-color: #06b6d4;"></div>
+                                <div class="color-option" data-color="#ec4899" style="background-color: #ec4899;"></div>
+                                <div class="color-option" data-color="#7c3aed" style="background-color: #7c3aed;"></div>
+                            </div>
+                            <input type="hidden" id="column-color" value="#3b82f6">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="column-wip">
+                                <i class="fas fa-tachometer-alt"></i>
+                                WIP Limit (Optional)
+                            </label>
+                            <input type="number" id="column-wip" placeholder="e.g., 3 (0 for unlimited)" min="0">
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus"></i>
+                                Add Column
+                            </button>
+                            <button type="button" class="btn btn-secondary close-modal">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Panel -->
+        <div class="quick-actions">
+            <button class="quick-action-btn" id="add-column-quick">
+                <i class="fas fa-plus"></i>
+                <span>Add Column</span>
+            </button>
+            <button class="quick-action-btn" id="add-task-quick">
+                <i class="fas fa-tasks"></i>
+                <span>Add Task</span>
+            </button>
+        </div>
+
+        <!-- Toast Notification -->
+        <div class="toast" id="toast">
+            <div class="toast-content">
+                <i class="fas fa-check-circle"></i>
+                <span class="toast-message">Task added successfully!</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-left">
+                <p>FlowBoard &copy; <span id="current-year"></span> • All data stored locally in your browser</p>
+            </div>
+            <div class="footer-right">
+                <button class="footer-btn" id="reset-board">
+                    <i class="fas fa-trash"></i>
+                    Reset Board
+                </button>
+                <button class="footer-btn" id="import-board">
+                    <i class="fas fa-upload"></i>
+                    Import
+                </button>
+                <div class="storage-info">
+                    <i class="fas fa-database"></i>
+                    <span id="storage-stats">0 tasks</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
