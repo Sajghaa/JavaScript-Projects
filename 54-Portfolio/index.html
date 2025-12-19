@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serge | Senior Full-Stack Developer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="nav-logo">
+                <svg class="logo-icon" width="32" height="32" viewBox="0 0 32 32">
+                    <path d="M16 2 L30 16 L16 30 L2 16 Z" fill="none" stroke="#6366f1" stroke-width="2"/>
+                    <circle cx="16" cy="16" r="6" fill="#6366f1"/>
+                    <path d="M8 8 L24 24 M24 8 L8 24" stroke="#6366f1" stroke-width="1.5"/>
+                </svg>
+                <span class="logo-text">QUANTUM<span class="logo-highlight">DEV</span></span>
+            </a>
+            
+            <div class="nav-links">
+                <a href="#home" class="nav-link active">
+                    <span class="link-icon"></span>
+                    <span class="link-text">Home</span>
+                </a>
+                <a href="#projects" class="nav-link">
+                    <span class="link-icon"></span>
+                    <span class="link-text">Work</span>
+                </a>
+                <a href="#expertise" class="nav-link">
+                    <span class="link-icon"></span>
+                    <span class="link-text">Expertise</span>
+                </a>
+                <a href="#experience" class="nav-link">
+                    <span class="link-icon"></span>
+                    <span class="link-text">Journey</span>
+                </a>
+                <a href="#contact" class="nav-link">
+                    <span class="link-icon"></span>
+                    <span class="link-text">Contact</span>
+                </a>
+            </div>
+            
+            <div class="nav-actions">
+                <a href="#contact" class="btn-nav">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M8 1V15M1 8H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span>Start Project</span>
+                </a>
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="theme-icon">
+                        <svg class="sun" width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M12 3V1M12 23V21M3 12H1M23 12H21M5.6 5.6L4 4M20 20L18.4 18.4M18.4 5.6L20 4M4 20L5.6 18.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        <svg class="moon" width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </span>
+                </button>
+                <button class="nav-toggle" id="navToggle">
+                    <span class="toggle-line"></span>
+                    <span class="toggle-line"></span>
+                    <span class="toggle-line"></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <div class="grid-bg"></div>
+            <div class="particles-container" id="particles"></div>
+        </div>
+        
+        <div class="hero-container">
+            <div class="hero-content">
+                <div class="hero-subtitle">
+                    <span class="subtitle-badge">Senior Full-Stack Developer</span>
+                    <span class="subtitle-separator">/</span>
+                    <span class="subtitle-years">8+ Years Experience</span>
+                </div>
+                
+                <h1 class="hero-title">
+                    <span class="title-line">Building Digital</span>
+                    <span class="title-line">
+                        <span class="title-highlight">Experiences</span> That
+                    </span>
+                    <span class="title-line">Drive <span class="title-rotate">Results</span></span>
+                </h1>
+                
+                <p class="hero-description">
+                    I architect and develop high-performance web applications using cutting-edge 
+                    technologies. Specializing in React, Node.js, and cloud infrastructure for 
+                    scalable, user-focused solutions.
+                </p>
+                
+                <div class="hero-actions">
+                    <a href="#projects" class="btn-hero btn-primary">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M10 1V19M1 10H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <span>View Projects</span>
+                    </a>
+                    <a href="#contact" class="btn-hero btn-outline">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M2 5L8 10L14 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <rect x="2" y="3" width="16" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        <span>Get in Touch</span>
+                    </a>
+                </div>
+                
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="50">0</div>
+                        <div class="stat-label">Projects Delivered</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="120">0</div>
+                        <div class="stat-label">Happy Clients</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" data-count="8">0</div>
+                        <div class="stat-label">Years Experience</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="terminal-window">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <span class="terminal-title">terminal — serge@quantum</span>
+                    </div>
+                    <div class="terminal-content">
+                        <div class="terminal-line">
+                            <span class="prompt">$</span>
+                            <span class="command">whois Serge</span>
+                        </div>
+                        <div class="terminal-output">
+                            > Senior Full-Stack Developer<br>
+                            > Specializing in React & Node.js<br>
+                            > Cloud Architecture & DevOps<br>
+                            > Real-time Applications<br>
+                            > Scalable Solutions
+                        </div>
+                        <div class="terminal-line">
+                            <span class="prompt">$</span>
+                            <span class="command">status --current</span>
+                        </div>
+                        <div class="terminal-output">
+                            > Available for new projects<br>
+                            > Open to collaborations<br>
+                            > Currently: Working on FinTech SaaS
+                        </div>
+                        <div class="terminal-line typing">
+                            <span class="prompt">$</span>
+                            <span class="command"></span>
+                            <span class="cursor"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <i class="devicon-react-original colored"></i>
+                        <span>React</span>
+                    </div>
+                    <div class="tech-item">
+                        <i class="devicon-nodejs-plain colored"></i>
+                        <span>Node.js</span>
+                    </div>
+                    <div class="tech-item">
+                        <i class="devicon-typescript-plain colored"></i>
+                        <span>TypeScript</span>
+                    </div>
+                    <div class="tech-item">
+                        <i class="devicon-aws-plain colored"></i>
+                        <span>AWS</span>
+                    </div>
+                    <div class="tech-item">
+                        <i class="devicon-docker-plain colored"></i>
+                        <span>Docker</span>
+                    </div>
+                    <div class="tech-item">
+                        <i class="devicon-postgresql-plain colored"></i>
+                        <span>PostgreSQL</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hero-scroll">
+            <div class="scroll-indicator">
+                <span class="scroll-text">SCROLL</span>
+                <div class="scroll-line">
+                    <div class="scroll-dot"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects">
+        <div class="section-header">
+            <div class="section-label">
+                <span class="label-number">01</span>
+                <span class="label-text">PROJECTS</span>
+            </div>
+            <h2 class="section-title">
+                Featured <span class="title-accent">Work</span>
+                <span class="title-line"></span>
+            </h2>
+            <p class="section-subtitle">
+                Real projects with measurable impact and innovative solutions
+            </p>
+        </div>
+        
+        <div class="projects-grid">
+            <!-- Project 1 -->
+            <div class="project-card">
+                <div class="project-image">
+                    <div class="image-overlay">
+                        <div class="overlay-content">
+                            <div class="overlay-tags">
+                                <span class="tag">Full-Stack</span>
+                                <span class="tag">FinTech</span>
+                                <span class="tag">Real-time</span>
+                            </div>
+                            <div class="overlay-links">
+                                <a href="#" class="link-btn">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M15 10V15H5V5H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                        <path d="M10 5H15V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                        <path d="M5 15L15 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    </svg>
+                                </a>
+                                <a href="#" class="link-btn">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M7.5 12.5L10 15L12.5 12.5M10 5V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <rect x="3" y="3" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="image-placeholder">
+                        <div class="placeholder-content">
+                            <span class="placeholder-title">FINANCE DASH</span>
+                            <span class="placeholder-sub">Real-time Analytics Platform</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-content">
+                    <div class="project-header">
+                        <h3 class="project-title">Quantum Finance Platform</h3>
+                        <div class="project-year">2024</div>
+                    </div>
+                    
+                    <p class="project-description">
+                        A real-time financial analytics platform processing millions of data points 
+                        daily. Features include live market data, predictive analytics, and 
+                        automated reporting.
+                    </p>
+                    
+                    <div class="project-tech">
+                        <span class="tech-item">
+                            <i class="devicon-react-original"></i>
+                            React
+                        </span>
+                        <span class="tech-item">
+                            <i class="devicon-nodejs-plain"></i>
+                            Node.js
+                        </span>
+                        <span class="tech-item">
+                            <i class="devicon-redis-plain"></i>
+                            Redis
+                        </span>
+                        <span class="tech-item">
+                            <i class="devicon-d3js-plain"></i>
+                            D3.js
+                        </span>
+                    </div>
+                    
+                    <div class="project-metrics">
+                        <div class="metric">
+                            <div class="metric-value">99.9%</div>
+                            <div class="metric-label">Uptime</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">2M+</div>
+                            <div class="metric-label">Daily Users</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">200ms</div>
+                            <div class="metric-label">Response Time</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="project-card">
+                <div class="project-image">
+                    <div class="image-overlay">
+                        <div class="overlay-content">
+                            <div class="overlay-tags">
+                                <span class="tag">SaaS</span>
+                                <span class="tag">AI/ML</span>
+                                <span class="tag">Cloud</span>
+                            </div>
+                            <div class="overlay-links">
+                                <a href="#" class="link-btn">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M15 10V15H5V5H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                        <path d="M10 5H15V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                        <path d="M5 15L15 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    </svg>
+                                </a>
+                                <a href="#" class="link-btn">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M7.5 12.5L10 15L12.5 12.5M10 5V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <rect x="3" y="3" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="image-placeholder placeholder-2">
+                        <div class="placeholder-content">
+                            <span class="placeholder-title">NEURAL API</span>
+                            <span class="placeholder-sub">AI Processing Service</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-content">
+                    <div class="project-header">
+                        <h3 class="project-title">AI Content Platform</h3>
+                        <div class="project-year">2023</div>
+                    </div>
+                    
+                    <p class="project-description">
+                        Scalable AI content generation platform with custom ML models, 
+                        supporting multiple languages and content formats with real-time 
+                        processing capabilities.
+                    </p>
+                    
+                    <div class="project-tech">
+                        <span class="tech-item">
+                            <i class="devicon-python-plain"></i>
+                            Python
+                        </span>
+                        <span class="tech-item">
+                            <i class="devicon-fastapi-plain"></i>
+                            FastAPI
+                        </span>
+                        <span class="tech-item">
+                            <i class="devicon-kubernetes-plain"></i>
+                            Kubernetes
+                        </span>
+                        <span class="tech-item">
+                            <i class="devicon-postgresql-plain"></i>
+                            PostgreSQL
+                        </span>
+                    </div>
+                    
+                    <div class="project-metrics">
+                        <div class="metric">
+                            <div class="metric-value">10K+</div>
+                            <div class="metric-label">API Calls/Day</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">50ms</div>
+                            <div class="metric-label">Avg. Latency</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">99.95%</div>
+                            <div class="metric-label">SLA</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="project-card">
+                <div class="project-image">
+                    <div class="image-overlay">
+                        <div class="overlay-content">
+                            <div class="overlay-tags">
+                                <span class="tag">Mobile</span>
+                                <span class="tag">Real-time</span>
+                                <span class="tag">PWA</span>
+                            </div>
+                            <div class="overlay-links">
+                                <a href="#" class="link-btn">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M15 10V15H5V5H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                        <path d="M10 5H15V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                        <path d="M5 15L15 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    </svg>
+                                </a>
+                                <a href="#" class="link-btn">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M7.5 12.5L10 15L12.5 12.5M10 5V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <rect x="3" y="3" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="image-placeholder placeholder-3">
+                        <div class="placeholder-content">
+                            <span class="placeholder-title">COLLAB APP</span>
+                            <span class="placeholder-sub">Team Collaboration</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-content">
+                    <div class="project-header">
+                        <h3 class="project-title">Real-time Collaboration Tool</h3>
+                        <div class="project-year">2023</div>
+                    </div>
+                    
+                    <p class="project-description">
+                        Cross-platform collaboration suite with real-time editing, video 
+                        conferencing, and project management features. Supports Web, iOS, 
+                        and Android platforms.
+                    </p>
+                    
+                    <div class="project-tech">
+                        <span class="tech-item">
+                            <i class="devicon-vuejs-plain"></i>
+                            Vue.js
+                        </span>
+                        <span class="tech-item">
+                            <i class="devicon-socketio-original"></i>
+                            Socket.io
+                        </span>
+                        <span class="tech-item">
+                            <i class="devicon-mongodb-plain"></i>
+                            MongoDB
+                        </span>
+                        <span class="tech-item">
+                            <i class="devicon-webrtc-plain"></i>
+                            WebRTC
+                        </span>
+                    </div>
+                    
+                    <div class="project-metrics">
+                        <div class="metric">
+                            <div class="metric-value">500+</div>
+                            <div class="metric-label">Teams</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">50ms</div>
+                            <div class="metric-label">Sync Time</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value">100%</div>
+                            <div class="metric-label">Offline Support</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="projects-footer">
+            <a href="#" class="btn-view-all">
+                <span>View All Projects</span>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M5 10H15M10 5L15 10L10 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Expertise Section -->
+    <section id="expertise" class="expertise">
+        <div class="section-header">
+            <div class="section-label">
+                <span class="label-number">02</span>
+                <span class="label-text">EXPERTISE</span>
+            </div>
+            <h2 class="section-title">
+                Technical <span class="title-accent">Skills</span>
+                <span class="title-line"></span>
+            </h2>
+            <p class="section-subtitle">
+                Deep expertise across modern web technologies and methodologies
+            </p>
+        </div>
+        
+        <div class="expertise-grid">
+            <div class="expertise-category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <rect x="2" y="3" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M8 21H16M12 17V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="category-title">Frontend</h3>
+                </div>
+                
+                <div class="skills-list">
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <div class="skill-name">
+                                <i class="devicon-react-original colored"></i>
+                                <span>React Ecosystem</span>
+                            </div>
+                            <div class="skill-level">Expert</div>
+                        </div>
+                        <div class="skill-description">
+                            Next.js, Redux, React Query, Testing Library
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <div class="skill-name">
+                                <i class="devicon-vuejs-plain colored"></i>
+                                <span>Vue.js</span>
+                            </div>
+                            <div class="skill-level">Advanced</div>
+                        </div>
+                        <div class="skill-description">
+                            Vue 3, Vuex, Vue Router, Composition API
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <div class="skill-name">
+                                <i class="devicon-typescript-plain colored"></i>
+                                <span>TypeScript</span>
+                            </div>
+                            <div class="skill-level">Expert</div>
+                        </div>
+                        <div class="skill-description">
+                            Advanced types, generics, type-safe APIs
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="expertise-category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <path d="M20 9V7C20 5.89543 19.1046 5 18 5H6C4.89543 5 4 5.89543 4 7V9M20 9H4M20 9V17C20 18.1046 19.1046 19 18 19H6C4.89543 19 4 18.1046 4 17V9" stroke="currentColor" stroke-width="1.5"/>
+                            <circle cx="12" cy="13" r="2" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <h3 class="category-title">Backend</h3>
+                </div>
+                
+                <div class="skills-list">
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <div class="skill-name">
+                                <i class="devicon-nodejs-plain colored"></i>
+                                <span>Node.js</span>
+                            </div>
+                            <div class="skill-level">Expert</div>
+                        </div>
+                        <div class="skill-description">
+                            Express, NestJS, GraphQL, WebSocket
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <div class="skill-name">
+                                <i class="devicon-python-plain colored"></i>
+                                <span>Python</span>
+                            </div>
+                            <div class="skill-level">Advanced</div>
+                        </div>
+                        <div class="skill-description">
+                            FastAPI, Django, Data Science, Automation
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <div class="skill-name">
+                                <i class="devicon-postgresql-plain colored"></i>
+                                <span>Databases</span>
+                            </div>
+                            <div class="skill-level">Expert</div>
+                        </div>
+                        <div class="skill-description">
+                            PostgreSQL, MongoDB, Redis, Elasticsearch
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="expertise-category">
+                <div class="category-header">
+                    <div class="category-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                            <path d="M2 17L12 22L22 17" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                            <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="category-title">DevOps & Cloud</h3>
+                </div>
+                
+                <div class="skills-list">
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <div class="skill-name">
+                                <i class="devicon-docker-plain colored"></i>
+                                <span>Containerization</span>
+                            </div>
+                            <div class="skill-level">Advanced</div>
+                        </div>
+                        <div class="skill-description">
+                            Docker, Kubernetes, ECS, Docker Compose
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <div class="skill-name">
+                                <i class="devicon-aws-plain colored"></i>
+                                <span>AWS Cloud</span>
+                            </div>
+                            <div class="skill-level">Advanced</div>
+                        </div>
+                        <div class="skill-description">
+                            EC2, S3, Lambda, RDS, CloudFront, VPC
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <div class="skill-name">
+                                <i class="devicon-git-plain colored"></i>
+                                <span>CI/CD</span>
+                            </div>
+                            <div class="skill-level">Expert</div>
+                        </div>
+                        <div class="skill-description">
+                            GitHub Actions, Jenkins, GitLab CI, ArgoCD
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="certifications">
+            <h3 class="certifications-title">Certifications</h3>
+            <div class="certifications-list">
+                <div class="cert-badge">
+                    <span class="cert-name">AWS Solutions Architect</span>
+                    <span class="cert-org">Amazon Web Services</span>
+                </div>
+                <div class="cert-badge">
+                    <span class="cert-name">Kubernetes Administrator</span>
+                    <span class="cert-org">Cloud Native Foundation</span>
+                </div>
+                <div class="cert-badge">
+                    <span class="cert-name">Node.js Services</span>
+                    <span class="cert-org">OpenJS Foundation</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="experience">
+        <div class="section-header">
+            <div class="section-label">
+                <span class="label-number">03</span>
+                <span class="label-text">JOURNEY</span>
+            </div>
+            <h2 class="section-title">
+                Professional <span class="title-accent">Experience</span>
+                <span class="title-line"></span>
+            </h2>
+            <p class="section-subtitle">
+                Years of solving complex problems and delivering value
+            </p>
+        </div>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-marker">
+                    <div class="marker-circle"></div>
+                    <div class="marker-line"></div>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-header">
+                        <h3 class="timeline-title">Lead Full-Stack Developer</h3>
+                        <div class="timeline-period">2022 — Present</div>
+                    </div>
+                    <div class="timeline-company">TechScale Inc.</div>
+                    <p class="timeline-description">
+                        Leading a team of 8 developers building enterprise SaaS solutions. 
+                        Architected microservices infrastructure handling 10M+ requests daily. 
+                        Improved system performance by 300% through optimization.
+                    </p>
+                    <div class="timeline-tech">
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">Node.js</span>
+                        <span class="tech-tag">Kubernetes</span>
+                        <span class="tech-tag">AWS</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-marker">
+                    <div class="marker-circle"></div>
+                    <div class="marker-line"></div>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-header">
+                        <h3 class="timeline-title">Senior Software Engineer</h3>
+                        <div class="timeline-period">2020 — 2022</div>
+                    </div>
+                    <div class="timeline-company">FinTech Solutions</div>
+                    <p class="timeline-description">
+                        Developed real-time trading platform with WebSocket connectivity. 
+                        Built risk management systems processing $1B+ daily transactions. 
+                        Implemented CI/CD pipeline reducing deployment time by 70%.
+                    </p>
+                    <div class="timeline-tech">
+                        <span class="tech-tag">Vue.js</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">PostgreSQL</span>
+                        <span class="tech-tag">Redis</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-marker">
+                    <div class="marker-circle"></div>
+                    <div class="marker-line"></div>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-header">
+                        <h3 class="timeline-title">Full-Stack Developer</h3>
+                        <div class="timeline-period">2018 — 2020</div>
+                    </div>
+                    <div class="timeline-company">Digital Agency</div>
+                    <p class="timeline-description">
+                        Built custom web applications for Fortune 500 clients. 
+                        Developed e-commerce platforms with 99.9% uptime. 
+                        Mentored junior developers and established coding standards.
+                    </p>
+                    <div class="timeline-tech">
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">Express</span>
+                        <span class="tech-tag">MongoDB</span>
+                        <span class="tech-tag">Docker</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="contact-container">
+            <div class="contact-content">
+                <div class="section-header">
+                    <div class="section-label">
+                        <span class="label-number">04</span>
+                        <span class="label-text">CONTACT</span>
+                    </div>
+                    <h2 class="section-title">
+                        Let's Build <span class="title-accent">Together</span>
+                        <span class="title-line"></span>
+                    </h2>
+                    <p class="section-subtitle">
+                        Have a project in mind? Let's discuss how we can create something amazing.
+                    </p>
+                </div>
+                
+                <div class="contact-info">
+                    <a href="mailto:alex@quantum.dev" class="contact-item">
+                        <div class="contact-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="1.5"/>
+                                <path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="1.5"/>
+                            </svg>
+                        </div>
+                        <div class="contact-details">
+                            <div class="contact-label">Email</div>
+                            <div class="contact-value">sajghaa@gmail.com</div>
+                        </div>
+                    </a>
+                    
+                    <a href="tel:+15551234567" class="contact-item">
+                        <div class="contact-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M22 16.92V19.92C22 20.47 21.55 20.92 21 20.92C11.61 20.92 3.08 12.39 3.08 3C3.08 2.45 3.53 2 4.08 2H7.08C7.63 2 8.08 2.45 8.08 3C8.08 5.58 8.93 8.03 10.47 9.97L9.47 10.97C8.68 10.18 8.08 9.23 7.69 8.18" stroke="currentColor" stroke-width="1.5"/>
+                                <path d="M14.31 17.82C15.36 17.43 16.31 16.82 17.1 16.03L18.1 15.03C20.05 16.57 22.5 17.42 25.08 17.42C25.63 17.42 26.08 17.87 26.08 18.42V21.42C26.08 21.97 25.63 22.42 25.08 22.42C15.69 22.42 7.16 13.89 7.16 4.5C7.16 3.95 7.61 3.5 8.16 3.5H11.16C11.71 3.5 12.16 3.95 12.16 4.5C12.16 7.08 13.01 9.53 14.55 11.47L13.55 12.47C12.76 11.68 12.16 10.73 11.77 9.68" stroke="currentColor" stroke-width="1.5"/>
+                            </svg>
+                        </div>
+                        <div class="contact-details">
+                            <div class="contact-label">Phone</div>
+                            <div class="contact-value">+250798412546</div>
+                        </div>
+                    </a>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 7.61305 3.94821 5.32387 5.63604 3.63604C7.32387 1.94821 9.61305 1 12 1C14.3869 1 16.6761 1.94821 18.364 3.63604C20.0518 5.32387 21 7.61305 21 10Z" stroke="currentColor" stroke-width="1.5"/>
+                                <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="1.5"/>
+                            </svg>
+                        </div>
+                        <div class="contact-details">
+                            <div class="contact-label">Location</div>
+                            <div class="contact-value">Rwanda, Kigali</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="social-links">
+                    <a href="#" class="social-link">
+                        <i class="devicon-github-original"></i>
+                    </a>
+                    <a href="#" class="social-link">
+                        <i class="devicon-linkedin-plain"></i>
+                    </a>
+                    <a href="#" class="social-link">
+                        <i class="devicon-twitter-original"></i>
+                    </a>
+                    <a href="#" class="social-link">
+                        <i class="devicon-stackoverflow-plain"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <form class="contact-form" id="contactForm">
+                <div class="form-group">
+                    <label for="name">Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject">
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Message *</label>
+                    <textarea id="message" name="message" rows="6" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn-submit">
+                    <span>Send Message</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M4 6L10 1L16 6M10 1V19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <svg class="logo-icon" width="24" height="24" viewBox="0 0 32 32">
+                    <path d="M16 2 L30 16 L16 30 L2 16 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="16" cy="16" r="6" fill="currentColor"/>
+                    <path d="M8 8 L24 24 M24 8 L8 24" stroke="currentColor" stroke-width="1.5"/>
+                </svg>
+                <span class="logo-text">QUANTUM<span class="logo-highlight">DEV</span></span>
+            </div>
+            
+            <div class="footer-text">
+                Crafting exceptional digital experiences through code and creativity.
+            </div>
+            
+            <div class="footer-links">
+                <a href="#home">Home</a>
+                <a href="#projects">Work</a>
+                <a href="#expertise">Expertise</a>
+                <a href="#experience">Journey</a>
+                <a href="#contact">Contact</a>
+            </div>
+            
+            <div class="footer-copyright">
+                &copy; 2025 Serge Quantum. All rights reserved.
+                <span class="footer-made">
+                    Built with 
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.28 18.6 15.36 13.45 20.04L12 21.35Z" fill="currentColor"/>
+                    </svg>
+                    and code
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
