@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VibeSpace | Social Feed</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+    <div class="theme-toggle">
+        <button id="themeToggle" class="theme-btn">
+            <i class="fas fa-moon"></i>
+            <i class="fas fa-sun"></i>
+            <span class="theme-indicator"></span>
+        </button>
+    </div>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-atom"></i>
+                </div>
+                <h1 class="logo-text">VibeSpace</h1>
+                <div class="logo-badge">βeta</div>
+            </div>
+
+            <!-- User Profile -->
+            <div class="user-profile">
+                <div class="avatar-container">
+                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" 
+                         alt="Profile" class="avatar">
+                    <div class="online-status"></div>
+                </div>
+                <div class="user-info">
+                    <h3 class="user-name">Alex Morgan</h3>
+                    <p class="user-handle">@alex.morgan</p>
+                </div>
+                <button class="settings-btn">
+                    <i class="fas fa-sliders-h"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Feed</span>
+                    <div class="nav-indicator"></div>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                    <span class="nav-badge">12</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                    <span class="nav-badge">3</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-bookmark"></i>
+                    <span>Bookmarks</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-user-friends"></i>
+                    <span>Communities</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </a>
+            </nav>
+
+            <!-- Trending Topics -->
+            <div class="trending-section">
+                <h4 class="section-title">
+                    <i class="fas fa-fire"></i>
+                    Trending Now
+                </h4>
+                <div class="trending-tags">
+                    <span class="tag">#WebDesign</span>
+                    <span class="tag">#AI</span>
+                    <span class="tag">#Tech</span>
+                    <span class="tag">#Creative</span>
+                    <span class="tag">#Innovation</span>
+                </div>
+            </div>
+
+            <!-- Create Post Button -->
+            <button class="create-post-btn" id="createPostBtn">
+                <i class="fas fa-plus-circle"></i>
+                <span>Create Post</span>
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Stories Section -->
+            <section class="stories-section">
+                <div class="stories-container">
+                    <div class="story create-story">
+                        <div class="story-avatar">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <span class="story-name">Add Story</span>
+                    </div>
+                    
+                    <!-- Stories will be dynamically added here -->
+                    <div class="story">
+                        <div class="story-avatar active">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Story">
+                        </div>
+                        <span class="story-name">Sam</span>
+                    </div>
+                    
+                    <div class="story">
+                        <div class="story-avatar">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Story">
+                        </div>
+                        <span class="story-name">Emma</span>
+                    </div>
+                    
+                    <div class="story">
+                        <div class="story-avatar">
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Story">
+                        </div>
+                        <span class="story-name">Jordan</span>
+                    </div>
+                    
+                    <div class="story">
+                        <div class="story-avatar">
+                            <img src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Story">
+                        </div>
+                        <span class="story-name">Taylor</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Create Post Modal (Hidden by default) -->
+            <div class="post-modal" id="postModal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Create Post</h3>
+                        <button class="close-modal" id="closeModal">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="modal-user">
+                            <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" 
+                                 alt="User" class="modal-avatar">
+                            <div>
+                                <h4>Alex Morgan</h4>
+                                <select class="privacy-select">
+                                    <option value="public">🌍 Public</option>
+                                    <option value="friends">👥 Friends Only</option>
+                                    <option value="private">🔒 Private</option>
+                                </select>
+                            </div>
+                        </div>
+                        <textarea class="post-input" id="postInput" placeholder="What's on your mind?"></textarea>
+                        <div class="post-options">
+                            <button class="option-btn">
+                                <i class="fas fa-image"></i>
+                                <span>Photo/Video</span>
+                            </button>
+                            <button class="option-btn">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Location</span>
+                            </button>
+                            <button class="option-btn">
+                                <i class="fas fa-smile"></i>
+                                <span>Feeling</span>
+                            </button>
+                            <button class="option-btn">
+                                <i class="fas fa-hashtag"></i>
+                                <span>Tag</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn-secondary" id="cancelPost">Cancel</button>
+                        <button class="btn-primary" id="submitPost" disabled>Post</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feed Content -->
+            <section class="feed-section">
+                <!-- Post Creation Card -->
+                <div class="create-post-card">
+                    <div class="post-input-container">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" 
+                             alt="User" class="post-avatar">
+                        <input type="text" class="post-prompt" placeholder="Share your thoughts..." id="quickPost">
+                        <button class="post-now-btn" id="quickPostBtn">
+                            <i class="fas fa-paper-plane"></i>
+                            Post
+                        </button>
+                    </div>
+                    <div class="post-actions">
+                        <button class="action-btn">
+                            <i class="fas fa-video"></i>
+                            <span>Live Video</span>
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-image"></i>
+                            <span>Photo/Video</span>
+                        </button>
+                        <button class="action-btn">
+                            <i class="fas fa-poll"></i>
+                            <span>Poll</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Feed Filters -->
+                <div class="feed-filters">
+                    <button class="filter-btn active">For You</button>
+                    <button class="filter-btn">Following</button>
+                    <button class="filter-btn">Popular</button>
+                    <button class="filter-btn">
+                        <i class="fas fa-sliders-h"></i>
+                        Filters
+                    </button>
+                </div>
+
+                <!-- Posts Container -->
+                <div class="posts-container" id="postsContainer">
+                    <!-- Posts will be dynamically loaded here -->
+                </div>
+
+                <!-- Loading Spinner -->
+                <div class="loading-spinner" id="loadingSpinner">
+                    <div class="spinner"></div>
+                    <p>Loading more posts...</p>
+                </div>
+            </section>
+
+            <!-- Right Sidebar -->
+            <aside class="right-sidebar">
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search VibeSpace..." class="search-input">
+                </div>
+
+                <!-- Who to Follow -->
+                <div class="follow-section">
+                    <h4 class="section-title">Who to Follow</h4>
+                    <div class="follow-list">
+                        <div class="follow-item">
+                            <div class="follow-user">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" 
+                                     alt="User" class="follow-avatar">
+                                <div class="follow-info">
+                                    <h5>Michael Chen</h5>
+                                    <p>@michael.chen</p>
+                                </div>
+                            </div>
+                            <button class="follow-btn">Follow</button>
+                        </div>
+                        <div class="follow-item">
+                            <div class="follow-user">
+                                <img src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" 
+                                     alt="User" class="follow-avatar">
+                                <div class="follow-info">
+                                    <h5>Sarah Johnson</h5>
+                                    <p>@sarah.j</p>
+                                </div>
+                            </div>
+                            <button class="follow-btn following">Following</button>
+                        </div>
+                        <div class="follow-item">
+                            <div class="follow-user">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" 
+                                     alt="User" class="follow-avatar">
+                                <div class="follow-info">
+                                    <h5>David Park</h5>
+                                    <p>@david.park</p>
+                                </div>
+                            </div>
+                            <button class="follow-btn">Follow</button>
+                        </div>
+                    </div>
+                    <a href="#" class="show-more">Show more</a>
+                </div>
+
+                <!-- Trending Topics -->
+                <div class="trending-widget">
+                    <h4 class="section-title">Trending Worldwide</h4>
+                    <div class="trending-list">
+                        <div class="trending-item">
+                            <div class="trending-rank">1</div>
+                            <div class="trending-content">
+                                <h5>#FutureOfAI</h5>
+                                <p>25.4K posts</p>
+                            </div>
+                        </div>
+                        <div class="trending-item">
+                            <div class="trending-rank">2</div>
+                            <div class="trending-content">
+                                <h5>Web3 Updates</h5>
+                                <p>18.7K posts</p>
+                            </div>
+                        </div>
+                        <div class="trending-item">
+                            <div class="trending-rank">3</div>
+                            <div class="trending-content">
+                                <h5>Design Trends</h5>
+                                <p>15.2K posts</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Online Friends -->
+                <div class="online-friends">
+                    <h4 class="section-title">Online Now</h4>
+                    <div class="friends-list">
+                        <div class="friend">
+                            <div class="friend-avatar">
+                                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Friend">
+                                <div class="online-dot"></div>
+                            </div>
+                            <span class="friend-name">Emma</span>
+                        </div>
+                        <div class="friend">
+                            <div class="friend-avatar">
+                                <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Friend">
+                                <div class="online-dot"></div>
+                            </div>
+                            <span class="friend-name">Jordan</span>
+                        </div>
+                        <div class="friend">
+                            <div class="friend-avatar">
+                                <img src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Friend">
+                                <div class="online-dot"></div>
+                            </div>
+                            <span class="friend-name">Taylor</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="js/state.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/posts.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
