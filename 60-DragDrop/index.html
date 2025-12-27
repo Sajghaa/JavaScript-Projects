@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag & Drop File Manager </title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-folder-open"></i>
+                <h1>Drag & Drop File Manager</h1>
+            </div>
+            <div class="actions">
+                <button id="newFolderBtn" class="btn btn-primary">
+                    <i class="fas fa-folder-plus"></i> New Folder
+                </button>
+                <button id="uploadBtn" class="btn btn-secondary">
+                    <i class="fas fa-cloud-upload-alt"></i> Upload Files
+                </button>
+                <input type="file" id="fileInput" multiple style="display: none;">
+            </div>
+        </header>
+
+        <div class="main-content">
+            <aside class="sidebar">
+                <h3><i class="fas fa-bars"></i> Navigation</h3>
+                <ul class="nav-list">
+                    <li class="active"><i class="fas fa-home"></i> Home</li>
+                    <li><i class="fas fa-star"></i> Favorites</li>
+                    <li><i class="fas fa-cloud"></i> Cloud Drive</li>
+                    <li><i class="fas fa-history"></i> Recent</li>
+                    <li><i class="fas fa-trash"></i> Trash</li>
+                </ul>
+                
+                <h3><i class="fas fa-chart-pie"></i> Storage</h3>
+                <div class="storage-info">
+                    <div class="storage-bar">
+                        <div class="storage-progress" style="width: 65%"></div>
+                    </div>
+                    <p>12.4 GB of 19 GB used</p>
+                </div>
+            </aside>
+
+            <main class="file-manager">
+                <div class="path-bar">
+                    <span class="path">Home / Documents / Projects</span>
+                    <div class="view-options">
+                        <button class="view-btn active" data-view="grid"><i class="fas fa-th-large"></i></button>
+                        <button class="view-btn" data-view="list"><i class="fas fa-list"></i></button>
+                    </div>
+                </div>
+
+                <div class="file-area">
+                    <div class="folders-container" id="foldersContainer">
+                        <h3><i class="fas fa-folder"></i> Folders</h3>
+                        <div class="items-grid" id="foldersGrid">
+                            <!-- Folders will be added here dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="files-container" id="filesContainer">
+                        <h3><i class="fas fa-file"></i> Files</h3>
+                        <div class="items-grid" id="filesGrid">
+                            <!-- Files will be added here dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="drop-zone" id="dropZone">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag files or folders here to upload</p>
+                        <p class="drop-hint">Drop anywhere in the file manager area</p>
+                    </div>
+                </div>
+
+                <div class="status-bar">
+                    <div class="selected-info">
+                        <span id="selectedCount">0 items selected</span>
+                    </div>
+                    <div class="action-buttons">
+                        <button id="deleteBtn" class="btn btn-danger" disabled>
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                        <button id="moveBtn" class="btn btn-warning" disabled>
+                            <i class="fas fa-arrows-alt"></i> Move
+                        </button>
+                        <button id="downloadBtn" class="btn btn-success" disabled>
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Context Menu -->
+        <div class="context-menu" id="contextMenu">
+            <ul>
+                <li data-action="open"><i class="fas fa-folder-open"></i> Open</li>
+                <li data-action="rename"><i class="fas fa-edit"></i> Rename</li>
+                <li data-action="move"><i class="fas fa-arrows-alt"></i> Move</li>
+                <li data-action="download"><i class="fas fa-download"></i> Download</li>
+                <li class="separator"></li>
+                <li data-action="delete" class="danger"><i class="fas fa-trash"></i> Delete</li>
+            </ul>
+        </div>
+
+        <!-- Modal for creating new folder -->
+        <div class="modal" id="newFolderModal">
+            <div class="modal-content">
+                <h2><i class="fas fa-folder-plus"></i> Create New Folder</h2>
+                <input type="text" id="folderName" placeholder="Enter folder name" autofocus>
+                <div class="modal-actions">
+                    <button id="cancelBtn" class="btn btn-secondary">Cancel</button>
+                    <button id="createBtn" class="btn btn-primary">Create</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast notifications -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
