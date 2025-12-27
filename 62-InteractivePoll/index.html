@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POLLY  | Interactive Polling Platform</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="bubble" style="--i:1;"></div>
+        <div class="bubble" style="--i:2;"></div>
+        <div class="bubble" style="--i:3;"></div>
+        <div class="bubble" style="--i:4;"></div>
+        <div class="bubble" style="--i:5;"></div>
+        <div class="bubble" style="--i:6;"></div>
+        <div class="bubble" style="--i:7;"></div>
+        <div class="bubble" style="--i:8;"></div>
+        <div class="bubble" style="--i:9;"></div>
+        <div class="bubble" style="--i:10;"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>POLLY</h1>
+                    <p>Interactive Polling Platform</p>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat">
+                    <i class="fas fa-poll"></i>
+                    <span id="totalPolls">12</span> Polls
+                </div>
+                <div class="stat">
+                    <i class="fas fa-vote-yea"></i>
+                    <span id="totalVotes">1,247</span> Votes
+                </div>
+                <div class="stat">
+                    <i class="fas fa-users"></i>
+                    <span id="activeUsers">48</span> Active
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar Navigation -->
+            <nav class="sidebar">
+                <div class="user-profile">
+                    <div class="avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-info">
+                        <h3>Poll Master</h3>
+                        <p>Admin Account</p>
+                    </div>
+                </div>
+                
+                <ul class="nav-menu">
+                    <li class="nav-item active" data-view="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </li>
+                    <li class="nav-item" data-view="create">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Create Poll</span>
+                    </li>
+                    <li class="nav-item" data-view="active">
+                        <i class="fas fa-fire"></i>
+                        <span>Active Polls</span>
+                    </li>
+                    <li class="nav-item" data-view="results">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Results</span>
+                    </li>
+                    <li class="nav-item" data-view="history">
+                        <i class="fas fa-history"></i>
+                        <span>History</span>
+                    </li>
+                    <li class="nav-item" data-view="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </li>
+                </ul>
+                
+                <div class="trending-polls">
+                    <h4><i class="fas fa-trending-up"></i> Trending Now</h4>
+                    <div class="trending-item">
+                        <div class="trending-title">Best Programming Language 2024</div>
+                        <div class="trending-votes">842 votes</div>
+                    </div>
+                    <div class="trending-item">
+                        <div class="trending-title">Favorite Social Media Platform</div>
+                        <div class="trending-votes">567 votes</div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Dashboard View -->
+                <div class="view active" id="dashboardView">
+                    <div class="view-header">
+                        <h2><i class="fas fa-home"></i> Dashboard Overview</h2>
+                        <button class="btn btn-primary" id="quickPollBtn">
+                            <i class="fas fa-bolt"></i> Quick Poll
+                        </button>
+                    </div>
+                    
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <div class="card-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                                <i class="fas fa-poll-h"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Active Polls</h3>
+                                <p class="card-value" id="activePollsCount">5</p>
+                                <p class="card-trend">+2 this week</p>
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard-card">
+                            <div class="card-icon" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                                <i class="fas fa-vote-yea"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Total Votes</h3>
+                                <p class="card-value" id="dashboardVotesCount">1,247</p>
+                                <p class="card-trend">↑ 15% from yesterday</p>
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard-card">
+                            <div class="card-icon" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Engagement Rate</h3>
+                                <p class="card-value">78%</p>
+                                <p class="card-trend">↑ 8% this month</p>
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard-card">
+                            <div class="card-icon" style="background: linear-gradient(135deg, #43e97b, #38f9d7);">
+                                <i class="fas fa-share-alt"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Shares</h3>
+                                <p class="card-value">324</p>
+                                <p class="card-trend">↑ 42 this week</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="recent-polls">
+                        <h3><i class="fas fa-clock"></i> Recent Polls</h3>
+                        <div class="polls-grid" id="recentPollsGrid">
+                            <!-- Recent polls will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create Poll View -->
+                <div class="view" id="createPollView">
+                    <div class="view-header">
+                        <h2><i class="fas fa-plus-circle"></i> Create New Poll</h2>
+                        <div class="view-actions">
+                            <button class="btn btn-secondary" id="previewPollBtn">
+                                <i class="fas fa-eye"></i> Preview
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="create-poll-form">
+                        <div class="form-group">
+                            <label for="pollTitle">
+                                <i class="fas fa-heading"></i> Poll Question
+                            </label>
+                            <input type="text" id="pollTitle" placeholder="What's your favorite programming language?" maxlength="100">
+                            <div class="char-count"><span id="titleCharCount">0</span>/100</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="pollDescription">
+                                <i class="fas fa-align-left"></i> Description (Optional)
+                            </label>
+                            <textarea id="pollDescription" placeholder="Add more context to your poll..." rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-list-ol"></i> Poll Options
+                            </label>
+                            <div class="options-container" id="optionsContainer">
+                                <div class="option-input">
+                                    <input type="text" class="poll-option" placeholder="Option 1" maxlength="60">
+                                    <button class="remove-option" disabled><i class="fas fa-times"></i></button>
+                                </div>
+                                <div class="option-input">
+                                    <input type="text" class="poll-option" placeholder="Option 2" maxlength="60">
+                                    <button class="remove-option" disabled><i class="fas fa-times"></i></button>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline" id="addOptionBtn">
+                                <i class="fas fa-plus"></i> Add Option
+                            </button>
+                            <div class="option-hint">Minimum 2 options, maximum 6</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-image"></i> Poll Theme</label>
+                            <div class="theme-selector">
+                                <div class="theme-option active" data-theme="blue">
+                                    <div class="theme-preview" style="background: linear-gradient(135deg, #667eea, #764ba2);"></div>
+                                    <span>Blue</span>
+                                </div>
+                                <div class="theme-option" data-theme="red">
+                                    <div class="theme-preview" style="background: linear-gradient(135deg, #f093fb, #f5576c);"></div>
+                                    <span>Red</span>
+                                </div>
+                                <div class="theme-option" data-theme="green">
+                                    <div class="theme-preview" style="background: linear-gradient(135deg, #43e97b, #38f9d7);"></div>
+                                    <span>Green</span>
+                                </div>
+                                <div class="theme-option" data-theme="purple">
+                                    <div class="theme-preview" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb);"></div>
+                                    <span>Purple</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-cog"></i> Poll Settings</label>
+                            <div class="settings-grid">
+                                <div class="setting">
+                                    <input type="checkbox" id="multipleVotes" checked>
+                                    <label for="multipleVotes">Allow multiple votes</label>
+                                </div>
+                                <div class="setting">
+                                    <input type="checkbox" id="showResults" checked>
+                                    <label for="showResults">Show results immediately</label>
+                                </div>
+                                <div class="setting">
+                                    <input type="checkbox" id="anonymousVote">
+                                    <label for="anonymousVote">Anonymous voting</label>
+                                </div>
+                                <div class="setting">
+                                    <input type="checkbox" id="endDateToggle">
+                                    <label for="endDateToggle">Set end date</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button class="btn btn-secondary" id="clearFormBtn">
+                                <i class="fas fa-broom"></i> Clear
+                            </button>
+                            <button class="btn btn-primary" id="createPollBtn">
+                                <i class="fas fa-rocket"></i> Launch Poll
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Polls View -->
+                <div class="view" id="activePollsView">
+                    <div class="view-header">
+                        <h2><i class="fas fa-fire"></i> Active Polls</h2>
+                        <div class="view-actions">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchPolls" placeholder="Search polls...">
+                            </div>
+                            <select id="sortPolls">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                                <option value="popular">Most Popular</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="polls-container" id="activePollsContainer">
+                        <!-- Active polls will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="view" id="resultsView">
+                    <div class="view-header">
+                        <h2><i class="fas fa-chart-bar"></i> Poll Results</h2>
+                        <div class="view-actions">
+                            <button class="btn btn-secondary" id="exportResultsBtn">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="results-container" id="resultsContainer">
+                        <!-- Results will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="modal" id="pollPreviewModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-eye"></i> Poll Preview</h3>
+                    <button class="close-modal"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body" id="pollPreviewBody">
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="pollVoteModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="voteModalTitle"></h3>
+                    <button class="close-modal"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body" id="voteModalBody">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary close-modal">Cancel</button>
+                    <button class="btn btn-primary" id="submitVoteBtn">Submit Vote</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="resultsModal">
+            <div class="modal-content wide">
+                <div class="modal-header">
+                    <h3 id="resultsModalTitle"></h3>
+                    <button class="close-modal"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body" id="resultsModalBody">
+                   
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" id="shareResultsBtn">
+                        <i class="fas fa-share-alt"></i> Share Results
+                    </button>
+                    <button class="btn btn-secondary close-modal">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container" id="toastContainer"></div>
+
+        <button class="fab" id="fabBtn">
+            <i class="fas fa-plus"></i>
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
