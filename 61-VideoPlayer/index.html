@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUXURY VIDEO PLAYER  | Custom Media Experience</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Theme Selection -->
+        <div class="theme-selector">
+            <h2><i class="fas fa-palette"></i> Player Theme</h2>
+            <div class="theme-options">
+                <button class="theme-btn active" data-theme="cyberpunk">
+                    <i class="fas fa-gamepad"></i> Cyberpunk
+                </button>
+                <button class="theme-btn" data-theme="midnight">
+                    <i class="fas fa-moon"></i> Midnight
+                </button>
+                <button class="theme-btn" data-theme="sunset">
+                    <i class="fas fa-sun"></i> Sunset
+                </button>
+                <button class="theme-btn" data-theme="ocean">
+                    <i class="fas fa-water"></i> Ocean
+                </button>
+            </div>
+        </div>
+
+        <div class="player-wrapper">
+            <!-- Main Video Player -->
+            <div class="video-container">
+                <video id="mainVideo" class="video-element">
+                    <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                
+                <!-- Video Overlay with Title -->
+                <div class="video-overlay">
+                    <div class="video-title">
+                        <h1 id="currentVideoTitle">Big Buck Bunny</h1>
+                        <p id="currentVideoDesc">A large and lovable rabbit fights back against his tormentors.</p>
+                    </div>
+                    <div class="play-large" id="playLargeBtn">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+
+                <!-- Custom Video Controls -->
+                <div class="video-controls">
+                    <!-- Progress Bar -->
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progressBar">
+                            <div class="progress-fill" id="progressFill"></div>
+                            <div class="progress-thumb" id="progressThumb"></div>
+                        </div>
+                        <div class="time-display">
+                            <span id="currentTime">00:00</span> / <span id="duration">00:00</span>
+                        </div>
+                    </div>
+
+                    <!-- Control Buttons -->
+                    <div class="controls-main">
+                        <div class="controls-left">
+                            <button class="control-btn" id="playPauseBtn">
+                                <i class="fas fa-play" id="playIcon"></i>
+                            </button>
+                            <button class="control-btn" id="skipBackBtn">
+                                <i class="fas fa-step-backward"></i>
+                            </button>
+                            <button class="control-btn" id="skipForwardBtn">
+                                <i class="fas fa-step-forward"></i>
+                            </button>
+                            <div class="volume-control">
+                                <button class="control-btn" id="volumeBtn">
+                                    <i class="fas fa-volume-up" id="volumeIcon"></i>
+                                </button>
+                                <div class="volume-slider-container">
+                                    <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="controls-center">
+                            <button class="control-btn" id="speedBtn" title="Playback Speed">
+                                1x
+                            </button>
+                            <button class="control-btn" id="pipBtn" title="Picture-in-Picture">
+                                <i class="fas fa-compress-alt"></i>
+                            </button>
+                            <button class="control-btn" id="fullscreenBtn">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+
+                        <div class="controls-right">
+                            <button class="control-btn" id="subtitlesBtn" title="Subtitles">
+                                <i class="fas fa-closed-captioning"></i>
+                            </button>
+                            <button class="control-btn" id="settingsBtn" title="Settings">
+                                <i class="fas fa-cog"></i>
+                            </button>
+                            <button class="control-btn" id="theaterBtn" title="Theater Mode">
+                                <i class="fas fa-film"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Panel -->
+                <div class="settings-panel" id="settingsPanel">
+                    <div class="settings-header">
+                        <h3><i class="fas fa-cog"></i> Player Settings</h3>
+                        <button class="close-settings" id="closeSettingsBtn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="settings-content">
+                        <div class="setting-group">
+                            <label>Playback Speed</label>
+                            <div class="speed-options">
+                                <button class="speed-option" data-speed="0.5">0.5x</button>
+                                <button class="speed-option" data-speed="0.75">0.75x</button>
+                                <button class="speed-option active" data-speed="1">1x</button>
+                                <button class="speed-option" data-speed="1.25">1.25x</button>
+                                <button class="speed-option" data-speed="1.5">1.5x</button>
+                                <button class="speed-option" data-speed="2">2x</button>
+                            </div>
+                        </div>
+                        <div class="setting-group">
+                            <label>Quality</label>
+                            <div class="quality-options">
+                                <button class="quality-option active">Auto</button>
+                                <button class="quality-option">1080p</button>
+                                <button class="quality-option">720p</button>
+                                <button class="quality-option">480p</button>
+                            </div>
+                        </div>
+                        <div class="setting-group">
+                            <label>Subtitles</label>
+                            <div class="subtitle-options">
+                                <button class="subtitle-option active">Off</button>
+                                <button class="subtitle-option">English</button>
+                                <button class="subtitle-option">Spanish</button>
+                                <button class="subtitle-option">French</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Playlist Section -->
+            <div class="playlist-container">
+                <div class="playlist-header">
+                    <h2><i class="fas fa-list-music"></i> Playlist</h2>
+                    <div class="playlist-actions">
+                        <button class="playlist-btn" id="shuffleBtn" title="Shuffle">
+                            <i class="fas fa-random"></i>
+                        </button>
+                        <button class="playlist-btn" id="repeatBtn" title="Repeat">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="playlist-items" id="playlistItems">
+                    <!-- Playlist items will be dynamically added -->
+                </div>
+                
+                <div class="playlist-info">
+                    <div class="playlist-stats">
+                        <p><i class="fas fa-video"></i> <span id="totalVideos">5</span> videos</p>
+                        <p><i class="fas fa-clock"></i> <span id="totalDuration">45:23</span> total</p>
+                    </div>
+                    <button class="add-video-btn" id="addVideoBtn">
+                        <i class="fas fa-plus-circle"></i> Add Video
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Player Stats -->
+        <div class="player-stats">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Currently Playing</h3>
+                    <p id="currentPlayStat">Big Buck Bunny</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Watch Time</h3>
+                    <p id="watchTimeStat">0:00 / 10:34</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Playback Speed</h3>
+                    <p id="speedStat">1x</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-volume-up"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>Volume</h3>
+                    <p id="volumeStat">100%</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Video Modal -->
+        <div class="modal" id="addVideoModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-plus-circle"></i> Add New Video</h2>
+                    <button class="close-modal" id="closeModalBtn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="videoTitle">Video Title</label>
+                        <input type="text" id="videoTitle" placeholder="Enter video title">
+                    </div>
+                    <div class="form-group">
+                        <label for="videoUrl">Video URL</label>
+                        <input type="text" id="videoUrl" placeholder="Enter video URL or choose sample">
+                        <div class="sample-videos">
+                            <p>Or choose a sample video:</p>
+                            <div class="sample-buttons">
+                                <button class="sample-btn" data-url="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" data-title="Big Buck Bunny" data-desc="A large and lovable rabbit fights back against his tormentors">
+                                    Big Buck Bunny
+                                </button>
+                                <button class="sample-btn" data-url="https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" data-title="Elephant's Dream" data-desc="The story of two strange characters exploring a capricious and seemingly infinite machine">
+                                    Elephant's Dream
+                                </button>
+                                <button class="sample-btn" data-url="https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" data-title="For Bigger Blazes" data-desc="A video showcasing Google's technology">
+                                    For Bigger Blazes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="videoDescription">Description (Optional)</label>
+                        <textarea id="videoDescription" rows="3" placeholder="Enter video description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="videoThumbnail">Thumbnail URL (Optional)</label>
+                        <input type="text" id="videoThumbnail" placeholder="Enter thumbnail URL">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="cancelAddBtn">Cancel</button>
+                    <button class="btn btn-primary" id="confirmAddBtn">Add Video</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <script src="script.js" type="module"></script>
+</body>
+</html>
