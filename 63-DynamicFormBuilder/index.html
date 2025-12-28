@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FORM BUILDER PRO  | Drag & Drop Form Creator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Animated Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>FORM BUILDER <span class="pro-badge">PRO</span></h1>
+                    <p>Drag & Drop Form Creator</p>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <button class="btn btn-outline" id="previewBtn">
+                    <i class="fas fa-eye"></i> Preview
+                </button>
+                <button class="btn btn-secondary" id="saveBtn">
+                    <i class="fas fa-save"></i> Save Form
+                </button>
+                <button class="btn btn-primary" id="exportBtn">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Left Sidebar - Form Elements -->
+            <aside class="sidebar left-sidebar">
+                <div class="sidebar-header">
+                    <h2><i class="fas fa-shapes"></i> Form Elements</h2>
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchElements" placeholder="Search elements...">
+                    </div>
+                </div>
+                
+                <div class="elements-categories">
+                    <div class="category active" data-category="basic">
+                        <i class="fas fa-font"></i> Basic Fields
+                    </div>
+                    <div class="category" data-category="advanced">
+                        <i class="fas fa-star"></i> Advanced
+                    </div>
+                    <div class="category" data-category="layout">
+                        <i class="fas fa-layer-group"></i> Layout
+                    </div>
+                    <div class="category" data-category="custom">
+                        <i class="fas fa-palette"></i> Custom
+                    </div>
+                </div>
+                
+                <div class="elements-container">
+                    <!-- Basic Elements -->
+                    <div class="elements-group active" id="basicElements">
+                        <div class="element" draggable="true" data-type="text">
+                            <div class="element-icon">
+                                <i class="fas fa-font"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Text Input</h4>
+                                <p>Single line text field</p>
+                            </div>
+                        </div>
+                        
+                        <div class="element" draggable="true" data-type="textarea">
+                            <div class="element-icon">
+                                <i class="fas fa-align-left"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Text Area</h4>
+                                <p>Multi-line text input</p>
+                            </div>
+                        </div>
+                        
+                        <div class="element" draggable="true" data-type="email">
+                            <div class="element-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Email Input</h4>
+                                <p>Email address field</p>
+                            </div>
+                        </div>
+                        
+                        <div class="element" draggable="true" data-type="number">
+                            <div class="element-icon">
+                                <i class="fas fa-hashtag"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Number Input</h4>
+                                <p>Numeric value field</p>
+                            </div>
+                        </div>
+                        
+                        <div class="element" draggable="true" data-type="select">
+                            <div class="element-icon">
+                                <i class="fas fa-list"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Dropdown</h4>
+                                <p>Select from options</p>
+                            </div>
+                        </div>
+                        
+                        <div class="element" draggable="true" data-type="checkbox">
+                            <div class="element-icon">
+                                <i class="fas fa-check-square"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Checkbox</h4>
+                                <p>Multiple selection</p>
+                            </div>
+                        </div>
+                        
+                        <div class="element" draggable="true" data-type="radio">
+                            <div class="element-icon">
+                                <i class="fas fa-dot-circle"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Radio Buttons</h4>
+                                <p>Single selection</p>
+                            </div>
+                        </div>
+                        
+                        <div class="element" draggable="true" data-type="date">
+                            <div class="element-icon">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Date Picker</h4>
+                                <p>Date selection field</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Elements -->
+                    <div class="elements-group" id="advancedElements">
+                        <div class="element" draggable="true" data-type="file">
+                            <div class="element-icon">
+                                <i class="fas fa-file-upload"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>File Upload</h4>
+                                <p>File attachment field</p>
+                            </div>
+                        </div>
+                        
+                        <div class="element" draggable="true" data-type="range">
+                            <div class="element-icon">
+                                <i class="fas fa-sliders-h"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Range Slider</h4>
+                                <p>Numeric range selection</p>
+                            </div>
+                        </div>
+                        
+                        <div class="element" draggable="true" data-type="color">
+                            <div class="element-icon">
+                                <i class="fas fa-palette"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Color Picker</h4>
+                                <p>Color selection field</p>
+                            </div>
+                        </div>
+                        
+                        <div class="element" draggable="true" data-type="password">
+                            <div class="element-icon">
+                                <i class="fas fa-lock"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Password</h4>
+                                <p>Secure password field</p>
+                            </div>
+                        </div>
+                        
+                        <div class="element" draggable="true" data-type="phone">
+                            <div class="element-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Phone Number</h4>
+                                <p>Telephone input field</p>
+                            </div>
+                        </div>
+                        
+                        <div class="element" draggable="true" data-type="url">
+                            <div class="element-icon">
+                                <i class="fas fa-link"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>URL Input</h4>
+                                <p>Website URL field</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Layout Elements -->
+                    <div class="elements-group" id="layoutElements">
+                        <div class="element" draggable="true" data-type="section">
+                            <div class="element-icon">
+                                <i class="fas fa-square"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Section</h4>
+                                <p>Group form elements</p>
+                            </div>
+                        </div>
+                        
+                        <div class="element" draggable="true" data-type="columns">
+                            <div class="element-icon">
+                                <i class="fas fa-columns"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Columns</h4>
+                                <p>Multi-column layout</p>
+                            </div>
+                        </div>
+                        
+                        <div class="element" draggable="true" data-type="divider">
+                            <div class="element-icon">
+                                <i class="fas fa-minus"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Divider</h4>
+                                <p>Visual separator</p>
+                            </div>
+                        </div>
+                        
+                        <div class="element" draggable="true" data-type="spacer">
+                            <div class="element-icon">
+                                <i class="fas fa-arrows-alt-v"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Spacer</h4>
+                                <p>Add vertical space</p>
+                            </div>
+                        </div>
+                        
+                        <div class="element" draggable="true" data-type="heading">
+                            <div class="element-icon">
+                                <i class="fas fa-heading"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Heading</h4>
+                                <p>Form section title</p>
+                            </div>
+                        </div>
+                        
+                        <div class="element" draggable="true" data-type="paragraph">
+                            <div class="element-icon">
+                                <i class="fas fa-paragraph"></i>
+                            </div>
+                            <div class="element-info">
+                                <h4>Paragraph</h4>
+                                <p>Descriptive text</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center - Form Builder Workspace -->
+            <section class="workspace">
+                <div class="workspace-header">
+                    <div class="form-title-editor">
+                        <input type="text" id="formTitle" value="Untitled Form" placeholder="Enter form title">
+                        <input type="text" id="formDescription" placeholder="Form description (optional)">
+                    </div>
+                    
+                    <div class="workspace-actions">
+                        <div class="action-group">
+                            <button class="action-btn" id="undoBtn" title="Undo">
+                                <i class="fas fa-undo"></i>
+                            </button>
+                            <button class="action-btn" id="redoBtn" title="Redo">
+                                <i class="fas fa-redo"></i>
+                            </button>
+                        </div>
+                        <div class="action-group">
+                            <button class="action-btn" id="clearBtn" title="Clear All">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <button class="action-btn" id="duplicateBtn" title="Duplicate">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-canvas" id="formCanvas">
+                    <div class="canvas-placeholder" id="canvasPlaceholder">
+                        <div class="placeholder-content">
+                            <i class="fas fa-hand-pointer"></i>
+                            <h3>Drag & Drop Form Elements</h3>
+                            <p>Start building your form by dragging elements from the left sidebar</p>
+                            <div class="hint">
+                                <i class="fas fa-lightbulb"></i>
+                                Tip: You can also double-click elements to add them
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Form elements will be added here dynamically -->
+                </div>
+                
+                <div class="workspace-footer">
+                    <div class="form-stats">
+                        <div class="stat">
+                            <i class="fas fa-layer-group"></i>
+                            <span id="elementCount">0</span> Elements
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span id="formWidth">100%</span> Width
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-outline" id="settingsBtn">
+                            <i class="fas fa-cog"></i> Settings
+                        </button>
+                        <button class="btn btn-primary" id="validateBtn">
+                            <i class="fas fa-check-circle"></i> Validate Form
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Sidebar - Element Properties -->
+            <aside class="sidebar right-sidebar">
+                <div class="sidebar-header">
+                    <h2><i class="fas fa-sliders-h"></i> Properties</h2>
+                    <div class="selected-element" id="selectedElementName">
+                        No element selected
+                    </div>
+                </div>
+                
+                <div class="properties-container" id="propertiesContainer">
+                    <div class="empty-properties">
+                        <i class="fas fa-mouse-pointer"></i>
+                        <h3>Select an Element</h3>
+                        <p>Click on any form element to edit its properties</p>
+                    </div>
+                </div>
+                
+                <div class="form-settings">
+                    <h3><i class="fas fa-cog"></i> Form Settings</h3>
+                    <div class="setting">
+                        <label for="formTheme">Theme</label>
+                        <select id="formTheme">
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                            <option value="modern">Modern</option>
+                            <option value="minimal">Minimal</option>
+                        </select>
+                    </div>
+                    <div class="setting">
+                        <label for="formWidth">Form Width</label>
+                        <input type="range" id="formWidthSlider" min="400" max="1200" step="50" value="800">
+                        <span class="value" id="formWidthValue">800px</span>
+                    </div>
+                    <div class="setting">
+                        <label>
+                            <input type="checkbox" id="showLabels" checked>
+                            Show Field Labels
+                        </label>
+                    </div>
+                    <div class="setting">
+                        <label>
+                            <input type="checkbox" id="showPlaceholders" checked>
+                            Show Placeholders
+                        </label>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Preview Modal -->
+        <div class="modal" id="previewModal">
+            <div class="modal-content large">
+                <div class="modal-header">
+                    <h3><i class="fas fa-eye"></i> Form Preview</h3>
+                    <button class="close-modal"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="preview-container" id="previewContainer">
+                        <!-- Preview will be rendered here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary close-modal">Close</button>
+                    <button class="btn btn-primary" id="testSubmitBtn">
+                        <i class="fas fa-paper-plane"></i> Test Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Modal -->
+        <div class="modal" id="exportModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-download"></i> Export Form</h3>
+                    <button class="close-modal"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="export-options">
+                        <div class="export-option active" data-format="html">
+                            <div class="export-icon">
+                                <i class="fab fa-html5"></i>
+                            </div>
+                            <h4>HTML</h4>
+                            <p>Pure HTML & CSS</p>
+                        </div>
+                        <div class="export-option" data-format="json">
+                            <div class="export-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <h4>JSON</h4>
+                            <p>Form structure data</p>
+                        </div>
+                        <div class="export-option" data-format="react">
+                            <div class="export-icon">
+                                <i class="fab fa-react"></i>
+                            </div>
+                            <h4>React</h4>
+                            <p>React components</p>
+                        </div>
+                        <div class="export-option" data-format="vue">
+                            <div class="export-icon">
+                                <i class="fab fa-vuejs"></i>
+                            </div>
+                            <h4>Vue.js</h4>
+                            <p>Vue components</p>
+                        </div>
+                    </div>
+                    
+                    <div class="export-preview">
+                        <h4>Preview:</h4>
+                        <div class="code-preview" id="codePreview">
+                            <pre><code id="exportCode"></code></pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary close-modal">Cancel</button>
+                    <button class="btn btn-primary" id="copyCodeBtn">
+                        <i class="fas fa-copy"></i> Copy Code
+                    </button>
+                    <button class="btn btn-success" id="downloadCodeBtn">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div class="modal" id="settingsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-cog"></i> Form Settings</h3>
+                    <button class="close-modal"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="settings-group">
+                        <h4><i class="fas fa-paint-brush"></i> Appearance</h4>
+                        <div class="setting">
+                            <label for="formPadding">Form Padding</label>
+                            <input type="range" id="formPadding" min="10" max="50" value="20">
+                            <span class="value" id="formPaddingValue">20px</span>
+                        </div>
+                        <div class="setting">
+                            <label for="fieldSpacing">Field Spacing</label>
+                            <input type="range" id="fieldSpacing" min="10" max="40" value="15">
+                            <span class="value" id="fieldSpacingValue">15px</span>
+                        </div>
+                        <div class="setting">
+                            <label for="borderRadius">Border Radius</label>
+                            <input type="range" id="borderRadius" min="0" max="20" value="8">
+                            <span class="value" id="borderRadiusValue">8px</span>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-group">
+                        <h4><i class="fas fa-check-circle"></i> Validation</h4>
+                        <div class="setting">
+                            <label>
+                                <input type="checkbox" id="enableValidation" checked>
+                                Enable client-side validation
+                            </label>
+                        </div>
+                        <div class="setting">
+                            <label>
+                                <input type="checkbox" id="showErrors" checked>
+                                Show validation errors
+                            </label>
+                        </div>
+                        <div class="setting">
+                            <label>
+                                <input type="checkbox" id="requiredByDefault">
+                                All fields required by default
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-group">
+                        <h4><i class="fas fa-share-alt"></i> Submission</h4>
+                        <div class="setting">
+                            <label for="submitAction">Submit Action</label>
+                            <select id="submitAction">
+                                <option value="none">None (Custom Handler)</option>
+                                <option value="console">Log to Console</option>
+                                <option value="alert">Show Alert</option>
+                                <option value="redirect">Redirect to URL</option>
+                            </select>
+                        </div>
+                        <div class="setting">
+                            <label for="successMessage">Success Message</label>
+                            <input type="text" id="successMessage" value="Form submitted successfully!">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary close-modal">Cancel</button>
+                    <button class="btn btn-primary" id="saveSettingsBtn">Save Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
