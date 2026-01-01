@@ -1,0 +1,122 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
+
+.container {
+  width: 500px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  transition: all 0.3s;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.progress-bar {
+  background: #eee;
+  border-radius: 50px;
+  height: 10px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 10px;
+  width: 0;
+  background: #007bff;
+  border-radius: 50px;
+  transition: width 0.3s;
+}
+
+.steps {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.step {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  border-bottom: 2px solid #ccc;
+  color: #999;
+  font-weight: bold;
+}
+
+.step.active {
+  border-bottom: 4px solid #007bff;
+  color: #007bff;
+}
+
+#stepContent {
+  margin-bottom: 20px;
+  transition: all 0.3s;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #f7f7f7;
+}
+
+.cart-item input {
+  width: 50px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+pre {
+  background: #f1f1f1;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+  max-height: 150px;
+}

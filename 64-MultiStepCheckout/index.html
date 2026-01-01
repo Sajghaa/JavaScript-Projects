@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi-step Checkout </title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Checkout Flow </h1>
+
+    <div class="progress-bar">
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <div class="steps">
+      <div class="step active" data-step="1">Cart</div>
+      <div class="step" data-step="2">Address</div>
+      <div class="step" data-step="3">Payment</div>
+    </div>
+
+    <div id="stepContent"></div>
+
+    <div class="buttons">
+      <button id="prevBtn" disabled>⬅ Previous</button>
+      <button id="nextBtn">Next ➡</button>
+    </div>
+
+    <h2>Checkout State (Debug)</h2>
+    <pre id="checkoutState"></pre>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
