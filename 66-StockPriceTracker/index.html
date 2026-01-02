@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Price Tracker  | Live Market Data</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>Stock Tracker <span class="chart-icon">📈</span></h1>
+                        <p class="tagline">Real-time market data & portfolio tracking</p>
+                    </div>
+                </div>
+                
+                <div class="market-status">
+                    <div class="status-indicator" id="marketStatus">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Loading...</span>
+                    </div>
+                    <div class="last-update" id="lastUpdate">
+                        Last update: --
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard">
+            <!-- Controls Panel -->
+            <div class="controls-panel">
+                <div class="panel-section">
+                    <h3><i class="fas fa-search"></i> Add Stocks</h3>
+                    <div class="search-container">
+                        <input type="text" id="stockSearch" placeholder="Search symbol (e.g., AAPL, TSLA, GOOGL)">
+                        <button id="searchBtn" class="btn-primary">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                    
+                    <div class="popular-stocks">
+                        <p class="section-subtitle">Popular Stocks:</p>
+                        <div class="popular-tickers">
+                            <button class="ticker-btn" data-symbol="AAPL">AAPL</button>
+                            <button class="ticker-btn" data-symbol="MSFT">MSFT</button>
+                            <button class="ticker-btn" data-symbol="GOOGL">GOOGL</button>
+                            <button class="ticker-btn" data-symbol="AMZN">AMZN</button>
+                            <button class="ticker-btn" data-symbol="TSLA">TSLA</button>
+                            <button class="ticker-btn" data-symbol="META">META</button>
+                            <button class="ticker-btn" data-symbol="NVDA">NVDA</button>
+                            <button class="ticker-btn" data-symbol="NFLX">NFLX</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3><i class="fas fa-sliders-h"></i> Settings</h3>
+                    <div class="settings-group">
+                        <div class="setting-item">
+                            <label for="refreshInterval">Auto-refresh:</label>
+                            <select id="refreshInterval">
+                                <option value="5">5 seconds</option>
+                                <option value="10" selected>10 seconds</option>
+                                <option value="30">30 seconds</option>
+                                <option value="60">1 minute</option>
+                                <option value="300">5 minutes</option>
+                                <option value="0">Manual</option>
+                            </select>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label for="themeSelect">Theme:</label>
+                            <select id="themeSelect">
+                                <option value="light" selected>Light</option>
+                                <option value="dark">Dark</option>
+                                <option value="blue">Blue</option>
+                            </select>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label>
+                                <input type="checkbox" id="soundToggle" checked>
+                                Sound alerts
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button id="refreshBtn" class="btn-secondary">
+                            <i class="fas fa-sync-alt"></i> Refresh Now
+                        </button>
+                        <button id="exportBtn" class="btn-secondary">
+                            <i class="fas fa-download"></i> Export Data
+                        </button>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3><i class="fas fa-info-circle"></i> Market Summary</h3>
+                    <div class="market-summary" id="marketSummary">
+                        <div class="summary-item">
+                            <span class="summary-label">Indices:</span>
+                            <span class="summary-value">Loading...</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Total Stocks:</span>
+                            <span class="summary-value" id="totalStocks">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Last Updated:</span>
+                            <span class="summary-value" id="summaryUpdateTime">--:--:--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Portfolio Summary -->
+                <div class="portfolio-summary">
+                    <div class="summary-card">
+                        <div class="summary-icon" style="background-color: #10b98120;">
+                            <i class="fas fa-wallet" style="color: #10b981;"></i>
+                        </div>
+                        <div class="summary-text">
+                            <p class="summary-label">Portfolio Value</p>
+                            <p class="summary-value" id="portfolioValue">$0.00</p>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-card">
+                        <div class="summary-icon" style="background-color: #3b82f620;">
+                            <i class="fas fa-chart-bar" style="color: #3b82f6;"></i>
+                        </div>
+                        <div class="summary-text">
+                            <p class="summary-label">Today's Change</p>
+                            <p class="summary-value" id="dailyChange">$0.00 <span id="dailyChangePercent">(0.00%)</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-card">
+                        <div class="summary-icon" style="background-color: #8b5cf620;">
+                            <i class="fas fa-arrow-trend-up" style="color: #8b5cf6;"></i>
+                        </div>
+                        <div class="summary-text">
+                            <p class="summary-label">Gainers</p>
+                            <p class="summary-value" id="gainersCount">0</p>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-card">
+                        <div class="summary-icon" style="background-color: #ef444420;">
+                            <i class="fas fa-arrow-trend-down" style="color: #ef4444;"></i>
+                        </div>
+                        <div class="summary-text">
+                            <p class="summary-label">Losers</p>
+                            <p class="summary-value" id="losersCount">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stocks Table -->
+                <div class="stocks-table-container">
+                    <div class="table-header">
+                        <h2><i class="fas fa-table"></i> Tracked Stocks</h2>
+                        <div class="table-actions">
+                            <button id="clearAllBtn" class="btn-danger">
+                                <i class="fas fa-trash"></i> Clear All
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="stocks-table" id="stocksTable">
+                            <thead>
+                                <tr>
+                                    <th class="sortable" data-sort="symbol">
+                                        Symbol <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="name">
+                                        Company <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="price">
+                                        Price <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="change">
+                                        Change <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="changePercent">
+                                        Change % <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th class="sortable" data-sort="volume">
+                                        Volume <i class="fas fa-sort"></i>
+                                    </th>
+                                    <th>Chart</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stocksTableBody">
+                                <!-- Stocks will be loaded here -->
+                                <tr class="empty-row">
+                                    <td colspan="8">
+                                        <div class="empty-state">
+                                            <i class="fas fa-chart-line"></i>
+                                            <p>No stocks added yet. Search for a stock symbol to get started.</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="footer-info">
+                            <span id="visibleStocks">Showing 0 of 0 stocks</span>
+                        </div>
+                        <div class="pagination">
+                            <button id="prevPage" class="pagination-btn" disabled>
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <span class="page-info">Page <span id="currentPage">1</span> of <span id="totalPages">1</span></span>
+                            <button id="nextPage" class="pagination-btn" disabled>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="charts-section">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3><i class="fas fa-chart-area"></i> Price Trends</h3>
+                            <div class="chart-controls">
+                                <select id="chartPeriod">
+                                    <option value="1d">1 Day</option>
+                                    <option value="5d">5 Days</option>
+                                    <option value="1mo" selected>1 Month</option>
+                                    <option value="3mo">3 Months</option>
+                                    <option value="6mo">6 Months</option>
+                                </select>
+                                <button id="fullscreenChart" class="btn-icon">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-placeholder" id="chartPlaceholder">
+                            <div class="chart-empty">
+                                <i class="fas fa-chart-line"></i>
+                                <p>Select a stock to view detailed chart</p>
+                            </div>
+                        </div>
+                        <canvas id="priceChart"></canvas>
+                    </div>
+                    
+                    <div class="stock-details">
+                        <div class="details-header">
+                            <h3><i class="fas fa-info-circle"></i> Stock Details</h3>
+                            <span id="selectedStockSymbol">--</span>
+                        </div>
+                        <div class="details-content" id="stockDetails">
+                            <div class="details-empty">
+                                <i class="fas fa-info"></i>
+                                <p>Click on a stock row to see detailed information</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Stock Tracker 📈</h4>
+                    <p>Real-time stock market data tracker with live updates.</p>
+                    <p class="disclaimer">Data is for demonstration purposes only. Not financial advice.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Data Sources</h4>
+                    <p>Powered by financial APIs providing real-time and historical data.</p>
+                    <div class="data-sources">
+                        <span class="source-tag">Alpha Vantage</span>
+                        <span class="source-tag">Yahoo Finance</span>
+                        <span class="source-tag">Market Data</span>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Refresh Status</h4>
+                    <div class="refresh-status">
+                        <div class="status-item">
+                            <span>Auto-refresh:</span>
+                            <span id="footerRefreshRate">10s</span>
+                        </div>
+                        <div class="status-item">
+                            <span>Last update:</span>
+                            <span id="footerLastUpdate">--:--:--</span>
+                        </div>
+                        <div class="status-item">
+                            <span>Stocks tracked:</span>
+                            <span id="footerStockCount">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2023 Stock Price Tracker. Built with HTML, CSS & JavaScript.</p>
+                <div class="footer-links">
+                    <a href="#" id="apiStatus"><i class="fas fa-plug"></i> API Status</a>
+                    <a href="#" id="viewDocs"><i class="fas fa-book"></i> Documentation</a>
+                    <a href="#" id="reportIssue"><i class="fas fa-bug"></i> Report Issue</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
