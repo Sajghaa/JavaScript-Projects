@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Editor Lite 🖌</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="app-header">
+            <div class="logo">
+                <i class="fas fa-camera-retro"></i>
+                <h1>Photo Editor Lite <span class="paint-brush">🖌</span></h1>
+            </div>
+            <p class="tagline">Edit your photos with ease - filters, crop, rotate and more!</p>
+        </header>
+
+        <main class="editor-container">
+            <div class="sidebar">
+                <div class="tool-category active" id="upload-section">
+                    <h3><i class="fas fa-cloud-upload-alt"></i> Upload Photo</h3>
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-image"></i>
+                        <p>Drag & drop your image here</p>
+                        <p class="upload-subtext">or click to browse</p>
+                        <input type="file" id="imageInput" accept="image/*">
+                    </div>
+                    <div class="sample-images">
+                        <p class="sample-title">Try with sample images:</p>
+                        <div class="sample-thumbnails">
+                            <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Sample 1" data-sample="1">
+                            <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Sample 2" data-sample="2">
+                            <img src="https://images.unsplash.com/photo-1505142468610-359e7d316be0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Sample 3" data-sample="3">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-category" id="filter-section">
+                    <h3><i class="fas fa-sliders-h"></i> Filters</h3>
+                    <div class="filters-grid">
+                        <div class="filter-option" data-filter="none">
+                            <div class="filter-preview original"></div>
+                            <span>Original</span>
+                        </div>
+                        <div class="filter-option" data-filter="vintage">
+                            <div class="filter-preview vintage"></div>
+                            <span>Vintage</span>
+                        </div>
+                        <div class="filter-option" data-filter="grayscale">
+                            <div class="filter-preview grayscale"></div>
+                            <span>Grayscale</span>
+                        </div>
+                        <div class="filter-option" data-filter="sepia">
+                            <div class="filter-preview sepia"></div>
+                            <span>Sepia</span>
+                        </div>
+                        <div class="filter-option" data-filter="brightness">
+                            <div class="filter-preview brightness"></div>
+                            <span>Brightness</span>
+                        </div>
+                        <div class="filter-option" data-filter="invert">
+                            <div class="filter-preview invert"></div>
+                            <span>Invert</span>
+                        </div>
+                        <div class="filter-option" data-filter="blur">
+                            <div class="filter-preview blur"></div>
+                            <span>Blur</span>
+                        </div>
+                        <div class="filter-option" data-filter="hue">
+                            <div class="filter-preview hue"></div>
+                            <span>Hue Rotate</span>
+                        </div>
+                    </div>
+                    <div class="slider-container">
+                        <label for="filter-intensity">Intensity: <span id="intensity-value">50%</span></label>
+                        <input type="range" id="filter-intensity" min="0" max="100" value="50">
+                    </div>
+                </div>
+
+                <div class="tool-category" id="crop-section">
+                    <h3><i class="fas fa-crop-alt"></i> Crop & Rotate</h3>
+                    <div class="crop-controls">
+                        <div class="crop-presets">
+                            <button class="preset-btn" data-ratio="free">Free</button>
+                            <button class="preset-btn" data-ratio="1:1">1:1</button>
+                            <button class="preset-btn" data-ratio="4:3">4:3</button>
+                            <button class="preset-btn" data-ratio="16:9">16:9</button>
+                        </div>
+                        <div class="rotate-controls">
+                            <button id="rotate-left" class="rotate-btn"><i class="fas fa-undo"></i> -90°</button>
+                            <button id="rotate-right" class="rotate-btn"><i class="fas fa-redo"></i> +90°</button>
+                            <button id="flip-horizontal" class="rotate-btn"><i class="fas fa-arrows-alt-h"></i> Flip H</button>
+                        </div>
+                        <div class="apply-container">
+                            <button id="apply-crop" class="apply-btn">Apply Crop</button>
+                            <button id="reset-all" class="reset-btn">Reset All</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-category" id="export-section">
+                    <h3><i class="fas fa-download"></i> Export</h3>
+                    <div class="export-controls">
+                        <div class="quality-control">
+                            <label for="export-quality">Quality: <span id="quality-value">80%</span></label>
+                            <input type="range" id="export-quality" min="10" max="100" value="80">
+                        </div>
+                        <div class="format-buttons">
+                            <button class="format-btn active" data-format="png">PNG</button>
+                            <button class="format-btn" data-format="jpeg">JPEG</button>
+                            <button class="format-btn" data-format="webp">WEBP</button>
+                        </div>
+                        <button id="download-btn" class="download-btn">
+                            <i class="fas fa-download"></i> Download Image
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="image-container" id="imageContainer">
+                    <div class="placeholder">
+                        <i class="fas fa-image"></i>
+                        <p>Your edited image will appear here</p>
+                        <p class="placeholder-subtext">Upload an image or choose a sample to get started</p>
+                    </div>
+                    <canvas id="mainCanvas"></canvas>
+                    <div class="crop-overlay" id="cropOverlay">
+                        <div class="crop-area" id="cropArea">
+                            <div class="crop-handle top-left"></div>
+                            <div class="crop-handle top-right"></div>
+                            <div class="crop-handle bottom-left"></div>
+                            <div class="crop-handle bottom-right"></div>
+                            <div class="crop-handle top-center"></div>
+                            <div class="crop-handle bottom-center"></div>
+                            <div class="crop-handle left-center"></div>
+                            <div class="crop-handle right-center"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="image-info">
+                    <div class="info-item">
+                        <span class="info-label">Dimensions:</span>
+                        <span id="dimensions">0 x 0</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Filter:</span>
+                        <span id="current-filter">None</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Rotation:</span>
+                        <span id="current-rotation">0°</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Status:</span>
+                        <span id="status">Ready</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <p>Photo Editor Lite 🖌 - A lightweight photo editing tool</p>
+            <p class="footer-links">
+                <span><i class="fas fa-code"></i> Built with HTML, CSS & JavaScript</span>
+                <span><i class="fas fa-filter"></i> Filters</span>
+                <span><i class="fas fa-crop-alt"></i> Crop</span>
+                <span><i class="fas fa-sync-alt"></i> Rotate</span>
+            </p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
