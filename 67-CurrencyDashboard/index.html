@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Dashboard  | Real-Time Exchange Rates</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💱</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1><i class="fas fa-chart-line"></i> Currency Dashboard</h1>
+                <p class="subtitle">Real-time exchange rates and multi-currency conversions</p>
+            </div>
+            <div class="header-actions">
+                <button id="refresh-rates" class="btn-refresh">
+                    <i class="fas fa-sync-alt"></i> Refresh Rates
+                </button>
+                <div class="last-updated" id="last-updated">
+                    Last updated: <span id="update-time">Just now</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-content">
+            <div class="dashboard-grid">
+                <!-- Currency Converter Section -->
+                <section class="card converter-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-exchange-alt"></i> Currency Converter</h2>
+                        <div class="card-actions">
+                            <button class="btn-icon" id="add-conversion" title="Add another conversion">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="conversion-container">
+                            <!-- Conversion items will be added here dynamically -->
+                        </div>
+                        <div class="conversion-result" id="conversion-result">
+                            <h3>Total Conversion</h3>
+                            <div class="result-display" id="total-conversion">-</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Exchange Rates Section -->
+                <section class="card rates-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-globe"></i> Exchange Rates</h2>
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="rate-search" placeholder="Search currencies...">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="rates-table-container">
+                            <table class="rates-table">
+                                <thead>
+                                    <tr>
+                                        <th>Currency</th>
+                                        <th>Code</th>
+                                        <th>Rate (USD)</th>
+                                        <th>Trend</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rates-table-body">
+                                    <!-- Rates will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Popular Currency Pairs -->
+                <section class="card pairs-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-star"></i> Popular Currency Pairs</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="currency-pairs" id="popular-pairs">
+                            <!-- Popular pairs will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Currency Statistics -->
+                <section class="card stats-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-chart-bar"></i> Currency Statistics</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-container" id="stats-container">
+                            <!-- Statistics will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer class="dashboard-footer">
+            <p>Currency Dashboard  • Data provided by <a href="https://exchangerate-api.com" target="_blank">ExchangeRate-API</a> • Rates update every 30 minutes</p>
+            <p class="footer-note"><i class="fas fa-info-circle"></i> This dashboard uses mock data for demonstration. In a production environment, connect to a live API.</p>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Fetching latest exchange rates...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
