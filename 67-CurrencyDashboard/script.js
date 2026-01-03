@@ -486,14 +486,14 @@ class UIComponents {
         });
     }
 
-    // Refresh exchange rates
+  
     async refreshRates() {
         const baseCurrency = this.stateManager.getState().baseCurrency;
         const data = await this.apiService.fetchExchangeRates(baseCurrency);
         this.stateManager.updateExchangeRates(data.rates);
     }
 
-    // Filter rates table
+  
     filterRates(query) {
         const tableRows = document.querySelectorAll('#rates-table-body tr');
         const queryLower = query.toLowerCase();
@@ -510,7 +510,6 @@ class UIComponents {
         });
     }
 
-    // Update all conversions when rates change
     updateAllConversions() {
         const conversionItems = document.querySelectorAll('.conversion-item');
         
@@ -519,14 +518,12 @@ class UIComponents {
         });
     }
 
-    // Update last updated time
     updateLastUpdatedTime() {
         const now = new Date();
         const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         document.getElementById('update-time').textContent = timeString;
     }
 
-    // Get currency options for select elements
     getCurrencyOptions(selected = 'USD') {
         const currencies = [
             { code: 'USD', name: 'US Dollar' },
@@ -548,7 +545,6 @@ class UIComponents {
         }).join('');
     }
 
-    // Get currency name from code
     getCurrencyName(code) {
         const currencyNames = {
             'USD': 'US Dollar',
@@ -569,7 +565,6 @@ class UIComponents {
     }
 }
 
-// Main Application Class
 class CurrencyDashboard {
     constructor() {
         this.stateManager = new CurrencyState();
@@ -577,15 +572,12 @@ class CurrencyDashboard {
         this.ui = new UIComponents(this.stateManager, this.apiService);
     }
 
-    // Initialize the application
     async init() {
-        // Load initial exchange rates
+     
         await this.loadInitialRates();
-        
-        // Initialize UI
+
         this.ui.init();
         
-        // Update last updated time
         this.ui.updateLastUpdatedTime();
     }
 
