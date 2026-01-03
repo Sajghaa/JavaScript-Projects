@@ -68,21 +68,13 @@ class ExchangeRateService {
         this.baseUrl = 'https://api.exchangerate-api.com/v4/latest';
     }
 
-    // Fetch exchange rates from API (mock implementation)
     async fetchExchangeRates(baseCurrency = 'USD') {
-        // Show loading state
         document.getElementById('loading-overlay').style.display = 'flex';
         
-        // In a real application, you would make an actual API call:
-        // const response = await fetch(`${this.baseUrl}/${baseCurrency}?apiKey=${this.apiKey}`);
-        // const data = await response.json();
-        
-        // Mock data for demonstration
         return new Promise(resolve => {
             setTimeout(() => {
                 document.getElementById('loading-overlay').style.display = 'none';
                 
-                // Generate realistic mock exchange rates
                 const mockRates = this.generateMockRates(baseCurrency);
                 resolve({
                     base: baseCurrency,
@@ -93,12 +85,12 @@ class ExchangeRateService {
         });
     }
 
-    // Generate realistic mock exchange rates
+    
     generateMockRates(baseCurrency) {
         const currencies = ['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY', 'INR', 'BRL', 'MXN', 'KRW'];
         const rates = {};
         
-        // Base rates relative to USD
+        
         const baseRates = {
             USD: 1,
             EUR: 0.92,
@@ -113,12 +105,10 @@ class ExchangeRateService {
             MXN: 17.25,
             KRW: 1332.5
         };
-        
-        // Convert to selected base currency
         const baseRate = baseRates[baseCurrency] || 1;
         
         currencies.forEach(currency => {
-            // Add small random fluctuations to make it look real
+            
             const fluctuation = (Math.random() - 0.5) * 0.02; // +/- 1%
             rates[currency] = ((baseRates[currency] || 1) / baseRate) * (1 + fluctuation);
         });
@@ -126,21 +116,17 @@ class ExchangeRateService {
         return rates;
     }
 
-    // Convert currency
     convert(amount, fromCurrency, toCurrency, rates) {
         if (fromCurrency === toCurrency) return amount;
         
-        // If rates are based on USD
         const fromRate = rates[fromCurrency] || 1;
         const toRate = rates[toCurrency] || 1;
         
-        // Convert to USD first, then to target currency
         const amountInUSD = amount / fromRate;
         return amountInUSD * toRate;
     }
 }
 
-// UI Components Module
 class UIComponents {
     constructor(stateManager, apiService) {
         this.stateManager = stateManager;
@@ -332,38 +318,31 @@ class UIComponents {
             result: 0
         });
         
-        // Calculate initial conversion
         this.calculateConversion(index);
         
-        // Setup event listeners for this conversion item
         this.setupConversionListeners(index);
     }
 
-    // Setup event listeners for conversion items
     setupConversionListeners(index) {
         const conversionItem = document.querySelector(`.conversion-item[data-index="${index}"]`);
         
         if (!conversionItem) return;
         
-        // Amount input change
         const amountInput = conversionItem.querySelector('.amount-input');
         amountInput.addEventListener('input', () => {
             this.calculateConversion(index);
         });
-        
-        // Currency from change
+
         const currencyFrom = conversionItem.querySelector('.currency-from');
         currencyFrom.addEventListener('change', () => {
             this.calculateConversion(index);
         });
-        
-        // Currency to change
+
         const currencyTo = conversionItem.querySelector('.currency-to');
         currencyTo.addEventListener('change', () => {
             this.calculateConversion(index);
         });
-        
-        // Swap button
+
         const swapBtn = conversionItem.querySelector('.swap-btn');
         if (swapBtn) {
             swapBtn.addEventListener('click', () => {
@@ -371,7 +350,6 @@ class UIComponents {
             });
         }
         
-        // Delete button
         const deleteBtn = conversionItem.querySelector('.delete-conversion');
         if (deleteBtn) {
             deleteBtn.addEventListener('click', () => {
@@ -380,7 +358,6 @@ class UIComponents {
         }
     }
 
-    // Calculate conversion for a specific item
     calculateConversion(index) {
         const conversionItem = document.querySelector(`.conversion-item[data-index="${index}"]`);
         
@@ -414,15 +391,11 @@ class UIComponents {
             result: result
         };
         
-        // Instead of directly modifying state, we'll update through state manager
-        // For simplicity in this demo, we'll update directly
         this.stateManager.state.conversions[index] = conversions[index];
         
-        // Update total conversion
         this.updateTotalConversion();
     }
 
-    // Swap currencies in a conversion item
     swapCurrencies(index) {
         const conversionItem = document.querySelector(`.conversion-item[data-index="${index}"]`);
         
@@ -438,7 +411,6 @@ class UIComponents {
         this.calculateConversion(index);
     }
 
-    // Remove a conversion item
     removeConversionItem(index) {
         const container = document.getElementById('conversion-container');
         const itemToRemove = document.querySelector(`.conversion-item[data-index="${index}"]`);
@@ -446,12 +418,10 @@ class UIComponents {
         if (itemToRemove) {
             itemToRemove.remove();
             
-            // Update indices for remaining items
             const remainingItems = container.querySelectorAll('.conversion-item');
             remainingItems.forEach((item, newIndex) => {
                 item.setAttribute('data-index', newIndex);
                 
-                // Update delete button visibility
                 const deleteBtn = item.querySelector('.delete-conversion');
                 if (newIndex === 0 && deleteBtn) {
                     deleteBtn.style.display = 'none';
@@ -460,15 +430,12 @@ class UIComponents {
                 }
             });
             
-            // Update state
             this.stateManager.removeConversion(index);
             
-            // Update total conversion
             this.updateTotalConversion();
         }
     }
 
-    // Update total conversion display
     updateTotalConversion() {
         const conversions = this.stateManager.getState().conversions;
         let total = 0;
@@ -480,24 +447,19 @@ class UIComponents {
         const totalElement = document.getElementById('total-conversion');
         totalElement.textContent = total.toFixed(2);
         
-        // Update the base currency display
         const baseCurrency = this.stateManager.getState().baseCurrency;
         document.querySelector('.conversion-result h3').textContent = `Total Conversion (${baseCurrency} equivalent)`;
     }
 
-    // Setup event listeners
     setupEventListeners() {
-        // Refresh rates button
         document.getElementById('refresh-rates').addEventListener('click', () => {
             this.refreshRates();
         });
-        
-        // Add conversion button
+
         document.getElementById('add-conversion').addEventListener('click', () => {
             this.addConversionItem();
         });
-        
-        // Search input for rates
+
         document.getElementById('rate-search').addEventListener('input', (e) => {
             this.filterRates(e.target.value);
         });
