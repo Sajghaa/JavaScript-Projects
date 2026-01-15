@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Sports Scoreboard ⚽</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-futbol"></i>
+                <h1>Live Sports Scoreboard</h1>
+            </div>
+            <div class="last-updated" id="lastUpdated">
+                Last updated: <span>Just now</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="controls">
+                <div class="refresh-controls">
+                    <button id="refreshBtn" class="btn-refresh">
+                        <i class="fas fa-sync-alt"></i> Refresh Scores
+                    </button>
+                    <div class="auto-refresh">
+                        <label for="autoRefresh">
+                            <input type="checkbox" id="autoRefresh" checked>
+                            Auto-refresh every 30s
+                        </label>
+                    </div>
+                </div>
+                <div class="league-filter">
+                    <select id="leagueFilter">
+                        <option value="all">All Leagues</option>
+                        <option value="premier">Premier League</option>
+                        <option value="la-liga">La Liga</option>
+                        <option value="serie-a">Serie A</option>
+                        <option value="bundesliga">Bundesliga</option>
+                        <option value="champions">Champions League</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="scoreboard">
+                <!-- Live matches will be dynamically inserted here -->
+            </div>
+
+            <div class="upcoming-matches">
+                <h2><i class="fas fa-calendar-alt"></i> Upcoming Matches</h2>
+                <div class="upcoming-list">
+                    <!-- Upcoming matches will be dynamically inserted here -->
+                </div>
+            </div>
+                    <!-- Add these new sections in main-content -->
+        <div class="match-details-panel">
+            <h2><i class="fas fa-chart-bar"></i> Match Statistics</h2>
+            <div class="stats-container" id="statsContainer">
+                <!-- Statistics will load here when a match is selected -->
+                <p class="no-stats">Select a match to view detailed statistics</p>
+            </div>
+        </div>
+
+        <div class="standings-section">
+            <h2><i class="fas fa-table"></i> League Standings</h2>
+            <div class="standings-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-league="premier">Premier League</button>
+                    <button class="tab-btn" data-league="la-liga">La Liga</button>
+                    <button class="tab-btn" data-league="serie-a">Serie A</button>
+                </div>
+                <div class="tab-content">
+                    <div class="standings-table" id="premierTable">
+                        <!-- Premier League standings will load here -->
+                    </div>
+                    <div class="standings-table" id="laLigaTable" style="display: none;">
+                        <!-- La Liga standings will load here -->
+                    </div>
+                    <div class="standings-table" id="serieATable" style="display: none;">
+                        <!-- Serie A standings will load here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add to controls section -->
+        <div class="view-toggle">
+            <button class="view-btn active" data-view="cards">
+                <i class="fas fa-th-large"></i> Cards
+            </button>
+            <button class="view-btn" data-view="list">
+                <i class="fas fa-list"></i> List
+            </button>
+        </div>
+        </main>
+
+        <div class="notifications">
+            <h3><i class="fas fa-bell"></i> Match Updates</h3>
+            <div class="notifications-list" id="notificationsList">
+                <!-- Custom event notifications will appear here -->
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>Live Sports Scoreboard ⚽ • Data updates every 30 seconds</p>
+            <p class="api-notice">Using simulated data for demonstration. In production, connect to a live sports API.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
