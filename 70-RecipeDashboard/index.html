@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Dashboard | Search & Favorites</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">
+                    <i class="fas fa-utensils"></i>
+                    Recipe Dashboard
+                </h1>
+                <div class="header-controls">
+                    <button id="themeToggle" class="icon-btn">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Search for recipes (e.g., pasta, chicken, pizza)..."
+                        autocomplete="off"
+                    >
+                    <button id="searchBtn" class="btn btn-primary">
+                        Search
+                    </button>
+                </div>
+                
+                <div class="filter-controls">
+                    <select id="mealType" class="filter-select">
+                        <option value="">All Meal Types</option>
+                        <option value="breakfast">Breakfast</option>
+                        <option value="lunch">Lunch</option>
+                        <option value="dinner">Dinner</option>
+                        <option value="snack">Snack</option>
+                        <option value="dessert">Dessert</option>
+                    </select>
+                    
+                    <select id="dietType" class="filter-select">
+                        <option value="">All Diets</option>
+                        <option value="vegetarian">Vegetarian</option>
+                        <option value="vegan">Vegan</option>
+                        <option value="gluten-free">Gluten Free</option>
+                        <option value="keto">Keto</option>
+                        <option value="paleo">Paleo</option>
+                    </select>
+                    
+                    <select id="cuisineType" class="filter-select">
+                        <option value="">All Cuisines</option>
+                        <option value="italian">Italian</option>
+                        <option value="mexican">Mexican</option>
+                        <option value="chinese">Chinese</option>
+                        <option value="indian">Indian</option>
+                        <option value="japanese">Japanese</option>
+                        <option value="thai">Thai</option>
+                        <option value="french">French</option>
+                        <option value="mediterranean">Mediterranean</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <button class="tab-btn active" data-tab="search">
+                    <i class="fas fa-search"></i>
+                    Search Results
+                </button>
+                <button class="tab-btn" data-tab="favorites">
+                    <i class="fas fa-heart"></i>
+                    Favorites
+                    <span id="favoritesCount" class="badge">0</span>
+                </button>
+            </div>
+
+            <!-- Search Results Section -->
+            <section id="searchResults" class="content-section active">
+                <div class="section-header">
+                    <h2>Search Results</h2>
+                    <div class="results-info">
+                        <span id="resultsCount">0</span> recipes found
+                    </div>
+                </div>
+                
+                <!-- Loading Spinner -->
+                <div id="loadingSpinner" class="loading-spinner hidden">
+                    <div class="spinner"></div>
+                    <p>Loading delicious recipes...</p>
+                </div>
+                
+                <!-- Recipes Grid -->
+                <div id="recipesGrid" class="recipes-grid"></div>
+                
+                <!-- Load More Button -->
+                <div class="load-more-container">
+                    <button id="loadMoreBtn" class="btn btn-secondary hidden">
+                        Load More Recipes
+                    </button>
+                </div>
+                
+                <!-- No Results Message -->
+                <div id="noResults" class="no-results hidden">
+                    <i class="fas fa-search"></i>
+                    <h3>No recipes found</h3>
+                    <p>Try adjusting your search or filters</p>
+                </div>
+            </section>
+
+            <!-- Favorites Section -->
+            <section id="favoritesSection" class="content-section">
+                <div class="section-header">
+                    <h2>
+                        <i class="fas fa-heart" style="color: #ff4757;"></i>
+                        My Favorite Recipes
+                    </h2>
+                </div>
+                
+                <div id="favoritesGrid" class="recipes-grid"></div>
+                
+                <div id="noFavorites" class="no-results">
+                    <i class="fas fa-heart-broken"></i>
+                    <h3>No favorites yet</h3>
+                    <p>Start adding recipes to your favorites!</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- Recipe Modal -->
+        <div id="recipeModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modalTitle">Recipe Details</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div id="modalBody" class="modal-body">
+                    <!-- Recipe details will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast hidden"></div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
