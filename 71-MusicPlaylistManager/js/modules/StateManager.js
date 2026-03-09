@@ -1,3 +1,5 @@
+import { StorageManager } from './StorageManager.js';
+
 export class StateManager {
     constructor() {
         this.state = {
