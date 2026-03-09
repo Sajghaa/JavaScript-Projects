@@ -48,10 +48,9 @@ export class AudioPlayer {
     // Load and play track
     async playTrack(track) {
         try {
-            // Use sample audio or actual audio file
-            this.audio.src = track.audioUrl || this.getSampleAudio(track);
-            await this.audio.load();
-            await this.audio.play();
+            // For demo purposes, we'll simulate audio playback
+            // In production, you would use actual audio files
+            this.simulatePlayback(track);
             
             this.stateManager.set('currentTrack', track);
             this.stateManager.addToRecentlyPlayed(track.id);
@@ -63,11 +62,55 @@ export class AudioPlayer {
         }
     }
 
-    // Get sample audio (for demo purposes)
-    getSampleAudio(track) {
-        // In production, this would be actual audio files
-        // For demo, we'll use a silent audio or Web Audio API
-        return 'data:audio/mp3;base64,SUQzBAAAAA...'; // Placeholder
+    // Simulate playback for demo (since we don't have actual audio files)
+    simulatePlayback(track) {
+        // Simulate loading metadata
+        setTimeout(() => {
+            this.audio.dispatchEvent(new Event('loadedmetadata'));
+        }, 100);
+        
+        // Simulate time updates
+        let currentTime = 0;
+        const duration = this.parseDuration(track.duration) || 180; // Default 3 minutes
+        
+        this.stateManager.update({
+            player: {
+                ...this.stateManager.get('player'),
+                duration: duration,
+                isPlaying: true
+            }
+        });
+        
+        const interval = setInterval(() => {
+            if (!this.stateManager.get('player').isPlaying) {
+                clearInterval(interval);
+                return;
+            }
+            
+            currentTime += 1;
+            if (currentTime >= duration) {
+                currentTime = duration;
+                clearInterval(interval);
+                this.handleTrackEnd();
+            }
+            
+            this.stateManager.update({
+                player: {
+                    ...this.stateManager.get('player'),
+                    currentTime: currentTime
+                }
+            });
+        }, 1000);
+    }
+
+    // Parse duration string (e.g., "3:45" to seconds)
+    parseDuration(duration) {
+        if (!duration) return 180;
+        const parts = duration.split(':');
+        if (parts.length === 2) {
+            return parseInt(parts[0]) * 60 + parseInt(parts[1]);
+        }
+        return 180;
     }
 
     // Pause current track
@@ -82,11 +125,13 @@ export class AudioPlayer {
 
     // Toggle play/pause
     togglePlay() {
-        if (this.audio.paused) {
-            this.play();
-        } else {
-            this.pause();
-        }
+        const player = this.stateManager.get('player');
+        this.stateManager.update({
+            player: {
+                ...player,
+                isPlaying: !player.isPlaying
+            }
+        });
     }
 
     // Stop current track
@@ -118,16 +163,13 @@ export class AudioPlayer {
     // Toggle mute
     toggleMute() {
         const player = this.stateManager.get('player');
-        if (player.isMuted) {
-            this.audio.volume = player.volume / 100;
-        } else {
-            this.audio.volume = 0;
-        }
+        const newMuted = !player.isMuted;
         
         this.stateManager.update({
             player: {
                 ...player,
-                isMuted: !player.isMuted
+                isMuted: newMuted,
+                volume: newMuted ? 0 : player.volume
             }
         });
     }
@@ -216,7 +258,7 @@ export class AudioPlayer {
         if (!tracks.length || !currentTrack) return;
         
         // If current time > 3 seconds, restart current track
-        if (this.audio.currentTime > 3) {
+        if (this.stateManager.get('player').currentTime > 3) {
             this.seek(0);
             return;
         }
@@ -273,6 +315,7 @@ export class AudioPlayer {
 
     // Format time (seconds to MM:SS)
     formatTime(seconds) {
+        if (!seconds) return '0:00';
         const mins = Math.floor(seconds / 60);
         const secs = Math.floor(seconds % 60);
         return `${mins}:${secs.toString().padStart(2, '0')}`;
