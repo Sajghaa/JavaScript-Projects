@@ -1,4 +1,3 @@
-// StateManager.js - Centralized state management
 export class StateManager {
     constructor() {
         this.state = {
