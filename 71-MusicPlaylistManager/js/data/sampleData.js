@@ -5,7 +5,7 @@ export const sampleTracks = [
         artist: 'Queen',
         album: 'A Night at the Opera',
         duration: '5:55',
-        artwork: 'https://via.placeholder.com/200/1db954/ffffff?text=Queen',
+        artwork: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200&h=200&fit=crop',
         genre: 'Rock',
         year: 1975
     },
@@ -15,7 +15,7 @@ export const sampleTracks = [
         artist: 'Michael Jackson',
         album: 'Thriller',
         duration: '4:54',
-        artwork: 'https://via.placeholder.com/200/1db954/ffffff?text=Michael+Jackson',
+        artwork: 'https://images.unsplash.com/photo-1518609878377-06fcf5b61f8e?w=200&h=200&fit=crop',
         genre: 'Pop',
         year: 1982
     },
@@ -25,7 +25,7 @@ export const sampleTracks = [
         artist: 'Ed Sheeran',
         album: '÷',
         duration: '3:53',
-        artwork: 'https://via.placeholder.com/200/1db954/ffffff?text=Ed+Sheeran',
+        artwork: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=200&fit=crop',
         genre: 'Pop',
         year: 2017
     },
@@ -35,7 +35,7 @@ export const sampleTracks = [
         artist: 'Nirvana',
         album: 'Nevermind',
         duration: '5:01',
-        artwork: 'https://via.placeholder.com/200/1db954/ffffff?text=Nirvana',
+        artwork: 'https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=200&h=200&fit=crop',
         genre: 'Grunge',
         year: 1991
     },
@@ -45,7 +45,7 @@ export const sampleTracks = [
         artist: 'Eagles',
         album: 'Hotel California',
         duration: '6:30',
-        artwork: 'https://via.placeholder.com/200/1db954/ffffff?text=Eagles',
+        artwork: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=200&h=200&fit=crop',
         genre: 'Rock',
         year: 1976
     },
@@ -55,7 +55,7 @@ export const sampleTracks = [
         artist: 'Adele',
         album: '21',
         duration: '3:48',
-        artwork: 'https://via.placeholder.com/200/1db954/ffffff?text=Adele',
+        artwork: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=200&fit=crop',
         genre: 'Soul',
         year: 2010
     },
@@ -65,7 +65,7 @@ export const sampleTracks = [
         artist: 'Mark Ronson ft. Bruno Mars',
         album: 'Uptown Special',
         duration: '4:30',
-        artwork: 'https://via.placeholder.com/200/1db954/ffffff?text=Uptown+Funk',
+        artwork: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=200&h=200&fit=crop',
         genre: 'Funk',
         year: 2014
     },
@@ -75,7 +75,7 @@ export const sampleTracks = [
         artist: 'John Lennon',
         album: 'Imagine',
         duration: '3:03',
-        artwork: 'https://via.placeholder.com/200/1db954/ffffff?text=John+Lennon',
+        artwork: 'https://images.unsplash.com/photo-1518609878377-06fcf5b61f8e?w=200&h=200&fit=crop',
         genre: 'Rock',
         year: 1971
     }
@@ -88,20 +88,20 @@ export const samplePlaylists = [
         name: 'Workout Mix',
         description: 'High energy tracks for your workout',
         tracks: ['1', '3', '6'],
-        artwork: 'https://via.placeholder.com/200/1db954/ffffff?text=Workout'
+        artwork: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=200&h=200&fit=crop'
     },
     {
         id: 'playlist2',
         name: 'Chill Vibes',
         description: 'Relaxing tunes for a lazy day',
         tracks: ['2', '5', '8'],
-        artwork: 'https://via.placeholder.com/200/1db954/ffffff?text=Chill'
+        artwork: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=200&h=200&fit=crop'
     },
     {
         id: 'playlist3',
         name: 'Road Trip',
         description: 'Perfect songs for driving',
         tracks: ['4', '7', '1'],
-        artwork: 'https://via.placeholder.com/200/1db954/ffffff?text=Road+Trip'
+        artwork: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=200&h=200&fit=crop'
     }
 ];
