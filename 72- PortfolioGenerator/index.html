@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Generator Pro | Create Your Professional Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/editor.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-code"></i>
+                    <span>Portfolio<span class="accent">Generator</span></span>
+                </div>
+                
+                <div class="header-actions">
+                    <button id="saveBtn" class="btn btn-outline">
+                        <i class="fas fa-save"></i>
+                        Save
+                    </button>
+                    <button id="previewBtn" class="btn btn-outline">
+                        <i class="fas fa-eye"></i>
+                        Preview
+                    </button>
+                    <button id="exportBtn" class="btn btn-primary">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <div class="workspace">
+            <!-- Left Sidebar - Editor -->
+            <aside class="editor-sidebar">
+                <div class="sidebar-tabs">
+                    <button class="tab-btn active" data-tab="sections">
+                        <i class="fas fa-layer-group"></i>
+                        Sections
+                    </button>
+                    <button class="tab-btn" data-tab="content">
+                        <i class="fas fa-edit"></i>
+                        Content
+                    </button>
+                    <button class="tab-btn" data-tab="design">
+                        <i class="fas fa-palette"></i>
+                        Design
+                    </button>
+                    <button class="tab-btn" data-tab="settings">
+                        <i class="fas fa-cog"></i>
+                        Settings
+                    </button>
+                </div>
+
+                <!-- Sections Panel -->
+                <div id="sectionsPanel" class="sidebar-panel active">
+                    <div class="panel-header">
+                        <h3>Add Sections</h3>
+                        <p>Drag & drop to reorder</p>
+                    </div>
+                    
+                    <div class="sections-library">
+                        <div class="section-item" data-type="hero">
+                            <i class="fas fa-user"></i>
+                            <span>Hero Section</span>
+                        </div>
+                        <div class="section-item" data-type="about">
+                            <i class="fas fa-info-circle"></i>
+                            <span>About Me</span>
+                        </div>
+                        <div class="section-item" data-type="projects">
+                            <i class="fas fa-code-branch"></i>
+                            <span>Projects</span>
+                        </div>
+                        <div class="section-item" data-type="skills">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Skills</span>
+                        </div>
+                        <div class="section-item" data-type="experience">
+                            <i class="fas fa-briefcase"></i>
+                            <span>Experience</span>
+                        </div>
+                        <div class="section-item" data-type="education">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Education</span>
+                        </div>
+                        <div class="section-item" data-type="testimonials">
+                            <i class="fas fa-quote-right"></i>
+                            <span>Testimonials</span>
+                        </div>
+                        <div class="section-item" data-type="contact">
+                            <i class="fas fa-envelope"></i>
+                            <span>Contact</span>
+                        </div>
+                    </div>
+
+                    <div class="active-sections">
+                        <h4>Active Sections</h4>
+                        <div id="activeSectionsList" class="sections-list">
+                            <!-- Active sections will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Editor Panel -->
+                <div id="contentPanel" class="sidebar-panel">
+                    <div class="panel-header">
+                        <h3>Edit Content</h3>
+                    </div>
+                    <div id="contentEditor" class="content-editor">
+                        <!-- Content editor will be dynamically loaded -->
+                        <div class="editor-placeholder">
+                            <i class="fas fa-arrow-left"></i>
+                            <p>Select a section to edit</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Design Panel -->
+                <div id="designPanel" class="sidebar-panel">
+                    <div class="panel-header">
+                        <h3>Design Settings</h3>
+                    </div>
+                    
+                    <div class="design-options">
+                        <div class="option-group">
+                            <label>Theme</label>
+                            <select id="themeSelect" class="design-select">
+                                <option value="modern">Modern</option>
+                                <option value="minimal">Minimal</option>
+                                <option value="creative">Creative</option>
+                                <option value="professional">Professional</option>
+                            </select>
+                        </div>
+
+                        <div class="option-group">
+                            <label>Color Scheme</label>
+                            <div class="color-schemes">
+                                <div class="color-scheme" data-primary="#2563eb" data-secondary="#1e40af">
+                                    <span style="background: #2563eb"></span>
+                                    <span style="background: #1e40af"></span>
+                                </div>
+                                <div class="color-scheme" data-primary="#7c3aed" data-secondary="#5b21b6">
+                                    <span style="background: #7c3aed"></span>
+                                    <span style="background: #5b21b6"></span>
+                                </div>
+                                <div class="color-scheme" data-primary="#059669" data-secondary="#047857">
+                                    <span style="background: #059669"></span>
+                                    <span style="background: #047857"></span>
+                                </div>
+                                <div class="color-scheme" data-primary="#b91c1c" data-secondary="#991b1b">
+                                    <span style="background: #b91c1c"></span>
+                                    <span style="background: #991b1b"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="option-group">
+                            <label>Typography</label>
+                            <select id="fontSelect" class="design-select">
+                                <option value="Inter">Inter (Modern)</option>
+                                <option value="Poppins">Poppins (Creative)</option>
+                                <option value="Roboto">Roboto (Professional)</option>
+                                <option value="Montserrat">Montserrat (Minimal)</option>
+                            </select>
+                        </div>
+
+                        <div class="option-group">
+                            <label>Layout</label>
+                            <div class="layout-options">
+                                <button class="layout-btn" data-layout="full">
+                                    <i class="fas fa-square"></i>
+                                    Full Width
+                                </button>
+                                <button class="layout-btn" data-layout="boxed">
+                                    <i class="fas fa-stop"></i>
+                                    Boxed
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="option-group">
+                            <label>Animations</label>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="animationsToggle" checked>
+                                <label for="animationsToggle"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Panel -->
+                <div id="settingsPanel" class="sidebar-panel">
+                    <div class="panel-header">
+                        <h3>Portfolio Settings</h3>
+                    </div>
+                    
+                    <div class="settings-options">
+                        <div class="option-group">
+                            <label>Portfolio URL</label>
+                            <input type="text" id="portfolioUrl" class="settings-input" placeholder="my-portfolio">
+                        </div>
+
+                        <div class="option-group">
+                            <label>Language</label>
+                            <select id="languageSelect" class="design-select">
+                                <option value="en">English</option>
+                                <option value="es">Español</option>
+                                <option value="fr">Français</option>
+                                <option value="de">Deutsch</option>
+                            </select>
+                        </div>
+
+                        <div class="option-group">
+                            <label>Social Links</label>
+                            <div class="social-links-editor">
+                                <div class="social-input">
+                                    <i class="fab fa-github"></i>
+                                    <input type="url" id="githubUrl" placeholder="https://github.com/username">
+                                </div>
+                                <div class="social-input">
+                                    <i class="fab fa-linkedin"></i>
+                                    <input type="url" id="linkedinUrl" placeholder="https://linkedin.com/in/username">
+                                </div>
+                                <div class="social-input">
+                                    <i class="fab fa-twitter"></i>
+                                    <input type="url" id="twitterUrl" placeholder="https://twitter.com/username">
+                                </div>
+                                <div class="social-input">
+                                    <i class="fab fa-codepen"></i>
+                                    <input type="url" id="codepenUrl" placeholder="https://codepen.io/username">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="option-group">
+                            <label>SEO Settings</label>
+                            <input type="text" id="metaTitle" class="settings-input" placeholder="Meta Title">
+                            <textarea id="metaDescription" class="settings-textarea" placeholder="Meta Description" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center - Live Preview -->
+            <main class="preview-area">
+                <div class="preview-toolbar">
+                    <div class="device-selector">
+                        <button class="device-btn active" data-device="desktop">
+                            <i class="fas fa-desktop"></i>
+                        </button>
+                        <button class="device-btn" data-device="tablet">
+                            <i class="fas fa-tablet-alt"></i>
+                        </button>
+                        <button class="device-btn" data-device="mobile">
+                            <i class="fas fa-mobile-alt"></i>
+                        </button>
+                    </div>
+                    <div class="preview-controls">
+                        <button id="refreshPreview" class="icon-btn">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button id="fullscreenPreview" class="icon-btn">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="previewContainer" class="preview-container">
+                    <iframe id="previewFrame" class="preview-frame" src="about:blank"></iframe>
+                </div>
+            </main>
+
+            <!-- Right Sidebar - Properties -->
+            <aside class="properties-sidebar">
+                <div class="properties-header">
+                    <h3>Properties</h3>
+                </div>
+                
+                <div id="propertiesPanel" class="properties-panel">
+                    <div class="properties-placeholder">
+                        <i class="fas fa-mouse-pointer"></i>
+                        <p>Select an element to edit its properties</p>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h4>Quick Actions</h4>
+                    <button id="duplicateSection" class="quick-btn">
+                        <i class="fas fa-copy"></i>
+                        Duplicate
+                    </button>
+                    <button id="moveUpSection" class="quick-btn">
+                        <i class="fas fa-arrow-up"></i>
+                        Move Up
+                    </button>
+                    <button id="moveDownSection" class="quick-btn">
+                        <i class="fas fa-arrow-down"></i>
+                        Move Down
+                    </button>
+                    <button id="deleteSection" class="quick-btn delete">
+                        <i class="fas fa-trash"></i>
+                        Delete
+                    </button>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Export Modal -->
+        <div id="exportModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Export Portfolio</h2>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="export-options">
+                        <div class="export-option">
+                            <i class="fas fa-file-code"></i>
+                            <h4>HTML + CSS</h4>
+                            <p>Download complete static website</p>
+                            <button class="btn btn-primary" data-export="html">
+                                Download
+                            </button>
+                        </div>
+                        <div class="export-option">
+                            <i class="fas fa-file-pdf"></i>
+                            <h4>PDF Resume</h4>
+                            <p>Generate PDF version</p>
+                            <button class="btn btn-primary" data-export="pdf">
+                                Download
+                            </button>
+                        </div>
+                        <div class="export-option">
+                            <i class="fas fa-code"></i>
+                            <h4>JSON Data</h4>
+                            <p>Export portfolio data</p>
+                            <button class="btn btn-primary" data-export="json">
+                                Download
+                            </button>
+                        </div>
+                        <div class="export-option">
+                            <i class="fab fa-github"></i>
+                            <h4>GitHub Pages</h4>
+                            <p>Publish to GitHub</p>
+                            <button class="btn btn-primary" data-export="github">
+                                Publish
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
