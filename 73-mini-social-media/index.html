@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Social - Connect & Share</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fab fa-twitter"></i>
+                <span>Mini<span class="accent">Social</span></span>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-view="home">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="#" class="nav-item" data-view="explore">
+                    <i class="fas fa-hashtag"></i>
+                    <span>Explore</span>
+                </a>
+                <a href="#" class="nav-item" data-view="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                    <span class="badge" id="notificationBadge">0</span>
+                </a>
+                <a href="#" class="nav-item" data-view="profile">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+                <a href="#" class="nav-item" data-view="messages">
+                    <i class="fas fa-envelope"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="#" class="nav-item" data-view="bookmarks">
+                    <i class="fas fa-bookmark"></i>
+                    <span>Bookmarks</span>
+                </a>
+            </nav>
+
+            <button id="createPostBtn" class="btn btn-primary btn-block">
+                <i class="fas fa-feather"></i>
+                Post
+            </button>
+
+            <div class="user-profile-mini" id="currentUserMini">
+                <img src="https://via.placeholder.com/40x40" alt="User" class="avatar">
+                <div class="user-info">
+                    <div class="user-name" id="sidebarUserName">Guest User</div>
+                    <div class="user-handle" id="sidebarUserHandle">@guest</div>
+                </div>
+                <button id="logoutBtn" class="icon-btn" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content" id="mainContent">
+            <!-- Dynamic content will be loaded here -->
+        </main>
+
+        <!-- Right Sidebar - Trends & Suggestions -->
+        <aside class="right-sidebar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search MiniSocial" id="searchInput">
+            </div>
+
+            <div class="trends-card">
+                <h3>Trends for you</h3>
+                <div class="trends-list" id="trendsList">
+                    <!-- Trends will be loaded here -->
+                </div>
+            </div>
+
+            <div class="suggestions-card">
+                <h3>Who to follow</h3>
+                <div class="suggestions-list" id="suggestionsList">
+                    <!-- Suggestions will be loaded here -->
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Create Post Modal -->
+    <div id="postModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Post</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="post-form">
+                    <div class="user-info">
+                        <img src="https://via.placeholder.com/48x48" alt="User" id="modalUserAvatar">
+                        <div>
+                            <span class="user-name" id="modalUserName">User Name</span>
+                            <span class="user-handle" id="modalUserHandle">@handle</span>
+                        </div>
+                    </div>
+                    <textarea id="postContent" placeholder="What's happening?" maxlength="280"></textarea>
+                    <div class="post-actions">
+                        <div class="post-tools">
+                            <button class="tool-btn" title="Add image">
+                                <i class="fas fa-image"></i>
+                            </button>
+                            <button class="tool-btn" title="Add GIF">
+                                <i class="fas fa-gift"></i>
+                            </button>
+                            <button class="tool-btn" title="Add poll">
+                                <i class="fas fa-chart-bar"></i>
+                            </button>
+                            <button class="tool-btn" title="Add emoji">
+                                <i class="far fa-smile"></i>
+                            </button>
+                        </div>
+                        <div class="post-submit">
+                            <span class="char-count" id="charCount">0/280</span>
+                            <button class="btn btn-primary" id="submitPost">Post</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login/Signup Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Join MiniSocial</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">Login</button>
+                    <button class="auth-tab" data-tab="signup">Sign Up</button>
+                </div>
+                
+                <div id="loginForm" class="auth-form active">
+                    <div class="form-group">
+                        <label>Email or Username</label>
+                        <input type="text" id="loginUsername" placeholder="Enter your email or username">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password">
+                    </div>
+                    <button class="btn btn-primary btn-block" id="loginBtn">Login</button>
+                </div>
+
+                <div id="signupForm" class="auth-form">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="signupName" placeholder="Enter your name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="signupEmail" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="signupUsername" placeholder="Choose a username">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="signupPassword" placeholder="Choose a password">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input type="password" id="signupConfirm" placeholder="Confirm your password">
+                    </div>
+                    <button class="btn btn-primary btn-block" id="signupBtn">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
