@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Trello - Task Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fab fa-trello"></i>
+                    <span>Mini<span class="accent">Trello</span></span>
+                </div>
+
+                <div class="header-actions">
+                    <button id="createBoardBtn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Create Board
+                    </button>
+                    <button id="themeToggle" class="icon-btn">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Boards Navigation -->
+            <div class="boards-nav" id="boardsNav">
+                <!-- Boards will be dynamically added here -->
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
+            <div class="boards-container" id="boardsContainer">
+                <!-- Boards will be dynamically loaded here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Board Modal -->
+    <div id="boardModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Board</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Board Title</label>
+                    <input type="text" id="boardTitle" placeholder="e.g., Project Management">
+                </div>
+                <div class="form-group">
+                    <label>Background Color</label>
+                    <div class="color-picker">
+                        <div class="color-option" data-color="#0079bf" style="background: #0079bf"></div>
+                        <div class="color-option" data-color="#d29034" style="background: #d29034"></div>
+                        <div class="color-option" data-color="#519839" style="background: #519839"></div>
+                        <div class="color-option" data-color="#b04632" style="background: #b04632"></div>
+                        <div class="color-option" data-color="#89609e" style="background: #89609e"></div>
+                        <div class="color-option" data-color="#cd5a91" style="background: #cd5a91"></div>
+                        <div class="color-option" data-color="#4bbf6b" style="background: #4bbf6b"></div>
+                        <div class="color-option" data-color="#ff9f1a" style="background: #ff9f1a"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" id="saveBoardBtn">Create Board</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create List Modal -->
+    <div id="listModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create List</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>List Title</label>
+                    <input type="text" id="listTitle" placeholder="e.g., To Do">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" id="saveListBtn">Create List</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create/Edit Card Modal -->
+    <div id="cardModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="cardModalTitle">Create Card</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Card Title</label>
+                    <input type="text" id="cardTitle" placeholder="e.g., Design homepage">
+                </div>
+                
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="cardDescription" rows="4" placeholder="Add a more detailed description..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Due Date</label>
+                    <input type="datetime-local" id="cardDueDate">
+                </div>
+
+                <div class="form-group">
+                    <label>Labels</label>
+                    <div class="labels-container" id="labelsContainer">
+                        <div class="label-option" data-color="#61bd4f">
+                            <span style="background: #61bd4f"></span>
+                            Green
+                        </div>
+                        <div class="label-option" data-color="#f2d600">
+                            <span style="background: #f2d600"></span>
+                            Yellow
+                        </div>
+                        <div class="label-option" data-color="#ff9f1a">
+                            <span style="background: #ff9f1a"></span>
+                            Orange
+                        </div>
+                        <div class="label-option" data-color="#eb5a46">
+                            <span style="background: #eb5a46"></span>
+                            Red
+                        </div>
+                        <div class="label-option" data-color="#c377e0">
+                            <span style="background: #c377e0"></span>
+                            Purple
+                        </div>
+                        <div class="label-option" data-color="#0079bf">
+                            <span style="background: #0079bf"></span>
+                            Blue
+                        </div>
+                    </div>
+                    <div id="selectedLabels" class="selected-labels"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Checklist</label>
+                    <div id="checklistContainer">
+                        <div class="checklist-item">
+                            <input type="text" class="checklist-input" placeholder="Add item">
+                            <button class="add-checklist-btn" onclick="addChecklistItem(this)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Attachment</label>
+                    <div class="attachment-area" id="attachmentArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click to upload or drag and drop</p>
+                        <input type="file" id="fileInput" multiple style="display: none;">
+                    </div>
+                    <div id="attachmentsList" class="attachments-list"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" id="saveCardBtn">Save Card</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card Details Modal -->
+    <div id="cardDetailsModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2 id="detailsCardTitle">Card Details</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body" id="cardDetailsBody">
+                <!-- Card details will be dynamically loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
