@@ -9,6 +9,7 @@ import { ModalManager } from './modules/ModalManager.js';
 import { BoardComponent } from './components/BoardComponent.js';
 import { ListComponent } from './components/ListComponent.js';
 import { CardComponent } from './components/CardComponent.js';
+import { ModalComponent } from './components/ModalComponent.js'; // Added ModalComponent
 
 class TrelloApp {
     constructor() {
@@ -19,6 +20,7 @@ class TrelloApp {
         this.initializeUI();
         this.setupEventListeners();
         this.loadInitialData();
+        this.injectModalHTML(); // Inject modal HTML into the DOM
     }
 
     initializeModules() {
@@ -31,6 +33,7 @@ class TrelloApp {
         this.boardComponent = new BoardComponent(this.stateManager, this.eventBus);
         this.listComponent = new ListComponent(this.stateManager, this.eventBus);
         this.cardComponent = new CardComponent(this.stateManager, this.eventBus);
+        this.modalComponent = new ModalComponent(this.stateManager, this.eventBus); // Initialize ModalComponent
     }
 
     initializeUI() {
@@ -83,6 +86,12 @@ class TrelloApp {
             // Escape to close modals
             if (e.key === 'Escape') {
                 this.modalManager.closeAllModals();
+            }
+
+            // ? for keyboard shortcuts
+            if (e.key === '?' && !e.shiftKey) {
+                e.preventDefault();
+                this.modalManager.showShortcutsModal();
             }
         });
 
@@ -211,23 +220,74 @@ class TrelloApp {
         }, 3000);
     }
 
-    // Global functions for onclick handlers
-    static initGlobalFunctions(app) {
-        window.app = app;
-        window.closeModal = () => app.modalManager.closeAllModals();
-        window.addChecklistItem = (btn) => {
-            const input = btn.previousElementSibling;
-            if (input.value.trim()) {
-                app.cardManager.addChecklistItem(input.value.trim());
-                input.value = '';
-            }
-        };
+    // Inject modal HTML into the DOM
+    injectModalHTML() {
+        // Create modals container if it doesn't exist
+        let modalsContainer = document.getElementById('modalsContainer');
+        if (!modalsContainer) {
+            modalsContainer = document.createElement('div');
+            modalsContainer.id = 'modalsContainer';
+            document.body.appendChild(modalsContainer);
+        }
+
+        // Add all modal HTML
+        modalsContainer.innerHTML = `
+            ${this.modalComponent.renderCreateBoardModal()}
+            ${this.modalComponent.renderCreateListModal()}
+            ${this.modalComponent.renderCardModal()}
+            ${this.modalComponent.renderCardDetailsModal({
+                id: 'placeholder',
+                title: 'Card Details',
+                listId: 'placeholder',
+                createdAt: new Date().toISOString(),
+                comments: [],
+                checklist: [],
+                attachments: []
+            })}
+            ${this.modalComponent.renderExportImportModal()}
+            ${this.modalComponent.renderShortcutsModal()}
+        `;
+
+        // Set up color picker listeners
+        this.setupColorPicker();
+        
+        // Set up file upload
+        this.modalManager.setupFileUpload();
+    }
+
+    setupColorPicker() {
+        const colorPicker = document.getElementById('boardColorPicker');
+        if (colorPicker) {
+            colorPicker.querySelectorAll('.color-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    colorPicker.querySelectorAll('.color-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    option.classList.add('active');
+                });
+            });
+        }
     }
 }
 
+// Global functions for onclick handlers
+window.closeModal = () => {
+    if (window.app) {
+        window.app.modalManager.closeAllModals();
+    }
+};
+
+window.addChecklistItem = (btn) => {
+    if (window.app) {
+        const input = btn.previousElementSibling;
+        if (input.value.trim()) {
+            window.app.modalManager.addChecklistItem(btn);
+        }
+    }
+};
+
 // Initialize app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    const app = new TrelloApp();
-    TrelloApp.initGlobalFunctions(app);
-    app.loadTheme();
+    window.app = new TrelloApp();
+    window.app.loadTheme();
 });
