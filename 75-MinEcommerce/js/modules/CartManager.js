@@ -31,6 +31,7 @@ export class CartManager {
                 type: 'success'
             });
             
+            this.updateCartDisplay();
             this.openCart();
         }
 
@@ -106,14 +107,32 @@ export class CartManager {
     toggleCart() {
         const isOpen = this.stateManager.get('ui.cartOpen');
         this.stateManager.set('ui.cartOpen', !isOpen);
+        
+        // Update cart sidebar visibility
+        const cartSidebar = document.getElementById('cartSidebar');
+        if (cartSidebar) {
+            if (!isOpen) {
+                cartSidebar.classList.add('open');
+            } else {
+                cartSidebar.classList.remove('open');
+            }
+        }
     }
 
     openCart() {
         this.stateManager.set('ui.cartOpen', true);
+        const cartSidebar = document.getElementById('cartSidebar');
+        if (cartSidebar) {
+            cartSidebar.classList.add('open');
+        }
     }
 
     closeCart() {
         this.stateManager.set('ui.cartOpen', false);
+        const cartSidebar = document.getElementById('cartSidebar');
+        if (cartSidebar) {
+            cartSidebar.classList.remove('open');
+        }
     }
 
     continueShopping() {
@@ -125,7 +144,40 @@ export class CartManager {
         
         // Update cart count in header
         const count = this.stateManager.getCartCount();
-        document.getElementById('cartCount').textContent = count;
+        const cartCountEl = document.getElementById('cartCount');
+        if (cartCountEl) {
+            cartCountEl.textContent = count;
+        }
+        
+        // Update cart sidebar content
+        const cartSidebar = document.getElementById('cartSidebar');
+        if (cartSidebar && this.stateManager.get('ui.cartOpen')) {
+            const cartItems = cartSidebar.querySelector('.cart-items');
+            const cartTotal = cartSidebar.querySelector('.cart-total span:last-child');
+            
+            if (cartItems) {
+                const cart = this.stateManager.get('cart');
+                if (cart.length === 0) {
+                    cartItems.innerHTML = `
+                        <div class="empty-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            <p>Your cart is empty</p>
+                            <button class="btn btn-primary" onclick="app.cartManager.closeCart()">
+                                Continue Shopping
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    const cartItemComponent = new CartItem(this.stateManager, this.eventBus);
+                    cartItems.innerHTML = cart.map(item => cartItemComponent.render(item)).join('');
+                }
+            }
+            
+            if (cartTotal) {
+                const total = this.stateManager.getCartTotal();
+                cartTotal.textContent = `$${total.toFixed(2)}`;
+            }
+        }
     }
 
     getCartSummary() {
