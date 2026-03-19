@@ -54,34 +54,49 @@ class ECommerceApp {
 
     setupEventListeners() {
         // Cart button
-        document.getElementById('cartBtn').addEventListener('click', () => {
-            this.cartManager.toggleCart();
-        });
+        const cartBtn = document.getElementById('cartBtn');
+        if (cartBtn) {
+            cartBtn.addEventListener('click', () => {
+                this.cartManager.toggleCart();
+            });
+        }
 
-        // Theme toggle
-        document.getElementById('themeToggle').addEventListener('click', () => {
-            this.toggleTheme();
-        });
+        // Theme toggle - FIXED
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                this.toggleTheme();
+            });
+        }
 
         // Search button
-        document.getElementById('searchBtn').addEventListener('click', () => {
-            const query = document.getElementById('searchInput').value;
-            this.searchManager.search(query);
-        });
+        const searchBtn = document.getElementById('searchBtn');
+        if (searchBtn) {
+            searchBtn.addEventListener('click', () => {
+                const query = document.getElementById('searchInput').value;
+                this.searchManager.search(query);
+            });
+        }
 
         // Search input (debounced)
-        let searchTimeout;
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                this.searchManager.search(e.target.value);
-            }, 300);
-        });
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            let searchTimeout;
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    this.searchManager.search(e.target.value);
+                }, 300);
+            });
+        }
 
         // Sort select
-        document.getElementById('sortSelect').addEventListener('change', (e) => {
-            this.filterManager.setSortBy(e.target.value);
-        });
+        const sortSelect = document.getElementById('sortSelect');
+        if (sortSelect) {
+            sortSelect.addEventListener('change', (e) => {
+                this.filterManager.setSortBy(e.target.value);
+            });
+        }
 
         // View mode toggle
         document.querySelectorAll('.view-btn').forEach(btn => {
@@ -92,13 +107,23 @@ class ECommerceApp {
         });
 
         // Load more button
-        document.querySelector('.load-more button')?.addEventListener('click', () => {
-            this.productManager.loadMore();
-        });
+        const loadMoreBtn = document.querySelector('.load-more button');
+        if (loadMoreBtn) {
+            loadMoreBtn.addEventListener('click', () => {
+                this.productManager.loadMore();
+            });
+        }
 
         // Close modals on escape
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
+                this.closeAllModals();
+            }
+        });
+
+        // Click outside to close modals
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
                 this.closeAllModals();
             }
         });
@@ -151,18 +176,42 @@ class ECommerceApp {
         this.renderProducts();
         this.renderCategories();
         this.renderFilters();
+        this.renderCartSidebar();
+    }
+
+    renderCartSidebar() {
+        // Check if cart sidebar exists, if not create it
+        let cartSidebar = document.getElementById('cartSidebar');
+        if (!cartSidebar) {
+            cartSidebar = document.createElement('div');
+            cartSidebar.id = 'cartSidebar';
+            cartSidebar.className = 'cart-sidebar';
+            document.body.appendChild(cartSidebar);
+        }
+        
+        cartSidebar.innerHTML = this.cartSidebar.render();
+        
+        // Re-attach close event
+        const closeBtn = cartSidebar.querySelector('.close-cart');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                this.cartManager.closeCart();
+            });
+        }
     }
 
     renderProducts() {
         const container = document.getElementById('productsGrid');
+        if (!container) return;
+        
         const { products, total, hasMore } = this.stateManager.getPaginatedProducts();
         
         container.innerHTML = this.productGrid.render(products);
         
         // Show/hide load more button
-        const loadMoreBtn = document.querySelector('.load-more');
-        if (loadMoreBtn) {
-            loadMoreBtn.style.display = hasMore ? 'block' : 'none';
+        const loadMoreContainer = document.querySelector('.load-more');
+        if (loadMoreContainer) {
+            loadMoreContainer.style.display = hasMore ? 'block' : 'none';
         }
 
         // Update section title
@@ -170,18 +219,22 @@ class ECommerceApp {
         const search = this.stateManager.get('search');
         const title = document.getElementById('sectionTitle');
         
-        if (search.query) {
-            title.textContent = `Search results for "${search.query}"`;
-        } else if (filters.category && filters.category !== 'all') {
-            const category = this.stateManager.get('categories').find(c => c.id === filters.category);
-            title.textContent = category ? category.name : 'All Products';
-        } else {
-            title.textContent = 'All Products';
+        if (title) {
+            if (search.query) {
+                title.textContent = `Search results for "${search.query}"`;
+            } else if (filters.category && filters.category !== 'all') {
+                const category = this.stateManager.get('categories').find(c => c.id === filters.category);
+                title.textContent = category ? category.name : 'All Products';
+            } else {
+                title.textContent = 'All Products';
+            }
         }
     }
 
     renderCategories() {
         const container = document.getElementById('categoriesNav');
+        if (!container) return;
+        
         const categories = this.stateManager.get('categories');
         const currentCategory = this.stateManager.get('filters.category');
         
@@ -190,6 +243,8 @@ class ECommerceApp {
 
     renderFilters() {
         const container = document.getElementById('filterSidebar');
+        if (!container) return;
+        
         container.innerHTML = this.filterPanel.render();
         
         // Add filter event listeners
@@ -198,27 +253,24 @@ class ECommerceApp {
 
     updateCartUI() {
         const count = this.stateManager.getCartCount();
-        document.getElementById('cartCount').textContent = count;
-        
-        const cartItems = document.getElementById('cartItems');
-        const cart = this.stateManager.get('cart');
-        
-        if (cart.length === 0) {
-            cartItems.innerHTML = `
-                <div class="empty-cart">
-                    <i class="fas fa-shopping-cart"></i>
-                    <p>Your cart is empty</p>
-                    <button class="btn btn-primary" onclick="app.cartManager.closeCart()">
-                        Continue Shopping
-                    </button>
-                </div>
-            `;
-        } else {
-            cartItems.innerHTML = cart.map(item => this.cartItem.render(item)).join('');
+        const cartCountEl = document.getElementById('cartCount');
+        if (cartCountEl) {
+            cartCountEl.textContent = count;
         }
         
-        const total = this.stateManager.getCartTotal();
-        document.getElementById('cartTotal').textContent = `$${total.toFixed(2)}`;
+        // Update cart sidebar if open
+        const cartSidebar = document.getElementById('cartSidebar');
+        if (cartSidebar && this.stateManager.get('ui.cartOpen')) {
+            cartSidebar.innerHTML = this.cartSidebar.render();
+            
+            // Re-attach close event
+            const closeBtn = cartSidebar.querySelector('.close-cart');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => {
+                    this.cartManager.closeCart();
+                });
+            }
+        }
     }
 
     updateCategoryUI(category) {
@@ -235,7 +287,9 @@ class ECommerceApp {
         });
         
         const grid = document.getElementById('productsGrid');
-        grid.classList.toggle('list-view', mode === 'list');
+        if (grid) {
+            grid.classList.toggle('list-view', mode === 'list');
+        }
     }
 
     toggleTheme() {
@@ -246,7 +300,11 @@ class ECommerceApp {
         localStorage.setItem('theme', newTheme);
         
         const icon = document.querySelector('#themeToggle i');
-        icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        if (icon) {
+            icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+        
+        this.toast.show(`${newTheme === 'dark' ? 'Dark' : 'Light'} mode activated`, 'info');
     }
 
     loadTheme() {
@@ -254,7 +312,9 @@ class ECommerceApp {
         document.documentElement.setAttribute('data-theme', savedTheme);
         
         const icon = document.querySelector('#themeToggle i');
-        icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        if (icon) {
+            icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
     }
 
     closeAllModals() {
@@ -271,13 +331,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Global helper functions
 window.addToCart = (productId) => {
-    app.cartManager.addToCart(productId);
+    if (window.app) {
+        app.cartManager.addToCart(productId);
+    }
 };
 
 window.viewProduct = (productId) => {
-    app.productManager.viewProduct(productId);
+    if (window.app) {
+        app.productManager.viewProduct(productId);
+    }
 };
 
 window.closeModal = () => {
-    app.closeAllModals();
+    if (window.app) {
+        app.closeAllModals();
+    }
 };
