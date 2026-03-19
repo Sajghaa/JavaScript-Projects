@@ -36,196 +36,188 @@ export class StateManager {
     }
 
     // Initialize sample products
-    initializeSampleData() {
-        if (this.state.products.length === 0) {
-            this.state.products = [
-                {
-                    id: 'prod_1',
-                    name: 'Wireless Headphones',
-                    description: 'Premium wireless headphones with noise cancellation and 30-hour battery life. Perfect for music lovers and frequent travelers.',
-                    price: 199.99,
-                    oldPrice: 249.99,
-                    category: 'electronics',
-                    subCategory: 'audio',
-                    images: [
-                        'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500',
-                        'https://images.unsplash.com/photo-1583394838336-acd977736f90?w=500'
-                    ],
-                    rating: 4.5,
-                    reviews: 234,
-                    inStock: true,
-                    stockCount: 45,
-                    brand: 'SoundMaster',
-                    tags: ['wireless', 'bluetooth', 'noise-cancelling'],
-                    featured: true,
-                    createdAt: '2024-01-15'
-                },
-                {
-                    id: 'prod_2',
-                    name: 'Smart Watch Series 5',
-                    description: 'Track your fitness, receive notifications, and more with this advanced smart watch. Includes heart rate monitor and GPS.',
-                    price: 299.99,
-                    oldPrice: 349.99,
-                    category: 'electronics',
-                    subCategory: 'wearables',
-                    images: [
-                        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500',
-                        'https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=500'
-                    ],
-                    rating: 4.3,
-                    reviews: 156,
-                    inStock: true,
-                    stockCount: 28,
-                    brand: 'TechWear',
-                    tags: ['smartwatch', 'fitness', 'gps'],
-                    featured: true,
-                    createdAt: '2024-01-20'
-                },
-                {
-                    id: 'prod_3',
-                    name: 'Classic Cotton T-Shirt',
-                    description: 'Comfortable 100% cotton t-shirt, perfect for everyday wear. Available in multiple colors.',
-                    price: 24.99,
-                    oldPrice: 29.99,
-                    category: 'clothing',
-                    subCategory: 'mens',
-                    images: [
-                        'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500',
-                        'https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=500'
-                    ],
-                    rating: 4.7,
-                    reviews: 89,
-                    inStock: true,
-                    stockCount: 120,
-                    brand: 'ComfortWear',
-                    tags: ['cotton', 'casual', 't-shirt'],
-                    featured: false,
-                    colors: ['Black', 'White', 'Navy', 'Gray'],
-                    sizes: ['S', 'M', 'L', 'XL'],
-                    createdAt: '2024-02-01'
-                },
-                {
-                    id: 'prod_4',
-                    name: 'Professional Blender',
-                    description: 'High-speed blender perfect for smoothies, soups, and more. 1000W motor and durable stainless steel blades.',
-                    price: 89.99,
-                    oldPrice: 119.99,
-                    category: 'home',
-                    subCategory: 'kitchen',
-                    images: [
-                        'https://images.unsplash.com/photo-1570222094114-d054a817e56b?w=500',
-                        'https://images.unsplash.com/photo-1574317580882-4cdc9a5cbc5f?w=500'
-                    ],
-                    rating: 4.4,
-                    reviews: 67,
-                    inStock: true,
-                    stockCount: 15,
-                    brand: 'KitchenPro',
-                    tags: ['blender', 'kitchen', 'appliance'],
-                    featured: true,
-                    createdAt: '2024-02-10'
-                },
-                {
-                    id: 'prod_5',
-                    name: 'Yoga Mat Premium',
-                    description: 'Non-slip exercise mat perfect for yoga, pilates, and workouts. Eco-friendly material with carrying strap.',
-                    price: 39.99,
-                    oldPrice: 49.99,
-                    category: 'sports',
-                    subCategory: 'fitness',
-                    images: [
-                        'https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=500',
-                        'https://images.unsplash.com/photo-1592432675946-3a5e25f6ab5d?w=500'
-                    ],
-                    rating: 4.8,
-                    reviews: 112,
-                    inStock: true,
-                    stockCount: 50,
-                    brand: 'FlexFit',
-                    tags: ['yoga', 'fitness', 'exercise'],
-                    featured: false,
-                    colors: ['Purple', 'Blue', 'Black'],
-                    createdAt: '2024-02-15'
-                },
-                {
-                    id: 'prod_6',
-                    name: 'Leather Wallet',
-                    description: 'Genuine leather wallet with multiple card slots and RFID blocking technology.',
-                    price: 49.99,
-                    oldPrice: 59.99,
-                    category: 'accessories',
-                    subCategory: 'wallets',
-                    images: [
-                        'https://images.unsplash.com/photo-1627123424574-724758594e93?w=500',
-                        'https://images.unsplash.com/photo-1606503825008-909a67e63c3d?w=500'
-                    ],
-                    rating: 4.6,
-                    reviews: 45,
-                    inStock: true,
-                    stockCount: 32,
-                    brand: 'LeatherCraft',
-                    tags: ['leather', 'wallet', 'accessories'],
-                    featured: false,
-                    colors: ['Brown', 'Black'],
-                    createdAt: '2024-02-20'
-                },
-                {
-                    id: 'prod_7',
-                    name: 'Coffee Maker',
-                    description: 'Programmable coffee maker with 12-cup capacity. Features auto-brew and keep-warm function.',
-                    price: 79.99,
-                    oldPrice: 99.99,
-                    category: 'home',
-                    subCategory: 'kitchen',
-                    images: [
-                        'https://images.unsplash.com/photo-1517668808822-9ebb7f1a4e3e?w=500',
-                        'https://images.unsplash.com/photo-1520975661595-6453be495343?w=500'
-                    ],
-                    rating: 4.2,
-                    reviews: 78,
-                    inStock: true,
-                    stockCount: 23,
-                    brand: 'BrewMaster',
-                    tags: ['coffee', 'kitchen', 'appliance'],
-                    featured: true,
-                    createdAt: '2024-02-25'
-                },
-                {
-                    id: 'prod_8',
-                    name: 'Running Shoes',
-                    description: 'Lightweight running shoes with responsive cushioning. Perfect for daily runs and marathons.',
-                    price: 129.99,
-                    oldPrice: 159.99,
-                    category: 'footwear',
-                    subCategory: 'running',
-                    images: [
-                        'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500',
-                        'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=500'
-                    ],
-                    rating: 4.7,
-                    reviews: 156,
-                    inStock: true,
-                    stockCount: 40,
-                    brand: 'SportFlex',
-                    tags: ['running', 'shoes', 'sports'],
-                    featured: true,
-                    colors: ['Red', 'Blue', 'Black'],
-                    sizes: ['7', '8', '9', '10', '11'],
-                    createdAt: '2024-03-01'
-                }
-            ];
+    // In StateManager.js - Update initializeSampleData method with working image URLs
 
-            this.state.categories = [
-                { id: 'all', name: 'All Products', count: this.state.products.length },
-                { id: 'electronics', name: 'Electronics', count: this.state.products.filter(p => p.category === 'electronics').length },
-                { id: 'clothing', name: 'Clothing', count: this.state.products.filter(p => p.category === 'clothing').length },
-                { id: 'home', name: 'Home & Kitchen', count: this.state.products.filter(p => p.category === 'home').length },
-                { id: 'sports', name: 'Sports & Outdoors', count: this.state.products.filter(p => p.category === 'sports').length },
-                { id: 'accessories', name: 'Accessories', count: this.state.products.filter(p => p.category === 'accessories').length },
-                { id: 'footwear', name: 'Footwear', count: this.state.products.filter(p => p.category === 'footwear').length }
-            ];
-        }
+initializeSampleData() {
+    if (this.state.products.length === 0) {
+        this.state.products = [
+            {
+                id: 'prod_1',
+                name: 'Wireless Headphones',
+                description: 'Premium wireless headphones with noise cancellation and 30-hour battery life. Perfect for music lovers and frequent travelers.',
+                price: 199.99,
+                oldPrice: 249.99,
+                category: 'electronics',
+                subCategory: 'audio',
+                images: [
+                    'https://placehold.co/500x500/2563eb/white?text=Headphones',
+                    'https://placehold.co/500x500/1e40af/white?text=Wireless'
+                ],
+                rating: 4.5,
+                reviews: 234,
+                inStock: true,
+                stockCount: 45,
+                brand: 'SoundMaster',
+                tags: ['wireless', 'bluetooth', 'noise-cancelling'],
+                featured: true,
+                createdAt: '2024-01-15'
+            },
+            {
+                id: 'prod_2',
+                name: 'Smart Watch Series 5',
+                description: 'Track your fitness, receive notifications, and more with this advanced smart watch. Includes heart rate monitor and GPS.',
+                price: 299.99,
+                oldPrice: 349.99,
+                category: 'electronics',
+                subCategory: 'wearables',
+                images: [
+                    'https://placehold.co/500x500/10b981/white?text=Smart+Watch',
+                    'https://placehold.co/500x500/059669/white?text=GPS'
+                ],
+                rating: 4.3,
+                reviews: 156,
+                inStock: true,
+                stockCount: 28,
+                brand: 'TechWear',
+                tags: ['smartwatch', 'fitness', 'gps'],
+                featured: true,
+                createdAt: '2024-01-20'
+            },
+            {
+                id: 'prod_3',
+                name: 'Classic Cotton T-Shirt',
+                description: 'Comfortable 100% cotton t-shirt, perfect for everyday wear. Available in multiple colors.',
+                price: 24.99,
+                oldPrice: 29.99,
+                category: 'clothing',
+                subCategory: 'mens',
+                images: [
+                    'https://placehold.co/500x500/f59e0b/white?text=T-Shirt',
+                    'https://placehold.co/500x500/d97706/white?text=Cotton'
+                ],
+                rating: 4.7,
+                reviews: 89,
+                inStock: true,
+                stockCount: 120,
+                brand: 'ComfortWear',
+                tags: ['cotton', 'casual', 't-shirt'],
+                featured: false,
+                colors: ['Black', 'White', 'Navy', 'Gray'],
+                sizes: ['S', 'M', 'L', 'XL'],
+                createdAt: '2024-02-01'
+            },
+            {
+                id: 'prod_4',
+                name: 'Professional Blender',
+                description: 'High-speed blender perfect for smoothies, soups, and more. 1000W motor and durable stainless steel blades.',
+                price: 89.99,
+                oldPrice: 119.99,
+                category: 'home',
+                subCategory: 'kitchen',
+                images: [
+                    'https://placehold.co/500x500/ef4444/white?text=Blender',
+                    'https://placehold.co/500x500/dc2626/white?text=Kitchen'
+                ],
+                rating: 4.4,
+                reviews: 67,
+                inStock: true,
+                stockCount: 15,
+                brand: 'KitchenPro',
+                tags: ['blender', 'kitchen', 'appliance'],
+                featured: true,
+                createdAt: '2024-02-10'
+            },
+            {
+                id: 'prod_5',
+                name: 'Yoga Mat Premium',
+                description: 'Non-slip exercise mat perfect for yoga, pilates, and workouts. Eco-friendly material with carrying strap.',
+                price: 39.99,
+                oldPrice: 49.99,
+                category: 'sports',
+                subCategory: 'fitness',
+                images: [
+                    'https://placehold.co/500x500/8b5cf6/white?text=Yoga+Mat',
+                    'https://placehold.co/500x500/7c3aed/white?text=Fitness'
+                ],
+                rating: 4.8,
+                reviews: 112,
+                inStock: true,
+                stockCount: 50,
+                brand: 'FlexFit',
+                tags: ['yoga', 'fitness', 'exercise'],
+                featured: false,
+                colors: ['Purple', 'Blue', 'Black'],
+                createdAt: '2024-02-15'
+            },
+            {
+                id: 'prod_6',
+                name: 'Leather Wallet',
+                description: 'Genuine leather wallet with multiple card slots and RFID blocking technology.',
+                price: 49.99,
+                oldPrice: 59.99,
+                category: 'accessories',
+                subCategory: 'wallets',
+                images: [
+                    'https://placehold.co/500x500/8b4513/white?text=Wallet',
+                    'https://placehold.co/500x500/654321/white?text=Leather'
+                ],
+                rating: 4.6,
+                reviews: 45,
+                inStock: true,
+                stockCount: 32,
+                brand: 'LeatherCraft',
+                tags: ['leather', 'wallet', 'accessories'],
+                featured: false,
+                colors: ['Brown', 'Black'],
+                createdAt: '2024-02-20'
+            },
+            {
+                id: 'prod_7',
+                name: 'Coffee Maker',
+                description: 'Programmable coffee maker with 12-cup capacity. Features auto-brew and keep-warm function.',
+                price: 79.99,
+                oldPrice: 99.99,
+                category: 'home',
+                subCategory: 'kitchen',
+                images: [
+                    'https://placehold.co/500x500/6b4f3c/white?text=Coffee+Maker',
+                    'https://placehold.co/500x500/4a3729/white?text=Coffee'
+                ],
+                rating: 4.2,
+                reviews: 78,
+                inStock: true,
+                stockCount: 23,
+                brand: 'BrewMaster',
+                tags: ['coffee', 'kitchen', 'appliance'],
+                featured: true,
+                createdAt: '2024-02-25'
+            },
+            {
+                id: 'prod_8',
+                name: 'Running Shoes',
+                description: 'Lightweight running shoes with responsive cushioning. Perfect for daily runs and marathons.',
+                price: 129.99,
+                oldPrice: 159.99,
+                category: 'footwear',
+                subCategory: 'running',
+                images: [
+                    'https://placehold.co/500x500/ef4444/white?text=Running+Shoes',
+                    'https://placehold.co/500x500/dc2626/white?text=Sports'
+                ],
+                rating: 4.7,
+                reviews: 156,
+                inStock: true,
+                stockCount: 40,
+                brand: 'SportFlex',
+                tags: ['running', 'shoes', 'sports'],
+                featured: true,
+                colors: ['Red', 'Blue', 'Black'],
+                sizes: ['7', '8', '9', '10', '11'],
+                createdAt: '2024-03-01'
+            }
+        ];
     }
+}
 
     // Get state
     get(path) {
