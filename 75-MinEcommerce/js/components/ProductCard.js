@@ -19,10 +19,10 @@ export class ProductCard {
                 ` : ''}
                 
                 <img src="${product.images[0]}" alt="${product.name}" class="product-image" 
-                     onclick="viewProduct('${product.id}')">
+                     onclick="viewProduct('${product.id}')" style="cursor: pointer;">
                 
                 <div class="product-info">
-                    <h3 class="product-title" onclick="viewProduct('${product.id}')">
+                    <h3 class="product-title" onclick="viewProduct('${product.id}')" style="cursor: pointer;">
                         ${product.name}
                     </h3>
                     
@@ -51,8 +51,9 @@ export class ProductCard {
                     </button>
                     
                     <button class="wishlist-btn ${isInWishlist ? 'active' : ''}" 
-                            onclick="app.productManager.toggleWishlist('${product.id}')">
-                        <i class="fas fa-heart"></i>
+                            onclick="app.productManager.toggleWishlist('${product.id}')"
+                            style="position: absolute; top: 10px; right: 10px; background: white; border: none; border-radius: 50%; width: 35px; height: 35px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                        <i class="fas fa-heart" style="color: ${isInWishlist ? '#ef4444' : '#6b7280'};"></i>
                     </button>
                 </div>
             </div>
@@ -68,17 +69,17 @@ export class ProductCard {
         
         // Full stars
         for (let i = 0; i < fullStars; i++) {
-            stars += '<i class="fas fa-star"></i>';
+            stars += '<i class="fas fa-star" style="color: #f59e0b;"></i>';
         }
         
         // Half star
         if (hasHalfStar) {
-            stars += '<i class="fas fa-star-half-alt"></i>';
+            stars += '<i class="fas fa-star-half-alt" style="color: #f59e0b;"></i>';
         }
         
         // Empty stars
         for (let i = 0; i < emptyStars; i++) {
-            stars += '<i class="far fa-star"></i>';
+            stars += '<i class="far fa-star" style="color: #f59e0b;"></i>';
         }
         
         return stars;
