@@ -3,72 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markdown Blog Engine</title>
+    <title>✍ BlogEngine Pro | Markdown Blog Platform</title>
     <link rel="stylesheet" href="css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>✍ Markdown Blog Engine</h1>
-            <div class="header-actions">
-                <button id="newPostBtn" class="btn btn-primary">+ New Post</button>
-                <button id="viewPostsBtn" class="btn btn-secondary">View Posts</button>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-feather-alt"></i>
+                    <span>BlogEngine</span>
+                    <span class="pro-badge">Pro</span>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
             </div>
         </header>
 
-        <main>
-            <!-- Posts List View -->
-            <div id="postsView" class="view active">
-                <div class="posts-header">
-                    <h2>All Posts</h2>
-                    <div class="search-bar">
-                        <input type="text" id="searchInput" placeholder="Search posts...">
-                    </div>
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <h3><i class="fas fa-pen-fancy"></i> My Posts</h3>
+                    <button class="btn-primary btn-sm" id="newPostBtn">
+                        <i class="fas fa-plus"></i> New Post
+                    </button>
                 </div>
-                <div id="postsList" class="posts-grid">
+                <div class="posts-list" id="postsList">
                     <!-- Posts will be dynamically inserted here -->
                 </div>
-            </div>
+            </aside>
 
-            <!-- Editor View -->
-            <div id="editorView" class="view">
-                <div class="editor-container">
-                    <div class="editor-header">
-                        <input type="text" id="postTitle" placeholder="Post Title" class="title-input">
-                        <div class="editor-actions">
-                            <button id="savePostBtn" class="btn btn-success">Save Post</button>
-                            <button id="cancelEditBtn" class="btn btn-danger">Cancel</button>
-                        </div>
-                    </div>
-                    <div class="split-view">
-                        <div class="editor-pane">
-                            <h3>Markdown Editor</h3>
-                            <textarea id="markdownEditor" placeholder="Write your post in Markdown..."></textarea>
-                        </div>
-                        <div class="preview-pane">
-                            <h3>Live Preview</h3>
-                            <div id="preview" class="markdown-preview"></div>
-                        </div>
-                    </div>
+            <!-- Editor/Viewer Area -->
+            <div class="editor-area">
+                <div class="editor-tabs">
+                    <button class="tab-btn active" data-tab="editor">
+                        <i class="fas fa-edit"></i> Write
+                    </button>
+                    <button class="tab-btn" data-tab="preview">
+                        <i class="fas fa-eye"></i> Preview
+                    </button>
                 </div>
-            </div>
 
-            <!-- Post View -->
-            <div id="postView" class="view">
-                <div class="post-container">
-                    <button id="backToPostsBtn" class="btn btn-secondary back-btn">← Back to Posts</button>
-                    <div id="singlePost" class="single-post">
-                        <!-- Single post will be displayed here -->
+                <!-- Editor Mode -->
+                <div class="tab-content active" id="editorTab">
+                    <div class="editor-header">
+                        <input type="text" id="postTitle" placeholder="Post Title..." class="title-input">
+                        <div class="editor-actions">
+                            <button class="btn-secondary" id="savePostBtn">
+                                <i class="fas fa-save"></i> Save
+                            </button>
+                            <button class="btn-danger" id="deletePostBtn" style="display: none;">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                    <div class="markdown-toolbar">
+                        <button class="toolbar-btn" data-action="bold"><i class="fas fa-bold"></i></button>
+                        <button class="toolbar-btn" data-action="italic"><i class="fas fa-italic"></i></button>
+                        <button class="toolbar-btn" data-action="heading"><i class="fas fa-heading"></i></button>
+                        <button class="toolbar-btn" data-action="link"><i class="fas fa-link"></i></button>
+                        <button class="toolbar-btn" data-action="code"><i class="fas fa-code"></i></button>
+                        <button class="toolbar-btn" data-action="list"><i class="fas fa-list-ul"></i></button>
+                    </div>
+                    <textarea id="markdownEditor" placeholder="Write your post in Markdown...&#10;&#10;# Heading 1&#10;## Heading 2&#10;**Bold text**&#10;*Italic text*&#10;&#10;- List item 1&#10;- List item 2&#10;&#10;```javascript&#10;console.log('Hello World');&#10;```" class="editor-textarea"></textarea>
+                </div>
+
+                <!-- Preview Mode -->
+                <div class="tab-content" id="previewTab">
+                    <div class="preview-header">
+                        <h2 id="previewTitle">Untitled Post</h2>
+                    </div>
+                    <div class="preview-content" id="previewContent">
+                        <p class="placeholder-text">Start writing to see preview...</p>
                     </div>
                 </div>
             </div>
         </main>
+
+        <!-- Toast Notification -->
+        <div class="toast" id="toast">
+            <i class="fas fa-check-circle"></i>
+            <span id="toastMessage"></span>
+        </div>
     </div>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/markdown.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/editor.js"></script>
-    <script src="js/renderer.js"></script>
 </body>
 </html>
