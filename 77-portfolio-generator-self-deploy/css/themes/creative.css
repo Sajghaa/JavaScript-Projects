@@ -1,0 +1,158 @@
+:root {
+    --theme-primary: #ec4899;
+    --theme-primary-dark: #db2777;
+    --theme-primary-light: #f472b6;
+    --theme-secondary: #f43f5e;
+    --theme-secondary-dark: #e11d48;
+    --theme-accent: #f59e0b;
+    --theme-bg-light: #fdf2f8;
+    --theme-bg-dark: #1c1917;
+    --theme-text: #44403c;
+    --theme-text-light: #78716c;
+    --theme-border: #fce7f3;
+    --theme-shadow: 0 10px 25px -5px rgba(236, 72, 153, 0.1), 0 8px 10px -6px rgba(236, 72, 153, 0.05);
+    --theme-shadow-hover: 0 20px 25px -5px rgba(236, 72, 153, 0.2), 0 10px 10px -5px rgba(236, 72, 153, 0.1);
+}
+
+/* Creative Theme Specific Styles */
+.theme-creative .hero {
+    background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+    position: relative;
+}
+
+.theme-creative .hero::after {
+    content: '✨';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 60px;
+    opacity: 0.3;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.theme-creative .hero-avatar {
+    border: 5px solid var(--theme-primary);
+    box-shadow: 0 0 0 5px rgba(236, 72, 153, 0.2);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 5px rgba(236, 72, 153, 0.2); }
+    50% { box-shadow: 0 0 0 15px rgba(236, 72, 153, 0); }
+}
+
+.theme-creative .hero h1 {
+    font-size: 3.5rem;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--theme-primary), var(--theme-secondary), var(--theme-accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.theme-creative .section-title {
+    font-size: 2.5rem;
+    letter-spacing: -0.01em;
+}
+
+.theme-creative .section-title::after {
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--theme-primary), var(--theme-secondary), var(--theme-accent));
+    border-radius: 2px;
+}
+
+.theme-creative .project-card {
+    border-radius: 30px;
+    border: 2px solid var(--theme-border);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.theme-creative .project-card:hover {
+    transform: rotate(1deg) scale(1.02);
+    border-color: var(--theme-primary);
+}
+
+.theme-creative .project-tag {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(244, 63, 94, 0.1));
+    border-radius: 30px;
+    font-weight: 500;
+}
+
+.theme-creative .skill-item {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.05), rgba(244, 63, 94, 0.05));
+    padding: 1rem;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.theme-creative .skill-item:hover {
+    transform: translateX(10px);
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(244, 63, 94, 0.1));
+}
+
+.theme-creative .skill-progress {
+    background: linear-gradient(90deg, var(--theme-primary), var(--theme-secondary), var(--theme-accent));
+    height: 10px;
+    border-radius: 5px;
+}
+
+.theme-creative .soft-skill {
+    background: linear-gradient(135deg, var(--theme-primary), var(--theme-secondary));
+    color: white;
+    border: none;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+}
+
+.theme-creative .soft-skill:hover {
+    transform: scale(1.05);
+    box-shadow: var(--theme-shadow-hover);
+}
+
+.theme-creative .contact {
+    background: linear-gradient(135deg, var(--theme-primary), var(--theme-secondary), var(--theme-accent));
+    clip-path: polygon(0 15%, 100% 0, 100% 100%, 0 100%);
+}
+
+.theme-creative .contact-item {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.theme-creative .contact-item:hover {
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.theme-creative .social-links a {
+    background: white;
+    border-radius: 30px;
+    width: 45px;
+    height: 45px;
+    transition: all 0.3s ease;
+}
+
+.theme-creative .social-links a:hover {
+    transform: rotate(15deg) scale(1.1);
+    background: linear-gradient(135deg, var(--theme-primary), var(--theme-secondary));
+    color: white;
+}
+
+.theme-creative .nav-links a {
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.theme-creative .nav-links a:hover {
+    color: var(--theme-primary);
+    transform: translateY(-2px);
+}
