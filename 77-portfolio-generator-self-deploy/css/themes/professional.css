@@ -1,0 +1,174 @@
+:root {
+    --theme-primary: #0f172a;
+    --theme-primary-dark: #020617;
+    --theme-primary-light: #1e293b;
+    --theme-secondary: #334155;
+    --theme-secondary-dark: #1e293b;
+    --theme-accent: #3b82f6;
+    --theme-bg-light: #f8fafc;
+    --theme-bg-dark: #f1f5f9;
+    --theme-text: #0f172a;
+    --theme-text-light: #475569;
+    --theme-border: #cbd5e1;
+    --theme-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --theme-shadow-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Professional Theme Specific Styles */
+.theme-professional .hero {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-bottom: 3px solid var(--theme-accent);
+}
+
+.theme-professional .hero-avatar {
+    border: 3px solid var(--theme-accent);
+}
+
+.theme-professional .hero h1 {
+    color: var(--theme-text);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.theme-professional .hero-title {
+    color: var(--theme-text-light);
+    font-weight: 400;
+}
+
+.theme-professional .hero-location {
+    color: var(--theme-text-light);
+}
+
+.theme-professional .section-title {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 1.5rem;
+}
+
+.theme-professional .section-title::after {
+    width: 60px;
+    height: 2px;
+    background: var(--theme-accent);
+}
+
+.theme-professional .about-content {
+    text-align: left;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.theme-professional .project-card {
+    border: 1px solid var(--theme-border);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.theme-professional .project-card:hover {
+    border-color: var(--theme-accent);
+    box-shadow: var(--theme-shadow-hover);
+}
+
+.theme-professional .project-tag {
+    background: var(--theme-bg-dark);
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.theme-professional .project-links a {
+    color: var(--theme-accent);
+    font-weight: 500;
+}
+
+.theme-professional .skill-category h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
+}
+
+.theme-professional .skill-info {
+    font-weight: 500;
+}
+
+.theme-professional .skill-bar {
+    background: var(--theme-border);
+    height: 6px;
+    border-radius: 3px;
+}
+
+.theme-professional .skill-progress {
+    background: var(--theme-accent);
+    border-radius: 3px;
+}
+
+.theme-professional .soft-skill {
+    background: var(--theme-bg-dark);
+    border: 1px solid var(--theme-border);
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.theme-professional .contact {
+    background: var(--theme-primary);
+}
+
+.theme-professional .contact .section-title {
+    color: white;
+}
+
+.theme-professional .contact .section-title::after {
+    background: var(--theme-accent);
+}
+
+.theme-professional .contact-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.theme-professional .contact-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.theme-professional .contact-item a {
+    color: white;
+    text-decoration: none;
+}
+
+.theme-professional .social-links a {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.theme-professional .social-links a:hover {
+    background: var(--theme-accent);
+    transform: translateY(-2px);
+}
+
+.theme-professional .nav-links a {
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+.theme-professional .nav-links a:hover {
+    color: var(--theme-accent);
+}
+
+.theme-professional .footer {
+    background: var(--theme-primary);
+    color: var(--theme-text-light);
+}
+
+.theme-professional .footer p {
+    font-size: 0.85rem;
+}
