@@ -1,4 +1,4 @@
-export class StorageManager {
+class StorageManager {
     static save(key, data) {
         try {
             localStorage.setItem(`portfolio_${key}`, JSON.stringify(data));
@@ -32,3 +32,5 @@ export class StorageManager {
         });
     }
 }
+
+window.StorageManager = StorageManager;
