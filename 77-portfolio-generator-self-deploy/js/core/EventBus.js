@@ -1,4 +1,4 @@
-export class EventBus {
+class EventBus {
     constructor() {
         this.events = new Map();
     }
@@ -30,3 +30,5 @@ export class EventBus {
         }
     }
 }
+
+window.EventBus = EventBus;
