@@ -43,3 +43,53 @@ if (document.readyState === 'loading') {
 } else {
     initializeApp();
 }
+
+// Mobile menu toggle functionality
+function initMobileMenu() {
+    const sidebar = document.querySelector('.editor-sidebar');
+    const toggleBtn = document.getElementById('mobileMenuToggle');
+    
+    if (!sidebar || !toggleBtn) return;
+    
+    // Check if we're on mobile
+    function isMobile() {
+        return window.innerWidth <= 768;
+    }
+    
+    // Toggle sidebar collapse
+    function toggleSidebar() {
+        if (isMobile()) {
+            sidebar.classList.toggle('collapsed');
+            const icon = toggleBtn.querySelector('i');
+            if (sidebar.classList.contains('collapsed')) {
+                icon.className = 'fas fa-chevron-down';
+            } else {
+                icon.className = 'fas fa-chevron-up';
+            }
+        }
+    }
+    
+    // Reset sidebar state on resize
+    function handleResize() {
+        if (!isMobile()) {
+            sidebar.classList.remove('collapsed');
+        } else {
+            // On mobile, start collapsed
+            if (!sidebar.classList.contains('collapsed')) {
+                sidebar.classList.add('collapsed');
+                const icon = toggleBtn.querySelector('i');
+                icon.className = 'fas fa-chevron-down';
+            }
+        }
+    }
+    
+    // Event listeners
+    toggleBtn.addEventListener('click', toggleSidebar);
+    window.addEventListener('resize', handleResize);
+    
+    // Initialize
+    handleResize();
+}
+
+// Call this when DOM is loaded
+document.addEventListener('DOMContentLoaded', initMobileMenu);
