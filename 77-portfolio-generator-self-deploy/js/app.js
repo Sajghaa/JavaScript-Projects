@@ -37,19 +37,11 @@ function initializeApp() {
     console.log('Portfolio Generator initialized successfully!');
 }
 
-// Make sure DOM is loaded before initializing
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeApp);
-} else {
-    initializeApp();
-}
-
-// Mobile menu toggle functionality
 function initMobileMenu() {
-    const sidebar = document.querySelector('.editor-sidebar');
     const toggleBtn = document.getElementById('mobileMenuToggle');
+    const sidebar = document.querySelector('.editor-sidebar');
     
-    if (!sidebar || !toggleBtn) return;
+    if (!toggleBtn || !sidebar) return;
     
     // Check if we're on mobile
     function isMobile() {
@@ -73,8 +65,10 @@ function initMobileMenu() {
     function handleResize() {
         if (!isMobile()) {
             sidebar.classList.remove('collapsed');
+            toggleBtn.style.display = 'none';
         } else {
-            // On mobile, start collapsed
+            toggleBtn.style.display = 'flex';
+            // Start collapsed on mobile for better UX
             if (!sidebar.classList.contains('collapsed')) {
                 sidebar.classList.add('collapsed');
                 const icon = toggleBtn.querySelector('i');
@@ -91,5 +85,9 @@ function initMobileMenu() {
     handleResize();
 }
 
-// Call this when DOM is loaded
-document.addEventListener('DOMContentLoaded', initMobileMenu);
+// Call when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+} else {
+    initMobileMenu();
+}
