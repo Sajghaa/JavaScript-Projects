@@ -1,4 +1,5 @@
-export class PreviewManager {
+// PreviewManager.js - Manages live preview generation
+class PreviewManager {
     constructor(stateManager, eventBus) {
         this.stateManager = stateManager;
         this.eventBus = eventBus;
@@ -28,7 +29,7 @@ export class PreviewManager {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${personal.name} | Portfolio</title>
+    <title>${this.escapeHtml(personal.name)} | Portfolio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=${design.fontFamily.replace(' ', '+')}:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -333,7 +334,6 @@ export class PreviewManager {
             padding: 5rem 0;
             background: linear-gradient(135deg, ${design.primaryColor}, ${design.secondaryColor});
             color: white;
-            text-align: center;
         }
         
         .contact .section-title::after {
@@ -375,7 +375,6 @@ export class PreviewManager {
             color: #9ca3af;
         }
         
-        /* Animations */
         ${design.animations ? `
             @keyframes fadeInUp {
                 from {
@@ -393,7 +392,6 @@ export class PreviewManager {
             }
         ` : ''}
         
-        /* Responsive */
         @media (max-width: 768px) {
             .nav {
                 flex-direction: column;
@@ -422,7 +420,7 @@ export class PreviewManager {
 <body>
     <header class="header">
         <nav class="nav">
-            <div class="logo">${personal.name.split(' ')[0]}</div>
+            <div class="logo">${this.escapeHtml(personal.name.split(' ')[0])}</div>
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#about">About</a></li>
@@ -436,18 +434,18 @@ export class PreviewManager {
     <main>
         <section id="home" class="hero">
             <div class="container">
-                <img src="${personal.avatar}" alt="${personal.name}" class="hero-avatar">
-                <h1>${personal.name}</h1>
-                <div class="hero-title">${personal.title}</div>
+                <img src="${this.escapeHtml(personal.avatar)}" alt="${this.escapeHtml(personal.name)}" class="hero-avatar">
+                <h1>${this.escapeHtml(personal.name)}</h1>
+                <div class="hero-title">${this.escapeHtml(personal.title)}</div>
                 <div class="hero-location">
                     <i class="fas fa-map-marker-alt"></i>
-                    <span>${personal.location}</span>
+                    <span>${this.escapeHtml(personal.location)}</span>
                 </div>
                 <div class="social-links">
-                    ${personal.github ? `<a href="${personal.github}" target="_blank"><i class="fab fa-github"></i></a>` : ''}
-                    ${personal.linkedin ? `<a href="${personal.linkedin}" target="_blank"><i class="fab fa-linkedin"></i></a>` : ''}
-                    ${personal.twitter ? `<a href="${personal.twitter}" target="_blank"><i class="fab fa-twitter"></i></a>` : ''}
-                    ${personal.codepen ? `<a href="${personal.codepen}" target="_blank"><i class="fab fa-codepen"></i></a>` : ''}
+                    ${personal.github ? `<a href="${this.escapeHtml(personal.github)}" target="_blank"><i class="fab fa-github"></i></a>` : ''}
+                    ${personal.linkedin ? `<a href="${this.escapeHtml(personal.linkedin)}" target="_blank"><i class="fab fa-linkedin"></i></a>` : ''}
+                    ${personal.twitter ? `<a href="${this.escapeHtml(personal.twitter)}" target="_blank"><i class="fab fa-twitter"></i></a>` : ''}
+                    ${personal.codepen ? `<a href="${this.escapeHtml(personal.codepen)}" target="_blank"><i class="fab fa-codepen"></i></a>` : ''}
                 </div>
             </div>
         </section>
@@ -456,7 +454,7 @@ export class PreviewManager {
             <div class="container">
                 <h2 class="section-title">About Me</h2>
                 <div class="about-content">
-                    <p>${personal.bio}</p>
+                    <p>${this.escapeHtml(personal.bio)}</p>
                 </div>
             </div>
         </section>
@@ -470,7 +468,7 @@ export class PreviewManager {
                         ${skills.map(skill => `
                             <div class="skill-item">
                                 <div class="skill-info">
-                                    <span>${skill.name}</span>
+                                    <span>${this.escapeHtml(skill.name)}</span>
                                     <span>${skill.level}%</span>
                                 </div>
                                 <div class="skill-bar">
@@ -483,7 +481,7 @@ export class PreviewManager {
                         <h3>Soft Skills</h3>
                         <div class="soft-skills">
                             ${softSkills.map(skill => `
-                                <span class="soft-skill">${skill}</span>
+                                <span class="soft-skill">${this.escapeHtml(skill)}</span>
                             `).join('')}
                         </div>
                     </div>
@@ -497,16 +495,16 @@ export class PreviewManager {
                 <div class="projects-grid">
                     ${projects.map(project => `
                         <div class="project-card">
-                            <img src="${project.image}" alt="${project.title}" class="project-image">
+                            <img src="${this.escapeHtml(project.image)}" alt="${this.escapeHtml(project.title)}" class="project-image">
                             <div class="project-content">
-                                <h3 class="project-title">${project.title}</h3>
-                                <p class="project-description">${project.description}</p>
+                                <h3 class="project-title">${this.escapeHtml(project.title)}</h3>
+                                <p class="project-description">${this.escapeHtml(project.description)}</p>
                                 <div class="project-tags">
-                                    ${project.tags.map(tag => `<span class="project-tag">${tag}</span>`).join('')}
+                                    ${project.tags.map(tag => `<span class="project-tag">${this.escapeHtml(tag)}</span>`).join('')}
                                 </div>
                                 <div class="project-links">
-                                    ${project.link ? `<a href="${project.link}" target="_blank"><i class="fas fa-external-link-alt"></i> Live Demo</a>` : ''}
-                                    ${project.github ? `<a href="${project.github}" target="_blank"><i class="fab fa-github"></i> Source Code</a>` : ''}
+                                    ${project.link ? `<a href="${this.escapeHtml(project.link)}" target="_blank"><i class="fas fa-external-link-alt"></i> Live Demo</a>` : ''}
+                                    ${project.github ? `<a href="${this.escapeHtml(project.github)}" target="_blank"><i class="fab fa-github"></i> Source Code</a>` : ''}
                                 </div>
                             </div>
                         </div>
@@ -521,15 +519,15 @@ export class PreviewManager {
                 <div class="contact-info">
                     <div class="contact-item">
                         <i class="fas fa-envelope"></i>
-                        <a href="mailto:${personal.email}">${personal.email}</a>
+                        <a href="mailto:${this.escapeHtml(personal.email)}">${this.escapeHtml(personal.email)}</a>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-phone"></i>
-                        <span>${personal.phone}</span>
+                        <span>${this.escapeHtml(personal.phone)}</span>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-map-marker-alt"></i>
-                        <span>${personal.location}</span>
+                        <span>${this.escapeHtml(personal.location)}</span>
                     </div>
                 </div>
             </div>
@@ -538,9 +536,22 @@ export class PreviewManager {
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; ${new Date().getFullYear()} ${personal.name}. All rights reserved.</p>
+            <p>&copy; ${new Date().getFullYear()} ${this.escapeHtml(personal.name)}. All rights reserved.</p>
         </div>
     </footer>
+    
+    <script>
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
         `;
@@ -555,17 +566,29 @@ export class PreviewManager {
             case 'mobile':
                 frame.style.width = '375px';
                 frame.style.margin = '0 auto';
-                container.style.backgroundColor = '#000';
+                if (container) container.style.backgroundColor = '#000';
                 break;
             case 'tablet':
                 frame.style.width = '768px';
                 frame.style.margin = '0 auto';
-                container.style.backgroundColor = '#f0f0f0';
+                if (container) container.style.backgroundColor = '#f0f0f0';
                 break;
             default:
                 frame.style.width = '100%';
                 frame.style.margin = '0';
-                container.style.backgroundColor = 'var(--background)';
+                if (container) container.style.backgroundColor = 'var(--background)';
         }
     }
+
+    escapeHtml(str) {
+        if (!str) return '';
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
 }
+
+window.PreviewManager = PreviewManager;
