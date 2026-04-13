@@ -6,8 +6,13 @@
     <title>Portfolio Generator | Create & Deploy Your Portfolio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/preview.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/preview.css">
+    <!-- Theme CSS files -->
+    <link rel="stylesheet" href="./css/themes/modern.css" id="themeModern">
+    <link rel="stylesheet" href="./css/themes/creative.css" id="themeCreative" disabled>
+    <link rel="stylesheet" href="./css/themes/minimal.css" id="themeMinimal" disabled>
+    <link rel="stylesheet" href="./css/themes/professional.css" id="themeProfessional" disabled>
 </head>
 <body>
     <div class="app-container">
@@ -255,7 +260,7 @@
             </div>
             
             <div class="preview-container" id="previewContainer">
-                <iframe id="previewFrame" class="preview-frame" title="Portfolio Preview"></iframe>
+                <iframe id="previewFrame" class="preview-frame" title="Portfolio Preview" srcdoc="<html><body style='display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;'><p>Loading your portfolio preview...</p></body></html>"></iframe>
             </div>
         </main>
 
@@ -309,6 +314,60 @@
         <div id="toast" class="toast"></div>
     </div>
 
-    <script type="module" src="js/app.js"></script>
+    <!-- Load all modules as scripts instead of modules to avoid CORS -->
+    <script>
+        // Create a global app object
+        window.app = {};
+        
+        // Function to load scripts in order
+        function loadScript(src, callback) {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = callback;
+            script.onerror = () => console.error(`Failed to load: ${src}`);
+            document.head.appendChild(script);
+        }
+
+        // Load core modules first
+        loadScript('./js/core/StateManager.js', () => {
+            loadScript('./js/core/EventBus.js', () => {
+                loadScript('./js/core/StorageManager.js', () => {
+                    loadScript('./js/modules/EditorManager.js', () => {
+                        loadScript('./js/modules/PreviewManager.js', () => {
+                            loadScript('./js/modules/TemplateManager.js', () => {
+                                loadScript('./js/modules/ExportManager.js', () => {
+                                    loadScript('./js/modules/SkillManager.js', () => {
+                                        loadScript('./js/modules/ProjectManager.js', () => {
+                                            loadScript('./js/modules/DeploymentManager.js', () => {
+                                                loadScript('./js/components/EditorPanel.js', () => {
+                                                    loadScript('./js/components/PreviewPanel.js', () => {
+                                                        loadScript('./js/components/SkillEditor.js', () => {
+                                                            loadScript('./js/components/ProjectEditor.js', () => {
+                                                                loadScript('./js/components/ThemeSelector.js', () => {
+                                                                    loadScript('./js/components/DeploymentModal.js', () => {
+                                                                        loadScript('./js/app.js', () => {
+                                                                            console.log('All scripts loaded successfully');
+                                                                            // Initialize the app after all scripts are loaded
+                                                                            if (typeof initializeApp === 'function') {
+                                                                                initializeApp();
+                                                                            }
+                                                                        });
+                                                                    });
+                                                                });
+                                                            });
+                                                        });
+                                                    });
+                                                });
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    </script>
 </body>
 </html>
