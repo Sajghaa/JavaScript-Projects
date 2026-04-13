@@ -644,10 +644,11 @@ body {
     gap: 0.5rem;
 }
 
+/* Preview Container - Mobile Optimized */
 .preview-container {
     flex: 1;
     background: var(--background);
-    padding: 2rem;
+    padding: 1rem;
     overflow: auto;
     display: flex;
     justify-content: center;
@@ -657,12 +658,25 @@ body {
 .preview-frame {
     width: 100%;
     height: 100%;
-    min-height: 600px;
+    min-height: 500px;
     background: white;
     border: none;
     border-radius: var(--radius);
     box-shadow: var(--shadow-lg);
-    transition: var(--transition);
+    transition: all 0.3s ease;
+}
+
+/* Mobile preview frame adjustments */
+@media (max-width: 768px) {
+    .preview-frame {
+        min-height: 400px;
+    }
+}
+
+@media (max-width: 480px) {
+    .preview-frame {
+        min-height: 350px;
+    }
 }
 
 /* Modal */
@@ -871,5 +885,369 @@ body {
     
     .form-row {
         grid-template-columns: 1fr;
+    }
+}
+/* Mobile Responsive Fixes - Add to style.css */
+
+/* Mobile Navigation - Hamburger Menu */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    z-index: 1001;
+}
+
+/* Responsive Design - Mobile First */
+@media (max-width: 768px) {
+    /* App Container */
+    .app-container {
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+    }
+    
+    /* Editor Sidebar - Make it collapsible */
+    .editor-sidebar {
+        width: 100%;
+        max-height: 50vh;
+        position: relative;
+        transition: max-height 0.3s ease;
+        overflow-y: auto;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+    
+    .editor-sidebar.collapsed {
+        max-height: 60px;
+        overflow: hidden;
+    }
+    
+    /* Sidebar Header */
+    .sidebar-header {
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        z-index: 10;
+    }
+    
+    .logo {
+        font-size: 1.2rem;
+    }
+    
+    .tagline {
+        display: none;
+    }
+    
+    /* Editor Tabs - Make scrollable */
+    .editor-tabs {
+        display: flex;
+        overflow-x: auto;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        scrollbar-width: thin;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .tab-btn {
+        flex-shrink: 0;
+        padding: 0.5rem 1rem;
+        flex-direction: row;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .tab-btn i {
+        font-size: 0.9rem;
+    }
+    
+    /* Tab Content */
+    .tab-content {
+        padding: 1rem;
+        max-height: calc(50vh - 120px);
+        overflow-y: auto;
+    }
+    
+    /* Form Layout */
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    /* Editor Actions */
+    .editor-actions {
+        padding: 1rem;
+        position: sticky;
+        bottom: 0;
+        background: var(--surface);
+        border-top: 1px solid var(--border);
+        z-index: 10;
+    }
+    
+    .editor-actions .btn {
+        padding: 0.6rem;
+        font-size: 0.85rem;
+    }
+    
+    /* Preview Area */
+    .preview-area {
+        height: 50vh;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .preview-header {
+        padding: 0.75rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .preview-controls {
+        order: 1;
+    }
+    
+    .preview-actions {
+        order: 2;
+        flex: 1;
+        justify-content: flex-end;
+    }
+    
+    .preview-actions .btn-icon {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .preview-container {
+        padding: 0.75rem;
+        flex: 1;
+    }
+    
+    .preview-frame {
+        min-height: auto;
+        height: 100%;
+    }
+    
+    /* Device Preview Sizes on Mobile */
+    .preview-frame[style*="width: 375px"] {
+        width: 100% !important;
+        max-width: 375px;
+        margin: 0 auto;
+    }
+    
+    .preview-frame[style*="width: 768px"] {
+        width: 100% !important;
+        max-width: 768px;
+        margin: 0 auto;
+    }
+    
+    /* Modal on Mobile */
+    .modal-content {
+        width: 95%;
+        margin: 1rem;
+        max-height: 85vh;
+    }
+    
+    .modal-header h2 {
+        font-size: 1.1rem;
+    }
+    
+    .deploy-options {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+    
+    .deploy-card {
+        padding: 1rem;
+    }
+    
+    .deploy-card i {
+        font-size: 1.8rem;
+    }
+    
+    .deploy-card h3 {
+        font-size: 0.9rem;
+    }
+    
+    .deploy-card p {
+        font-size: 0.75rem;
+    }
+    
+    /* Theme Options on Mobile */
+    .theme-options {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+    
+    .theme-card {
+        padding: 0.5rem;
+    }
+    
+    .theme-preview {
+        height: 60px;
+    }
+    
+    .theme-card span {
+        font-size: 0.8rem;
+    }
+    
+    .theme-card small {
+        font-size: 0.65rem;
+        display: none;
+    }
+    
+    /* Color Picker on Mobile */
+    .color-picker {
+        flex-wrap: wrap;
+    }
+    
+    /* Layout Options on Mobile */
+    .layout-options {
+        flex-wrap: wrap;
+    }
+    
+    .layout-option {
+        flex: 1;
+        justify-content: center;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    /* Skills Editor on Mobile */
+    .skill-item {
+        flex-wrap: wrap;
+    }
+    
+    .skill-level {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+    
+    .soft-skills-list {
+        flex-wrap: wrap;
+    }
+    
+    .soft-skill-item {
+        flex: 1;
+        min-width: 120px;
+    }
+    
+    /* Projects Editor on Mobile */
+    .project-editor-card .project-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .project-editor-card .project-title-input {
+        width: 100%;
+    }
+    
+    .project-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    
+    /* Toast on Mobile */
+    .toast {
+        bottom: 1rem;
+        right: 1rem;
+        left: 1rem;
+        max-width: none;
+        font-size: 0.85rem;
+        padding: 0.75rem 1rem;
+    }
+}
+
+/* Small Mobile Devices (max-width: 480px) */
+@media (max-width: 480px) {
+    .editor-sidebar {
+        max-height: 45vh;
+    }
+    
+    .preview-area {
+        height: 55vh;
+    }
+    
+    .tab-content {
+        padding: 0.75rem;
+    }
+    
+    .section-header h3 {
+        font-size: 0.9rem;
+    }
+    
+    .btn-icon {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+    }
+    
+    .form-group label {
+        font-size: 0.75rem;
+    }
+    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .theme-options {
+        grid-template-columns: 1fr;
+    }
+    
+    .preview-btn {
+        padding: 0.3rem;
+        font-size: 0.8rem;
+    }
+    
+    .preview-btn i {
+        font-size: 0.9rem;
+    }
+    
+    .btn {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* Landscape Mode on Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .editor-sidebar {
+        max-height: 60vh;
+    }
+    
+    .preview-area {
+        height: 40vh;
+    }
+    
+    .tab-content {
+        max-height: calc(60vh - 100px);
+    }
+}
+
+/* Add a collapse/expand button for mobile */
+@media (max-width: 768px) {
+    .sidebar-header {
+        cursor: pointer;
+    }
+    
+    .sidebar-header::after {
+        content: '\f078';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        font-size: 0.8rem;
+        opacity: 0.7;
+    }
+    
+    .editor-sidebar.collapsed .sidebar-header::after {
+        content: '\f077';
     }
 }
