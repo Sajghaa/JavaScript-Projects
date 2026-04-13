@@ -1,4 +1,4 @@
-export class TemplateManager {
+class TemplateManager {
     constructor(stateManager, eventBus) {
         this.stateManager = stateManager;
         this.eventBus = eventBus;
@@ -59,3 +59,5 @@ export class TemplateManager {
         return this.templates;
     }
 }
+
+window.TemplateManager = TemplateManager;
