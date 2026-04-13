@@ -1,4 +1,4 @@
-export class StateManager {
+class StateManager {
     constructor() {
         this.state = {
             personal: {
@@ -72,6 +72,7 @@ export class StateManager {
     }
 
     get(path) {
+        if (!path) return this.state;
         return path.split('.').reduce((obj, key) => obj?.[key], this.state);
     }
 
@@ -85,6 +86,9 @@ export class StateManager {
         
         this.notifyListeners(path, value, oldValue);
         this.saveToStorage();
+        
+        // Dispatch custom event for UI updates
+        document.dispatchEvent(new CustomEvent('stateChanged', { detail: { path, value } }));
     }
 
     subscribe(path, callback) {
@@ -106,7 +110,6 @@ export class StateManager {
         }
     }
 
-    // Project operations
     addProject(project) {
         const projects = [...this.state.projects];
         const newProject = {
@@ -131,7 +134,6 @@ export class StateManager {
         this.set('projects', projects);
     }
 
-    // Skill operations
     addSkill(skill) {
         const skills = [...this.state.skills, skill];
         this.set('skills', skills);
@@ -149,7 +151,6 @@ export class StateManager {
         this.set('skills', skills);
     }
 
-    // Soft skill operations
     addSoftSkill(skill) {
         const softSkills = [...this.state.softSkills, skill];
         this.set('softSkills', softSkills);
@@ -167,7 +168,6 @@ export class StateManager {
         this.set('softSkills', softSkills);
     }
 
-    // Save to localStorage
     saveToStorage() {
         try {
             localStorage.setItem('portfolio_data', JSON.stringify(this.state));
@@ -193,3 +193,6 @@ export class StateManager {
         window.location.reload();
     }
 }
+
+// Make available globally
+window.StateManager = StateManager;
