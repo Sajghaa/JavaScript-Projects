@@ -1,7 +1,16 @@
-export class DeploymentManager {
-    constructor(stateManager, eventBus) {
+class DeploymentManager {
+    constructor(stateManager, eventBus, previewManager) {
         this.stateManager = stateManager;
         this.eventBus = eventBus;
+        this.previewManager = previewManager;
+        this.deploymentModal = new DeploymentModal(stateManager, eventBus);
+        
+        this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+        this.eventBus.on('deploy:show', () => this.deploymentModal.show());
+        this.eventBus.on('deploy:method', (method) => this.deploy(method));
     }
 
     deploy(method) {
@@ -42,13 +51,11 @@ export class DeploymentManager {
     }
 
     deployGitHub() {
-        // Simulate GitHub Pages deployment
         this.eventBus.emit('notification', {
             message: 'Opening GitHub Pages setup guide...',
             type: 'info'
         });
         
-        // In a real implementation, this would use GitHub API
         setTimeout(() => {
             window.open('https://github.com/new', '_blank');
             this.eventBus.emit('notification', {
@@ -64,11 +71,9 @@ export class DeploymentManager {
             type: 'info'
         });
         
-        // Create a zip file with portfolio files
         const previewFrame = document.getElementById('previewFrame');
         const html = previewFrame.contentDocument.documentElement.outerHTML;
         
-        // Create a download link for Netlify Drop
         const blob = new Blob([html], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -116,3 +121,5 @@ export class DeploymentManager {
         }, 1000);
     }
 }
+
+window.DeploymentManager = DeploymentManager;
