@@ -1,7 +1,15 @@
-export class ExportManager {
-    constructor(stateManager, eventBus) {
+class ExportManager {
+    constructor(stateManager, eventBus, previewManager) {
         this.stateManager = stateManager;
         this.eventBus = eventBus;
+        this.previewManager = previewManager;
+        
+        this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+        this.eventBus.on('export:download', () => this.downloadPortfolio());
+        this.eventBus.on('export:copyLink', () => this.copyPreviewLink());
     }
 
     downloadPortfolio() {
@@ -25,7 +33,6 @@ export class ExportManager {
     }
 
     copyPreviewLink() {
-        // Create a data URL of the current preview
         const previewFrame = document.getElementById('previewFrame');
         const html = previewFrame.contentDocument.documentElement.outerHTML;
         const dataUrl = 'data:text/html,' + encodeURIComponent(html);
@@ -43,3 +50,5 @@ export class ExportManager {
         });
     }
 }
+
+window.ExportManager = ExportManager;
