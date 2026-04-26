@@ -1,5 +1,7 @@
-// app.js - Main application (UPDATED with all components)
+// app.js - Main application (CORRECTED)
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Initializing Quiz Platform...');
+    
     const stateManager = new StateManager();
     const eventBus = new EventBus();
     
@@ -16,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const quizManager = new QuizManager(stateManager, eventBus, questionManager, timerManager, scoreManager);
     const categoryManager = new CategoryManager(stateManager, eventBus, quizManager);
     
+    // Make everything globally accessible
     window.app = {
         stateManager,
         eventBus,
@@ -31,17 +34,46 @@ document.addEventListener('DOMContentLoaded', function() {
         leaderboard
     };
     
-    // Render categories with QuizCard component
+    // Render categories
     const renderCategories = () => {
         const container = document.getElementById('categoriesGrid');
+        if (!container) {
+            console.error('categoriesGrid not found');
+            return;
+        }
         const categories = stateManager.get('categories');
         
         container.innerHTML = categories.map(category => quizCard.render(category)).join('');
         
         container.querySelectorAll('.category-card').forEach((card, index) => {
             const categoryId = categories[index].id;
-            quizCard.attachEvents(card, categoryId);
+            card.onclick = (e) => {
+                e.stopPropagation();
+                console.log('Category clicked:', categoryId);
+                const category = stateManager.get('categories').find(c => c.id === categoryId);
+                if (category && quizManager.selectQuiz) {
+                    quizManager.selectQuiz(category);
+                } else {
+                    console.error('Category not found or quizManager missing');
+                }
+            };
         });
+    };
+    
+    // Navigation
+    window.navigateTo = (screen) => {
+        console.log('Global navigate to:', screen);
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        const target = document.getElementById(`${screen}Screen`);
+        if (target) target.classList.add('active');
+        
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.toggle('active', item.dataset.nav === screen);
+        });
+        
+        if (screen === 'leaderboard') {
+            renderLeaderboard();
+        }
     };
     
     // Render leaderboard
@@ -58,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
     
-    // Update profile stats with progress bar
+    // Update profile
     const updateProfile = () => {
         const user = stateManager.get('user');
         document.getElementById('playerName').textContent = user.name;
@@ -96,31 +128,10 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     // Event listeners
-    eventBus.on('quiz:selected', (categoryId) => {
-        const category = stateManager.get('categories').find(c => c.id === categoryId);
-        quizManager.selectQuiz(category);
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.onclick = () => navigateTo(item.dataset.nav);
     });
     
-    eventBus.on('leaderboard:select', (userId) => {
-        console.log('Selected user:', userId);
-        // Navigate to user profile or show details
-    });
-    
-    // Navigation
-    window.navigateTo = (screen) => {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(`${screen}Screen`).classList.add('active');
-        
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.toggle('active', item.dataset.nav === screen);
-        });
-        
-        if (screen === 'leaderboard') {
-            renderLeaderboard();
-        }
-    };
-    
-    // Theme toggle
     document.getElementById('themeToggle').onclick = () => {
         const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
         const newTheme = currentTheme === 'light' ? 'dark' : 'light';
@@ -130,7 +141,6 @@ document.addEventListener('DOMContentLoaded', function() {
         icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     };
     
-    // Edit name
     document.getElementById('editNameBtn').onclick = () => {
         const newName = prompt('Enter your name:', stateManager.get('user.name'));
         if (newName && newName.trim()) {
@@ -140,27 +150,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
     
-    // Navigation items
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.onclick = () => navigateTo(item.dataset.nav);
-    });
-    
     // Load saved theme
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
-    const icon = document.querySelector('#themeToggle i');
-    icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    const themeIcon = document.querySelector('#themeToggle i');
+    if (themeIcon) themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     
     // Subscriptions
     stateManager.subscribe('user', updateProfile);
     stateManager.subscribe('leaderboard', renderLeaderboard);
     
-    // Initialize
-    renderCategories();
-    updateProfile();
-    renderLeaderboard();
-    
-    // Toast notification
+    // Toast notifications
     class NotificationToast {
         show(message, type = 'success', duration = 3000) {
             const toast = document.getElementById('toast');
@@ -169,9 +169,13 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => toast.classList.remove('show'), duration);
         }
     }
-    
     const toast = new NotificationToast();
     eventBus.on('toast', ({ message, type }) => toast.show(message, type));
     
-    console.log('Quiz Platform Fully Initialized with All Components!');
+    // Initialize
+    renderCategories();
+    updateProfile();
+    renderLeaderboard();
+    
+    console.log('Quiz Platform Initialized Successfully!');
 });
