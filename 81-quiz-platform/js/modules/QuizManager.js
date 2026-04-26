@@ -1,4 +1,4 @@
-// QuizManager.js - Manages quiz flow
+// QuizManager.js - Manages quiz flow (FIXED)
 class QuizManager {
     constructor(stateManager, eventBus, questionManager, timerManager, scoreManager) {
         this.stateManager = stateManager;
@@ -24,24 +24,40 @@ class QuizManager {
     }
 
     selectQuiz(category) {
+        console.log('Quiz selected:', category);
         this.currentQuiz = category;
         this.showSetupScreen();
     }
 
     showSetupScreen() {
         const quizInfo = document.getElementById('quizInfo');
+        if (!quizInfo) {
+            console.error('quizInfo element not found');
+            return;
+        }
+        
         quizInfo.innerHTML = `
-            <h2>${category.name}</h2>
-            <p>${category.icon} Test your knowledge in ${category.name}</p>
+            <h2>${this.currentQuiz.name}</h2>
+            <p>${this.currentQuiz.icon} Test your knowledge in ${this.currentQuiz.name}</p>
         `;
         
+        // Reset form values to defaults
+        document.getElementById('questionCount').value = '10';
+        document.getElementById('difficulty').value = 'medium';
+        document.getElementById('timeLimit').value = '30';
+        
+        // Navigate to setup screen
         this.navigateTo('quizSetup');
     }
 
     async startQuiz() {
+        console.log('Starting quiz...');
         const questionCount = parseInt(document.getElementById('questionCount').value);
         const difficulty = document.getElementById('difficulty').value;
         const timeLimit = parseInt(document.getElementById('timeLimit').value);
+        
+        // Show loading state
+        this.showLoading(true);
         
         this.currentQuestions = await this.questionManager.loadQuestions(
             this.currentQuiz.id, questionCount, difficulty
@@ -57,31 +73,87 @@ class QuizManager {
         this.renderCurrentQuestion();
         this.navigateTo('quiz');
         this.updateProgress();
+        this.showLoading(false);
     }
 
     renderCurrentQuestion() {
         const question = this.currentQuestions[this.currentIndex];
         const container = document.getElementById('questionContainer');
         
-        container.innerHTML = this.questionManager.renderQuestion(question, this.currentIndex);
-        
-        document.getElementById(`currentQuestion`).textContent = this.currentIndex + 1;
-        document.getElementById(`totalQuestions`).textContent = this.currentQuestions.length;
-        
-        this.questionManager.attachOptionListeners();
-        
-        // Update navigation buttons
-        document.getElementById('prevQuestionBtn').disabled = this.currentIndex === 0;
-        
-        if (this.currentIndex === this.currentQuestions.length - 1) {
-            document.getElementById('nextQuestionBtn').style.display = 'none';
-            document.getElementById('submitQuizBtn').style.display = 'flex';
-        } else {
-            document.getElementById('nextQuestionBtn').style.display = 'flex';
-            document.getElementById('submitQuizBtn').style.display = 'none';
+        if (!container) {
+            console.error('questionContainer not found');
+            return;
         }
         
-        this.updateProgress();
+        // Use QuestionCard component to render
+        const questionCard = window.app?.questionCard;
+        if (questionCard) {
+            container.innerHTML = questionCard.render(question, this.currentIndex, question.userAnswer);
+            questionCard.attachEvents(container, question.id, (qId, selectedIndex) => {
+                const q = this.currentQuestions.find(q => q.id === qId);
+                if (q) {
+                    q.userAnswer = selectedIndex;
+                    this.scoreManager.updateScore(q);
+                    this.updateProgress();
+                }
+            });
+        } else {
+            // Fallback rendering
+            container.innerHTML = this.renderQuestionFallback(question);
+            this.attachFallbackListeners();
+        }
+        
+        // Update navigation buttons
+        const prevBtn = document.getElementById('prevQuestionBtn');
+        const nextBtn = document.getElementById('nextQuestionBtn');
+        const submitBtn = document.getElementById('submitQuizBtn');
+        
+        if (prevBtn) prevBtn.disabled = this.currentIndex === 0;
+        
+        if (this.currentIndex === this.currentQuestions.length - 1) {
+            if (nextBtn) nextBtn.style.display = 'none';
+            if (submitBtn) submitBtn.style.display = 'flex';
+        } else {
+            if (nextBtn) nextBtn.style.display = 'flex';
+            if (submitBtn) submitBtn.style.display = 'none';
+        }
+        
+        document.getElementById('currentQuestion').textContent = this.currentIndex + 1;
+        document.getElementById('totalQuestions').textContent = this.currentQuestions.length;
+    }
+
+    renderQuestionFallback(question) {
+        const letters = ['A', 'B', 'C', 'D'];
+        return `
+            <div class="question-text">${this.currentIndex + 1}. ${question.text}</div>
+            <div class="options-list">
+                ${question.options.map((option, idx) => `
+                    <div class="option-item ${question.userAnswer === idx ? 'selected' : ''}" data-option-index="${idx}">
+                        <div class="option-letter">${letters[idx]}</div>
+                        <div class="option-text">${option}</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    attachFallbackListeners() {
+        document.querySelectorAll('.option-item').forEach(option => {
+            option.onclick = () => {
+                const optionIndex = parseInt(option.dataset.optionIndex);
+                const currentQuestion = this.currentQuestions[this.currentIndex];
+                
+                // Remove selected class from all options
+                option.parentElement.querySelectorAll('.option-item').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                option.classList.add('selected');
+                currentQuestion.userAnswer = optionIndex;
+                this.scoreManager.updateScore(currentQuestion);
+                this.updateProgress();
+            };
+        });
     }
 
     nextQuestion() {
@@ -105,7 +177,6 @@ class QuizManager {
 
     submitQuiz() {
         this.timerManager.stopTimer();
-        
         const results = this.scoreManager.calculateResults(this.currentQuestions);
         this.showResults(results);
     }
@@ -119,37 +190,21 @@ class QuizManager {
             results.answers
         );
         
-        this.renderResults(results);
+        // Use ResultCard component to render
+        const resultCard = window.app?.resultCard;
+        const resultsContainer = document.getElementById('resultsScreen');
+        
+        if (resultCard && resultsContainer) {
+            const resultsHTML = resultCard.render(results);
+            const existingContainer = resultsContainer.querySelector('.results-container');
+            if (existingContainer) {
+                existingContainer.innerHTML = resultsHTML;
+            } else {
+                resultsContainer.innerHTML = `<div class="results-container">${resultsHTML}</div>`;
+            }
+        }
+        
         this.navigateTo('results');
-    }
-
-    renderResults(results) {
-        const scorePercent = results.score;
-        const correctCount = results.correct;
-        const incorrectCount = results.total - results.correct;
-        
-        document.getElementById('finalScore').textContent = scorePercent;
-        document.getElementById('correctCount').textContent = correctCount;
-        document.getElementById('incorrectCount').textContent = incorrectCount;
-        document.getElementById('pointsEarned').textContent = results.points;
-        document.getElementById('timeTaken').textContent = this.formatTime(this.timerManager.getTimeSpent());
-        
-        // Update score circle
-        const circle = document.getElementById('scoreCircle');
-        const angle = (scorePercent / 100) * 360;
-        circle.style.background = `conic-gradient(var(--primary) ${angle}deg, var(--surface-hover) ${angle}deg)`;
-        
-        // Render answer review
-        const reviewContainer = document.getElementById('answersReview');
-        reviewContainer.innerHTML = results.answers.map((answer, index) => `
-            <div class="review-item">
-                <div class="review-question">${index + 1}. ${answer.question}</div>
-                <div class="review-answer ${answer.isCorrect ? 'correct' : 'incorrect'}">
-                    Your answer: ${answer.selectedAnswer}
-                    ${!answer.isCorrect ? `<br>Correct answer: ${answer.correctAnswer}` : ''}
-                </div>
-            </div>
-        `).join('');
     }
 
     retakeQuiz() {
@@ -162,28 +217,49 @@ class QuizManager {
 
     toggleReview() {
         const reviewSection = document.getElementById('reviewSection');
-        const isHidden = reviewSection.style.display === 'none';
-        reviewSection.style.display = isHidden ? 'block' : 'none';
-        document.getElementById('reviewAnswersBtn').innerHTML = isHidden ? 
-            '<i class="fas fa-times"></i> Hide Review' : 
-            '<i class="fas fa-search"></i> Review Answers';
+        if (reviewSection) {
+            const isHidden = reviewSection.style.display === 'none';
+            reviewSection.style.display = isHidden ? 'block' : 'none';
+            const reviewBtn = document.getElementById('reviewAnswersBtn');
+            if (reviewBtn) {
+                reviewBtn.innerHTML = isHidden ? 
+                    '<i class="fas fa-times"></i> Hide Review' : 
+                    '<i class="fas fa-search"></i> Review Answers';
+            }
+        }
     }
 
     updateProgress() {
         const progress = ((this.currentIndex + 1) / this.currentQuestions.length) * 100;
-        document.getElementById('quizProgressBar').style.width = `${progress}%`;
-        document.getElementById('currentScore').textContent = this.scoreManager.getCurrentScore();
+        const progressBar = document.getElementById('quizProgressBar');
+        if (progressBar) progressBar.style.width = `${progress}%`;
+        
+        const currentScoreSpan = document.getElementById('currentScore');
+        if (currentScoreSpan) currentScoreSpan.textContent = this.scoreManager.getCurrentScore();
+    }
+
+    showLoading(show) {
+        const spinner = document.getElementById('loadingSpinner');
+        if (spinner) {
+            spinner.style.display = show ? 'flex' : 'none';
+        }
+    }
+
+    navigateTo(screen) {
+        console.log('Navigating to:', screen);
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        const targetScreen = document.getElementById(`${screen}Screen`);
+        if (targetScreen) {
+            targetScreen.classList.add('active');
+        } else {
+            console.error(`Screen ${screen}Screen not found`);
+        }
     }
 
     formatTime(seconds) {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
         return `${mins}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    navigateTo(screen) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(`${screen}Screen`).classList.add('active');
     }
 }
 
