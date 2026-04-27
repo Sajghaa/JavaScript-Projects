@@ -10,52 +10,32 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- Header -->
         <header class="header">
             <div class="header-content">
                 <div class="logo">
                     <i class="fas fa-brain"></i>
                     <span>Quiz<span class="accent">Master</span></span>
                 </div>
-                
                 <div class="header-stats">
                     <div class="stat-badge">
                         <i class="fas fa-trophy"></i>
                         <span id="highScore">0</span>
                     </div>
-                    <div class="stat-badge">
-                        <i class="fas fa-chart-line"></i>
-                        <span id="totalQuizzes">0</span>
-                    </div>
                 </div>
-                
                 <button id="themeToggle" class="icon-btn">
                     <i class="fas fa-moon"></i>
                 </button>
             </div>
         </header>
 
-        <!-- Main Content -->
         <main class="main-content">
             <!-- Home Screen -->
             <div id="homeScreen" class="screen active">
                 <div class="hero-section">
                     <h1>Test Your Knowledge</h1>
-                    <p>Choose from various categories and challenge yourself</p>
+                    <p>Choose a category and challenge yourself</p>
                 </div>
-
-                <!-- Categories Grid -->
-                <div class="categories-grid" id="categoriesGrid">
-                    <!-- Categories will be dynamically loaded -->
-                </div>
-
-                <!-- Recent Activity -->
-                <div class="recent-section">
-                    <h3><i class="fas fa-history"></i> Recent Activity</h3>
-                    <div id="recentActivities" class="recent-list">
-                        <!-- Recent quizzes will be shown here -->
-                    </div>
-                </div>
+                <div class="categories-grid" id="categoriesGrid"></div>
             </div>
 
             <!-- Quiz Setup Screen -->
@@ -64,47 +44,27 @@
                     <button class="back-btn" onclick="app.navigateTo('home')">
                         <i class="fas fa-arrow-left"></i> Back
                     </button>
-                    
-                    <div class="quiz-info" id="quizInfo">
-                        <!-- Quiz info will be loaded here -->
-                    </div>
-                    
+                    <div class="quiz-info" id="quizInfo"></div>
                     <div class="setup-options">
                         <div class="option-group">
                             <label>Number of Questions</label>
                             <select id="questionCount" class="form-select">
-                                <option value="5">5 Questions</option>
-                                <option value="10" selected>10 Questions</option>
-                                <option value="15">15 Questions</option>
-                                <option value="20">20 Questions</option>
+                                <option value="3">3 Questions</option>
+                                <option value="5" selected>5 Questions</option>
+                                <option value="10">10 Questions</option>
                             </select>
                         </div>
-                        
                         <div class="option-group">
-                            <label>Difficulty Level</label>
-                            <select id="difficulty" class="form-select">
-                                <option value="easy">Easy</option>
-                                <option value="medium" selected>Medium</option>
-                                <option value="hard">Hard</option>
-                                <option value="mixed">Mixed</option>
-                            </select>
-                        </div>
-                        
-                        <div class="option-group">
-                            <label>Time per Question</label>
+                            <label>Time per Question (seconds)</label>
                             <select id="timeLimit" class="form-select">
-                                <option value="0">No Time Limit</option>
+                                <option value="0">No Limit</option>
                                 <option value="15">15 seconds</option>
                                 <option value="30" selected>30 seconds</option>
                                 <option value="45">45 seconds</option>
-                                <option value="60">60 seconds</option>
                             </select>
                         </div>
                     </div>
-                    
-                    <button id="startQuizBtn" class="btn btn-primary btn-large">
-                        <i class="fas fa-play"></i> Start Quiz
-                    </button>
+                    <button id="startQuizBtn" class="btn btn-primary btn-large">Start Quiz</button>
                 </div>
             </div>
 
@@ -112,36 +72,25 @@
             <div id="quizScreen" class="screen">
                 <div class="quiz-header">
                     <div class="quiz-progress">
-                        <span id="currentQuestion">1</span> / <span id="totalQuestions">10</span>
+                        Question <span id="currentQ">1</span> / <span id="totalQ">5</span>
                     </div>
                     <div class="quiz-timer" id="timerDisplay">
                         <i class="fas fa-hourglass-half"></i>
                         <span id="timeLeft">00:00</span>
                     </div>
-                    <div class="quiz-score" id="quizScore">
+                    <div class="quiz-score">
                         <i class="fas fa-star"></i>
                         <span id="currentScore">0</span>
                     </div>
                 </div>
-
                 <div class="progress-bar-container">
-                    <div class="progress-bar-fill" id="quizProgressBar"></div>
+                    <div class="progress-bar-fill" id="quizProgress"></div>
                 </div>
-
-                <div id="questionContainer" class="question-container">
-                    <!-- Question will be loaded here -->
-                </div>
-
+                <div id="questionContainer" class="question-container"></div>
                 <div class="quiz-controls">
-                    <button id="prevQuestionBtn" class="btn btn-secondary" disabled>
-                        <i class="fas fa-chevron-left"></i> Previous
-                    </button>
-                    <button id="nextQuestionBtn" class="btn btn-primary">
-                        Next <i class="fas fa-chevron-right"></i>
-                    </button>
-                    <button id="submitQuizBtn" class="btn btn-success" style="display: none;">
-                        <i class="fas fa-check"></i> Submit Quiz
-                    </button>
+                    <button id="prevBtn" class="btn btn-secondary" disabled>Previous</button>
+                    <button id="nextBtn" class="btn btn-primary">Next</button>
+                    <button id="submitBtn" class="btn btn-success" style="display:none">Submit Quiz</button>
                 </div>
             </div>
 
@@ -152,167 +101,59 @@
                         <i class="fas fa-chart-line"></i>
                         <h2>Quiz Complete!</h2>
                     </div>
-                    
                     <div class="score-card">
                         <div class="score-circle" id="scoreCircle">
-                            <span id="finalScore">0</span>
-                            <span>%</span>
+                            <span id="finalScore">0</span><span>%</span>
                         </div>
                         <div class="score-details">
-                            <div class="detail-item">
-                                <span>Correct Answers:</span>
-                                <strong id="correctCount">0</strong>
-                            </div>
-                            <div class="detail-item">
-                                <span>Incorrect Answers:</span>
-                                <strong id="incorrectCount">0</strong>
-                            </div>
-                            <div class="detail-item">
-                                <span>Time Taken:</span>
-                                <strong id="timeTaken">0</strong>
-                            </div>
-                            <div class="detail-item">
-                                <span>Points Earned:</span>
-                                <strong id="pointsEarned">0</strong>
-                            </div>
+                            <div class="detail-item">Correct Answers: <strong id="correctCount">0</strong></div>
+                            <div class="detail-item">Incorrect Answers: <strong id="incorrectCount">0</strong></div>
+                            <div class="detail-item">Points Earned: <strong id="pointsEarned">0</strong></div>
                         </div>
                     </div>
-                    
                     <div class="results-actions">
-                        <button id="reviewAnswersBtn" class="btn btn-secondary">
-                            <i class="fas fa-search"></i> Review Answers
-                        </button>
-                        <button id="retakeQuizBtn" class="btn btn-primary">
-                            <i class="fas fa-redo"></i> Retake Quiz
-                        </button>
-                        <button id="newQuizBtn" class="btn btn-outline">
-                            <i class="fas fa-plus"></i> New Quiz
-                        </button>
+                        <button id="retakeBtn" class="btn btn-primary">Retake Quiz</button>
+                        <button id="newQuizBtn" class="btn btn-secondary">New Quiz</button>
                     </div>
-                    
-                    <div id="reviewSection" class="review-section" style="display: none;">
+                    <div id="reviewSection" class="review-section" style="display:none">
                         <h3>Answer Review</h3>
-                        <div id="answersReview" class="answers-review">
-                            <!-- Answers will be reviewed here -->
-                        </div>
+                        <div id="answersReview"></div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Leaderboard Screen -->
-            <div id="leaderboardScreen" class="screen">
-                <div class="leaderboard-container">
-                    <div class="leaderboard-header">
-                        <h2><i class="fas fa-trophy"></i> Leaderboard</h2>
-                        <button class="back-btn" onclick="app.navigateTo('home')">
-                            <i class="fas fa-arrow-left"></i> Back
-                        </button>
-                    </div>
-                    
-                    <div class="leaderboard-filters">
-                        <select id="leaderboardCategory" class="form-select">
-                            <option value="all">All Categories</option>
-                        </select>
-                        <select id="leaderboardPeriod" class="form-select">
-                            <option value="all">All Time</option>
-                            <option value="week">This Week</option>
-                            <option value="month">This Month</option>
-                        </select>
-                    </div>
-                    
-                    <div id="leaderboardList" class="leaderboard-list">
-                        <!-- Leaderboard entries will be loaded here -->
-                    </div>
+                    <button id="reviewBtn" class="btn btn-outline" style="margin-top:1rem">Review Answers</button>
                 </div>
             </div>
         </main>
 
-        <!-- Bottom Navigation -->
         <nav class="bottom-nav">
-            <button class="nav-item active" data-nav="home">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </button>
-            <button class="nav-item" data-nav="leaderboard">
-                <i class="fas fa-trophy"></i>
-                <span>Leaderboard</span>
-            </button>
-            <button class="nav-item" data-nav="profile">
-                <i class="fas fa-user"></i>
-                <span>Profile</span>
-            </button>
+            <button class="nav-item active" data-nav="home"><i class="fas fa-home"></i><span>Home</span></button>
+            <button class="nav-item" data-nav="profile"><i class="fas fa-user"></i><span>Profile</span></button>
         </nav>
 
         <!-- Profile Screen -->
         <div id="profileScreen" class="screen">
             <div class="profile-container">
                 <div class="profile-header">
-                    <div class="profile-avatar">
-                        <i class="fas fa-user-circle"></i>
-                    </div>
+                    <div class="profile-avatar"><i class="fas fa-user-circle"></i></div>
                     <h2 id="playerName">Quiz Master</h2>
-                    <button id="editNameBtn" class="btn btn-secondary btn-sm">
-                        <i class="fas fa-edit"></i> Edit Name
-                    </button>
+                    <button id="editNameBtn" class="btn btn-secondary btn-sm">Edit Name</button>
                 </div>
-                
                 <div class="stats-grid">
-                    <div class="stat-card">
-                        <i class="fas fa-check-circle"></i>
-                        <div>
-                            <div class="stat-value" id="totalCorrect">0</div>
-                            <div class="stat-label">Correct Answers</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-trophy"></i>
-                        <div>
-                            <div class="stat-value" id="totalPoints">0</div>
-                            <div class="stat-label">Total Points</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-chart-line"></i>
-                        <div>
-                            <div class="stat-value" id="avgScore">0%</div>
-                            <div class="stat-label">Average Score</div>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-clock"></i>
-                        <div>
-                            <div class="stat-value" id="totalTime">0</div>
-                            <div class="stat-label">Hours Spent</div>
-                        </div>
-                    </div>
+                    <div class="stat-card"><i class="fas fa-check-circle"></i><div><div id="totalCorrect">0</div><div>Correct</div></div></div>
+                    <div class="stat-card"><i class="fas fa-trophy"></i><div><div id="totalPoints">0</div><div>Points</div></div></div>
+                    <div class="stat-card"><i class="fas fa-chart-line"></i><div><div id="totalQuizzes">0</div><div>Quizzes</div></div></div>
                 </div>
-                
                 <div class="achievements-section">
-                    <h3><i class="fas fa-medal"></i> Achievements</h3>
-                    <div id="achievementsList" class="achievements-grid">
-                        <!-- Achievements will be loaded here -->
-                    </div>
+                    <h3>Achievements</h3>
+                    <div id="achievementsList" class="achievements-grid"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Toast Notification -->
         <div id="toast" class="toast"></div>
     </div>
 
     <script src="js/core/StateManager.js"></script>
     <script src="js/core/EventBus.js"></script>
-    <script src="js/core/StorageManager.js"></script>
-    <script src="js/components/QuizCard.js"></script>
-    <script src="js/components/QuestionCard.js"></script>
-    <script src="js/components/ResultCard.js"></script>
-    <script src="js/components/ProgressBar.js"></script>
-    <script src="js/components/Leaderboard.js"></script>
-    <script src="js/modules/TimerManager.js"></script>
-    <script src="js/modules/ScoreManager.js"></script>
-    <script src="js/modules/QuestionManager.js"></script>
-    <script src="js/modules/CategoryManager.js"></script>
-    <script src="js/modules/QuizManager.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>
