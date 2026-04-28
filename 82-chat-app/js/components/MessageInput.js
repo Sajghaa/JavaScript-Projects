@@ -39,8 +39,9 @@ class MessageInput {
 
     sendMessage() {
         const input = document.getElementById('messageInput');
-        const text = input.value.trim();
+        if (!input) return;
         
+        const text = input.value.trim();
         if (!text) return;
         
         const roomId = this.stateManager.get('currentRoom');
