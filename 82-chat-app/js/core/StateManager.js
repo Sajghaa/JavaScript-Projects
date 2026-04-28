@@ -25,7 +25,7 @@ class StateManager {
 
     initializeSampleMessages() {
         if (this.state.messages.length === 0) {
-            const now = new Date();
+            const now = new Date().getTime();
             this.state.messages = [
                 { id: 'msg1', roomId: 'room1', userId: 'user1', text: 'Hello everyone! 👋', timestamp: new Date(now - 3600000), reactions: [] },
                 { id: 'msg2', roomId: 'room1', userId: 'user2', text: 'Hey Alex! How are you?', timestamp: new Date(now - 3500000), reactions: [] },
@@ -33,6 +33,7 @@ class StateManager {
                 { id: 'msg4', roomId: 'room2', userId: 'user1', text: 'Anyone up for a game? 🎮', timestamp: new Date(now - 3000000), reactions: [] },
                 { id: 'msg5', roomId: 'room3', userId: 'user3', text: 'Check out this new framework!', timestamp: new Date(now - 2000000), reactions: [] }
             ];
+            this.saveToStorage();
         }
     }
 
@@ -106,7 +107,7 @@ class StateManager {
     }
 
     addRoom(room) {
-        const newRoom = { id: 'room' + (this.state.rooms.length + 1), members: [this.state.currentUser.id], createdAt: new Date(), ...room };
+        const newRoom = { id: 'room_' + Date.now(), members: [this.state.currentUser?.id].filter(Boolean), createdAt: new Date(), ...room };
         this.state.rooms.push(newRoom);
         this.notifyListeners('rooms', this.state.rooms);
         this.saveToStorage();
@@ -130,7 +131,8 @@ class StateManager {
         try {
             localStorage.setItem('chat_app_state', JSON.stringify({
                 messages: this.state.messages,
-                currentUser: this.state.currentUser
+                currentUser: this.state.currentUser,
+                rooms: this.state.rooms
             }));
         } catch (e) { console.error(e); }
     }
@@ -142,6 +144,9 @@ class StateManager {
                 const data = JSON.parse(saved);
                 this.state.messages = data.messages || [];
                 this.state.currentUser = data.currentUser || null;
+                if (data.rooms) {
+                    this.state.rooms = data.rooms;
+                }
             }
         } catch (e) { console.error(e); }
     }
