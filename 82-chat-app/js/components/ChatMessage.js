@@ -10,15 +10,17 @@ class ChatMessage {
         
         const isOwn = message.userId === currentUserId;
         const time = new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const safeName = this.escapeHtml(user.name);
+        const safeAvatar = this.escapeAttr(user.avatar);
         
         return `
             <div class="message ${isOwn ? 'message-own' : ''}" data-message-id="${message.id}">
                 <div class="message-avatar">
-                    <img src="${user.avatar}" alt="${user.name}">
+                    <img src="${safeAvatar}" alt="${safeName}">
                 </div>
                 <div class="message-content">
                     <div class="message-header">
-                        <span class="message-sender">${user.name}</span>
+                        <span class="message-sender">${safeName}</span>
                         <span class="message-time">${time}</span>
                     </div>
                     <div class="message-bubble">
@@ -55,6 +57,18 @@ class ChatMessage {
             if (m === '>') return '&gt;';
             return m;
         }).replace(/\n/g, '<br>');
+    }
+
+    escapeAttr(str) {
+        if (!str) return '';
+        return str.replace(/[&<>"']/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            if (m === '"') return '&quot;';
+            if (m === "'") return '&#39;';
+            return m;
+        });
     }
 }
 
