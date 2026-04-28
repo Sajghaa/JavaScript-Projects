@@ -796,6 +796,22 @@ body {
     display: block;
 }
 
+.toast.success {
+    border-left-color: var(--secondary);
+}
+
+.toast.error {
+    border-left-color: var(--danger);
+}
+
+.toast.info {
+    border-left-color: var(--primary);
+}
+
+.toast.warning {
+    border-left-color: var(--warning);
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
     width: 6px;
@@ -835,4 +851,179 @@ body {
 /* Utility */
 .hidden {
     display: none !important;
+}
+
+.close-sidebar-btn {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.close-sidebar-btn:hover {
+    background: var(--surface-hover);
+    color: var(--danger);
+}
+
+/* Overlay for sidebar */
+.sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* Close Modal Button Fix */
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-secondary);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.close-modal:hover {
+    background: var(--surface-hover);
+    color: var(--danger);
+}
+
+/* Ensure modal close works */
+.modal .close-modal {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+}
+
+.modal-header {
+    position: relative;
+    padding-right: 3rem;
+}
+
+/* Room Details Styles */
+.room-info-card {
+    padding: 1rem;
+}
+
+.room-icon-large {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.room-description {
+    color: var(--text-secondary);
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+}
+
+.room-meta {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.member-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.member-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    background: var(--surface-hover);
+    transition: var(--transition);
+}
+
+.member-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.member-info {
+    flex: 1;
+}
+
+.member-name {
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.member-status {
+    font-size: 0.7rem;
+}
+
+.member-status.online {
+    color: var(--secondary);
+}
+
+.member-status.offline {
+    color: var(--text-secondary);
+}
+
+.dm-btn {
+    background: var(--primary);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dm-btn:hover {
+    background: var(--primary-dark);
+    transform: scale(1.05);
+}
+
+/* Make sure all modal close buttons work */
+.modal .close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+.modal-header {
+    position: relative;
+    padding-right: 3rem;
+}
+
+/* Fix for the X button in all modals */
+button.close-modal,
+button.close-sidebar-btn {
+    cursor: pointer;
 }
