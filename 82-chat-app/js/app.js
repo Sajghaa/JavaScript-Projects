@@ -44,16 +44,9 @@ document.addEventListener('DOMContentLoaded', function() {
         Notification.requestPermission();
     }
     
-    // Theme toggle
+    // Theme setup
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
-    
-    document.getElementById('themeToggle')?.addEventListener('click', () => {
-        const current = document.documentElement.getAttribute('data-theme') || 'light';
-        const newTheme = current === 'light' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-    });
     
     console.log('Chat App Initialized!');
 });
