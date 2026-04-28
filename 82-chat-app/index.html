@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-User Chat | Real-time Communication</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-comments"></i>
+                    <span>Chat<span class="accent">Hub</span></span>
+                </div>
+                <button id="userMenuBtn" class="icon-btn">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+            </div>
+
+            <!-- Active Users -->
+            <div class="users-section">
+                <h3><i class="fas fa-users"></i> Active Users</h3>
+                <div id="usersList" class="users-list">
+                    <!-- Users will be dynamically loaded -->
+                </div>
+            </div>
+
+            <!-- Rooms -->
+            <div class="rooms-section">
+                <h3><i class="fas fa-hashtag"></i> Channels</h3>
+                <div id="roomsList" class="rooms-list">
+                    <!-- Rooms will be dynamically loaded -->
+                </div>
+                <button id="createRoomBtn" class="btn-create">
+                    <i class="fas fa-plus"></i> Create Channel
+                </button>
+            </div>
+
+            <!-- Current User -->
+            <div class="current-user" id="currentUserCard">
+                <div class="user-avatar" id="currentUserAvatar">
+                    <img src="https://via.placeholder.com/40" alt="User">
+                </div>
+                <div class="user-info">
+                    <div class="user-name" id="currentUserName">Guest User</div>
+                    <div class="user-status" id="currentUserStatus">Online</div>
+                </div>
+                <button id="switchUserBtn" class="icon-btn">
+                    <i class="fas fa-exchange-alt"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-area">
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="room-info">
+                    <i class="fas fa-hashtag" id="roomIcon"></i>
+                    <h2 id="roomName">General</h2>
+                    <span id="roomMemberCount">0 members</span>
+                </div>
+                <div class="chat-actions">
+                    <button id="roomInfoBtn" class="icon-btn">
+                        <i class="fas fa-info-circle"></i>
+                    </button>
+                    <button id="searchBtn" class="icon-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages Container -->
+            <div id="messagesContainer" class="messages-container">
+                <!-- Messages will be dynamically loaded -->
+            </div>
+
+            <!-- Typing Indicator -->
+            <div id="typingIndicator" class="typing-indicator">
+                <span></span>
+            </div>
+
+            <!-- Message Input -->
+            <div class="message-input-container">
+                <div class="input-tools">
+                    <button class="tool-btn" id="emojiBtn">
+                        <i class="far fa-smile"></i>
+                    </button>
+                    <button class="tool-btn" id="attachBtn">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    <button class="tool-btn" id="gifBtn">
+                        <i class="fas fa-gift"></i>
+                    </button>
+                </div>
+                <div class="input-wrapper">
+                    <textarea id="messageInput" placeholder="Type a message..." rows="1"></textarea>
+                    <button id="sendBtn" class="send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Sidebar - User Info / Room Info -->
+        <aside class="right-sidebar" id="rightSidebar">
+            <div class="sidebar-header">
+                <h3>Room Details</h3>
+                <button id="closeSidebarBtn" class="icon-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="roomDetails" class="room-details">
+                <!-- Room details will be loaded here -->
+            </div>
+        </aside>
+    </div>
+
+    <!-- Switch User Modal -->
+    <div id="switchUserModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Switch User</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="userOptions" class="user-options">
+                    <!-- User options will be dynamically loaded -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Room Modal -->
+    <div id="createRoomModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Channel</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Channel Name</label>
+                    <input type="text" id="roomNameInput" placeholder="e.g., general, random, tech">
+                </div>
+                <div class="form-group">
+                    <label>Description (Optional)</label>
+                    <textarea id="roomDescription" rows="3" placeholder="Describe the purpose of this channel"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" id="confirmCreateRoomBtn">Create Channel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emoji Picker (simplified) -->
+    <div id="emojiPicker" class="emoji-picker" style="display: none;">
+        <div class="emoji-list">
+            <span>😀</span><span>😂</span><span>😍</span><span>🥰</span><span>😎</span>
+            <span>🤔</span><span>😴</span><span>🥳</span><span>🎉</span><span>❤️</span>
+            <span>🔥</span><span>👍</span><span>👎</span><span>🙏</span><span>💀</span>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="js/core/StateManager.js"></script>
+    <script src="js/core/EventBus.js"></script>
+    <script src="js/core/StorageManager.js"></script>
+    <script src="js/components/ChatMessage.js"></script>
+    <script src="js/components/UserList.js"></script>
+    <script src="js/components/RoomList.js"></script>
+    <script src="js/components/MessageInput.js"></script>
+    <script src="js/components/TypingIndicator.js"></script>
+    <script src="js/modules/UserManager.js"></script>
+    <script src="js/modules/RoomManager.js"></script>
+    <script src="js/modules/MessageManager.js"></script>
+    <script src="js/modules/ChatManager.js"></script>
+    <script src="js/modules/NotificationManager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
