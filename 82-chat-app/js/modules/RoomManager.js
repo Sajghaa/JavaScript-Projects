@@ -10,6 +10,7 @@ class RoomManager {
         this.renderRooms();
         document.getElementById('createRoomBtn').onclick = () => this.showCreateRoomModal();
         this.eventBus.on('room:select', (roomId) => this.switchRoom(roomId));
+        this.setupModalClose();
     }
 
     renderRooms() {
@@ -31,11 +32,19 @@ class RoomManager {
     updateRoomInfo() {
         const roomId = this.stateManager.get('currentRoom');
         const room = this.stateManager.get('rooms').find(r => r.id === roomId);
+        const iconEl = document.getElementById('roomIcon');
         
-        if (room) {
+        if (room && iconEl) {
             document.getElementById('roomName').textContent = room.name;
             document.getElementById('roomMemberCount').textContent = `${room.members.length} members`;
-            document.getElementById('roomIcon').className = room.icon || 'fas fa-hashtag';
+            // Use textContent for emoji icons, className for FontAwesome icons
+            if (room.icon && room.icon.length <= 2) {
+                iconEl.className = '';
+                iconEl.textContent = room.icon;
+            } else {
+                iconEl.className = room.icon || 'fas fa-hashtag';
+                iconEl.textContent = '';
+            }
         }
     }
 
@@ -70,42 +79,35 @@ class RoomManager {
         this.eventBus.emit('toast', { message: `Channel #${name} created!`, type: 'success' });
     }
 
-    showRoomDetails() {
-        const roomId = this.stateManager.get('currentRoom');
-        const room = this.stateManager.get('rooms').find(r => r.id === roomId);
-        const users = this.stateManager.get('users');
-        const members = users.filter(u => room?.members.includes(u.id));
-        
-        const sidebar = document.getElementById('rightSidebar');
-        const details = document.getElementById('roomDetails');
-        
-        details.innerHTML = `
-            <h4># ${room?.name}</h4>
-            <p>${room?.description || 'No description'}</p>
-            <div class="member-list">
-                <strong>Members (${members.length})</strong>
-                ${members.map(m => `
-                    <div class="user-item">
-                        <div class="user-avatar"><img src="${m.avatar}" alt="${m.name}"></div>
-                        <div class="user-info">
-                            <div class="user-name">${m.name}</div>
-                            <div class="user-status-text">${m.status}</div>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-        
-        sidebar.classList.add('open');
-    }
-
-    closeSidebar() {
-        document.getElementById('rightSidebar').classList.remove('open');
-    }
-
     closeModal() {
-        document.getElementById('createRoomModal').classList.remove('active');
+        const modal = document.getElementById('createRoomModal');
+        if (modal) modal.classList.remove('active');
     }
+     setupModalClose() {
+        const modal = document.getElementById('createRoomModal');
+        if (modal) {
+            const closeBtn = modal.querySelector('.close-modal');
+            if (closeBtn) {
+                closeBtn.onclick = () => this.closeModal();
+            }
+            // Click outside to close
+            modal.onclick = (e) => {
+                if (e.target === modal) this.closeModal();
+            };
+        }
+        
+        const userModal = document.getElementById('switchUserModal');
+        if (userModal) {
+            const closeBtn = userModal.querySelector('.close-modal');
+            if (closeBtn) {
+                closeBtn.onclick = () => userModal.classList.remove('active');
+            }
+            userModal.onclick = (e) => {
+                if (e.target === userModal) userModal.classList.remove('active');
+            };
+        }
+    }
+    
 }
 
 window.RoomManager = RoomManager;
