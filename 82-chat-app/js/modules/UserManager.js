@@ -71,9 +71,15 @@ class UserManager {
     }
 
     openPrivateChat(userId) {
+        const currentUser = this.stateManager.get('currentUser');
+        if (!currentUser) {
+            this.eventBus.emit('toast', { message: 'Please select a user first', type: 'error' });
+            return;
+        }
+        
         const user = this.stateManager.get('users').find(u => u.id === userId);
         if (user) {
-            const privateRoomId = `dm_${[this.stateManager.get('currentUser')?.id, userId].sort().join('_')}`;
+            const privateRoomId = `dm_${[currentUser.id, userId].sort().join('_')}`;
             let room = this.stateManager.get('rooms').find(r => r.id === privateRoomId);
             
             if (!room) {
@@ -83,7 +89,7 @@ class UserManager {
                     description: `Direct message with ${user.name}`,
                     icon: '💬',
                     isPrivate: true,
-                    members: [this.stateManager.get('currentUser')?.id, userId]
+                    members: [currentUser.id, userId]
                 });
             }
             
