@@ -21,6 +21,8 @@ class MessageManager {
 
     renderMessages() {
         const container = document.getElementById('messagesContainer');
+        if (!container) return;
+        
         const roomId = this.stateManager.get('currentRoom');
         const messages = this.stateManager.getRoomMessages(roomId);
         const currentUser = this.stateManager.get('currentUser');
