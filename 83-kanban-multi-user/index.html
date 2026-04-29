@@ -39,33 +39,16 @@
             
             <!-- Active Users Bar -->
             <div class="active-users-bar" id="activeUsersBar">
-                <div class="users-list" id="activeUsersList">
-                    <!-- Active users will be dynamically loaded -->
-                </div>
+                <div class="users-list" id="activeUsersList"></div>
             </div>
         </header>
 
         <!-- Kanban Board -->
         <main class="kanban-board" id="kanbanBoard">
-            <div class="columns-container" id="columnsContainer">
-                <!-- Columns will be dynamically loaded -->
-            </div>
+            <div class="columns-container" id="columnsContainer"></div>
         </main>
 
-        <!-- Activity Sidebar -->
-        <aside class="activity-sidebar" id="activitySidebar">
-            <div class="sidebar-header">
-                <h3><i class="fas fa-history"></i> Activity Log</h3>
-                <button class="close-sidebar" id="closeActivityBtn">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div id="activityList" class="activity-list">
-                <!-- Activities will be loaded here -->
-            </div>
-        </aside>
-
-        <!-- User Selection Modal -->
+        <!-- User Modal -->
         <div id="userModal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -73,9 +56,7 @@
                     <button class="close-modal" onclick="closeModal()">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <div id="userList" class="user-grid">
-                        <!-- Users will be loaded here -->
-                    </div>
+                    <div id="userList" class="user-grid"></div>
                 </div>
             </div>
         </div>
@@ -93,12 +74,10 @@
                             <label>Task Title</label>
                             <input type="text" id="taskTitle" placeholder="Enter task title" required>
                         </div>
-                        
                         <div class="form-group">
                             <label>Description</label>
                             <textarea id="taskDescription" rows="3" placeholder="Add a description..."></textarea>
                         </div>
-                        
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Priority</label>
@@ -109,23 +88,18 @@
                                     <option value="urgent">Urgent</option>
                                 </select>
                             </div>
-                            
                             <div class="form-group">
                                 <label>Due Date</label>
                                 <input type="date" id="taskDueDate">
                             </div>
                         </div>
-                        
                         <div class="form-group">
                             <label>Assign To</label>
-                            <select id="taskAssignee">
-                                <option value="">Unassigned</option>
-                            </select>
+                            <select id="taskAssignee"></select>
                         </div>
-                        
                         <div class="form-group">
                             <label>Tags</label>
-                            <input type="text" id="taskTags" placeholder="e.g., frontend, backend, design">
+                            <input type="text" id="taskTags" placeholder="e.g., frontend, backend">
                         </div>
                     </form>
                 </div>
@@ -137,7 +111,7 @@
             </div>
         </div>
 
-        <!-- Notification Toast -->
+        <!-- Toast -->
         <div id="toast" class="toast"></div>
     </div>
 
@@ -148,7 +122,6 @@
     <script src="js/components/Column.js"></script>
     <script src="js/components/UserAvatar.js"></script>
     <script src="js/components/TaskModal.js"></script>
-    <script src="js/components/ActivityLog.js"></script>
     <script src="js/modules/TaskManager.js"></script>
     <script src="js/modules/UserManager.js"></script>
     <script src="js/modules/DragDropManager.js"></script>
