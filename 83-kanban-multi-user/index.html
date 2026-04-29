@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban Board | Multi-User Task Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-tasks"></i>
+                    <span>Kanban<span class="accent">Flow</span></span>
+                </div>
+                
+                <div class="board-info">
+                    <h2 id="boardTitle">Development Board</h2>
+                    <span id="taskCount">0 tasks</span>
+                </div>
+                
+                <div class="header-actions">
+                    <button id="addTaskBtn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Task
+                    </button>
+                    <button id="userMenuBtn" class="icon-btn">
+                        <i class="fas fa-users"></i>
+                        <span id="activeUsersCount" class="badge">0</span>
+                    </button>
+                    <button id="themeToggle" class="icon-btn">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Active Users Bar -->
+            <div class="active-users-bar" id="activeUsersBar">
+                <div class="users-list" id="activeUsersList">
+                    <!-- Active users will be dynamically loaded -->
+                </div>
+            </div>
+        </header>
+
+        <!-- Kanban Board -->
+        <main class="kanban-board" id="kanbanBoard">
+            <div class="columns-container" id="columnsContainer">
+                <!-- Columns will be dynamically loaded -->
+            </div>
+        </main>
+
+        <!-- Activity Sidebar -->
+        <aside class="activity-sidebar" id="activitySidebar">
+            <div class="sidebar-header">
+                <h3><i class="fas fa-history"></i> Activity Log</h3>
+                <button class="close-sidebar" id="closeActivityBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="activityList" class="activity-list">
+                <!-- Activities will be loaded here -->
+            </div>
+        </aside>
+
+        <!-- User Selection Modal -->
+        <div id="userModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-users"></i> Switch User</h2>
+                    <button class="close-modal" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="userList" class="user-grid">
+                        <!-- Users will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Modal -->
+        <div id="taskModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="taskModalTitle">Add New Task</h2>
+                    <button class="close-modal" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="taskForm">
+                        <div class="form-group">
+                            <label>Task Title</label>
+                            <input type="text" id="taskTitle" placeholder="Enter task title" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea id="taskDescription" rows="3" placeholder="Add a description..."></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Priority</label>
+                                <select id="taskPriority">
+                                    <option value="low">Low</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="urgent">Urgent</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Due Date</label>
+                                <input type="date" id="taskDueDate">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Assign To</label>
+                            <select id="taskAssignee">
+                                <option value="">Unassigned</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Tags</label>
+                            <input type="text" id="taskTags" placeholder="e.g., frontend, backend, design">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button class="btn btn-danger" id="deleteTaskBtn" style="display: none;">Delete</button>
+                    <button class="btn btn-primary" id="saveTaskBtn">Save Task</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Toast -->
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <script src="js/core/StateManager.js"></script>
+    <script src="js/core/EventBus.js"></script>
+    <script src="js/core/StorageManager.js"></script>
+    <script src="js/components/TaskCard.js"></script>
+    <script src="js/components/Column.js"></script>
+    <script src="js/components/UserAvatar.js"></script>
+    <script src="js/components/TaskModal.js"></script>
+    <script src="js/components/ActivityLog.js"></script>
+    <script src="js/modules/TaskManager.js"></script>
+    <script src="js/modules/UserManager.js"></script>
+    <script src="js/modules/DragDropManager.js"></script>
+    <script src="js/modules/NotificationManager.js"></script>
+    <script src="js/modules/BoardManager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
