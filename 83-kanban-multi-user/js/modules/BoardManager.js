@@ -4,78 +4,40 @@ class BoardManager {
         this.eventBus = eventBus;
         this.taskManager = taskManager;
         this.column = new Column(stateManager, eventBus, taskCard);
-        this.activityLog = new ActivityLog(stateManager, eventBus);
         this.init();
+        this.eventBus.on('board:refresh', () => this.renderBoard());
     }
 
-    init() {
-        this.renderBoard();
-        this.setupActivitySidebar();
-        
-        this.eventBus.on('board:refresh', () => this.renderBoard());
-        this.eventBus.on('activity:refresh', () => this.renderActivityLog());
-        
-        document.getElementById('closeActivityBtn').onclick = () => this.closeActivitySidebar();
-        this.renderActivityLog();
-    }
+    init() { this.renderBoard(); }
 
     renderBoard() {
         const container = document.getElementById('columnsContainer');
         const columns = this.stateManager.get('columns');
         const tasks = this.stateManager.get('tasks');
         const activeUsers = this.stateManager.getActiveUsers();
-        
-        // Update UI counts
         document.getElementById('taskCount').textContent = `${tasks.length} tasks`;
         document.getElementById('activeUsersCount').textContent = activeUsers.length;
-        
-        container.innerHTML = columns.map(column => {
-            const columnTasks = tasks.filter(t => t.columnId === column.id);
-            return this.column.render(column, columnTasks);
-        }).join('');
-        
-        // Attach column events and task drag events
-        columns.forEach(column => {
-            const columnElement = container.querySelector(`[data-column-id="${column.id}"]`);
-            if (columnElement) {
-                this.column.attachEvents(columnElement, column.id);
-            }
+        container.innerHTML = columns.map(col => this.column.render(col, tasks.filter(t=>t.columnId===col.id))).join('');
+        columns.forEach(col => { const el = container.querySelector(`[data-column-id="${col.id}"]`); if(el) this.column.attachEvents(el, col.id); });
+        this.setupDragEvents();
+    }
+
+    setupDragEvents() {
+        document.querySelectorAll('.task-card').forEach(card => {
+            card.addEventListener('dragstart', (e) => { e.dataTransfer.setData('text/plain', card.dataset.taskId); card.classList.add('dragging'); });
+            card.addEventListener('dragend', (e) => { card.classList.remove('dragging'); });
         });
-        
-        // Setup drag events on new tasks
-        this.setupTaskCardEvents();
-    }
-
-    setupTaskCardEvents() {
-        const taskCards = document.querySelectorAll('.task-card');
-        taskCards.forEach(card => {
-            card.ondblclick = () => {
-                const taskId = card.dataset.taskId;
-                this.eventBus.emit('task:edit', taskId);
-            };
+        document.querySelectorAll('.tasks-container').forEach(container => {
+            container.addEventListener('dragover', (e) => { e.preventDefault(); container.classList.add('drag-over'); });
+            container.addEventListener('dragleave', () => { container.classList.remove('drag-over'); });
+            container.addEventListener('drop', (e) => {
+                e.preventDefault(); container.classList.remove('drag-over');
+                const taskId = e.dataTransfer.getData('text/plain');
+                const newColId = container.dataset.columnId;
+                const task = this.stateManager.get('tasks').find(t=>t.id===taskId);
+                if(task && task.columnId !== newColId) { this.taskManager.moveTask(taskId, newColId); this.eventBus.emit('toast', { message: 'Task moved!', type: 'success' }); }
+            });
         });
-    }
-
-    setupActivitySidebar() {
-        const activityBtn = document.getElementById('userMenuBtn');
-        if (activityBtn) {
-            activityBtn.onclick = () => {
-                const sidebar = document.getElementById('activitySidebar');
-                sidebar.classList.toggle('open');
-                this.renderActivityLog();
-            };
-        }
-    }
-
-    renderActivityLog() {
-        const container = document.getElementById('activityList');
-        const activities = this.stateManager.getRecentActivities();
-        container.innerHTML = this.activityLog.render(activities);
-    }
-
-    closeActivitySidebar() {
-        document.getElementById('activitySidebar').classList.remove('open');
     }
 }
-
 window.BoardManager = BoardManager;
