@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VideoStream | Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-video"></i>
+                    <span>Video<span class="accent">Stream</span></span>
+                </div>
+                
+                <div class="search-container">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search videos...">
+                        <button id="searchBtn" class="btn btn-primary">Search</button>
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <button id="queueToggleBtn" class="icon-btn">
+                        <i class="fas fa-list"></i>
+                        <span id="queueCount" class="badge">0</span>
+                    </button>
+                    <button id="themeToggle" class="icon-btn">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Categories Navigation -->
+            <nav class="categories-nav" id="categoriesNav">
+                <!-- Categories will be dynamically added -->
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-layout">
+            <!-- Video Player Section -->
+            <section class="player-section">
+                <div class="video-player-container" id="videoPlayerContainer">
+                    <div class="video-player" id="videoPlayer">
+                        <div class="player-placeholder">
+                            <i class="fas fa-play-circle"></i>
+                            <p>Select a video to play</p>
+                        </div>
+                    </div>
+                    <div class="video-info" id="videoInfo">
+                        <h2 id="currentVideoTitle">Welcome to VideoStream</h2>
+                        <div class="video-meta" id="currentVideoMeta">
+                            <span><i class="fas fa-eye"></i> 0 views</span>
+                            <span><i class="fas fa-calendar"></i> Just now</span>
+                            <span><i class="fas fa-clock"></i> 0:00</span>
+                        </div>
+                        <p id="currentVideoDescription">Discover amazing videos from our curated collection</p>
+                        <div class="video-actions">
+                            <button id="likeBtn" class="action-btn"><i class="far fa-thumbs-up"></i> <span>0</span></button>
+                            <button id="addToQueueBtn" class="action-btn"><i class="fas fa-plus"></i> Add to Queue</button>
+                            <button id="watchLaterBtn" class="action-btn"><i class="far fa-clock"></i> Watch Later</button>
+                            <button id="favoriteBtn" class="action-btn"><i class="far fa-heart"></i> Favorite</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Videos Grid Section -->
+            <section class="videos-section">
+                <div class="section-header">
+                    <h2 id="sectionTitle">Recommended for You</h2>
+                    <div class="view-controls">
+                        <button class="view-btn active" data-view="grid">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="view-btn" data-view="list">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="videosGrid" class="videos-grid">
+                    <!-- Videos will be dynamically loaded -->
+                </div>
+                
+                <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Loading videos...</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Queue Sidebar -->
+        <aside id="queueSidebar" class="queue-sidebar">
+            <div class="queue-header">
+                <h3><i class="fas fa-list"></i> Play Queue</h3>
+                <button id="closeQueueBtn" class="icon-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="queueList" class="queue-list">
+                <!-- Queue items will be dynamically added -->
+            </div>
+            <div class="queue-footer">
+                <button id="clearQueueBtn" class="btn btn-secondary btn-block">
+                    Clear Queue
+                </button>
+            </div>
+        </aside>
+
+        <!-- Watch Later Sidebar -->
+        <aside id="watchLaterSidebar" class="watchlater-sidebar">
+            <div class="queue-header">
+                <h3><i class="far fa-clock"></i> Watch Later</h3>
+                <button id="closeWatchLaterBtn" class="icon-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="watchLaterList" class="queue-list">
+                <!-- Watch later items will be dynamically added -->
+            </div>
+        </aside>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <script src="js/core/StateManager.js"></script>
+    <script src="js/core/EventBus.js"></script>
+    <script src="js/core/StorageManager.js"></script>
+    <script src="js/components/VideoCard.js"></script>
+    <script src="js/components/VideoPlayer.js"></script>
+    <script src="js/components/QueueList.js"></script>
+    <script src="js/components/SearchBar.js"></script>
+    <script src="js/components/CategoryNav.js"></script>
+    <script src="js/modules/VideoManager.js"></script>
+    <script src="js/modules/QueueManager.js"></script>
+    <script src="js/modules/SearchManager.js"></script>
+    <script src="js/modules/CategoryManager.js"></script>
+    <script src="js/modules/PlayerManager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
