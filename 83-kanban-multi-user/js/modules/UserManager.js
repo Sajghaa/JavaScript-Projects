@@ -4,45 +4,80 @@ class UserManager {
         this.eventBus = eventBus;
         this.userAvatar = new UserAvatar(stateManager, eventBus);
         this.init();
+        // Make current user active
+        const currentUser = this.stateManager.getCurrentUser();
+        if (currentUser) {
+            this.stateManager.toggleActiveUser(currentUser.id, true);
+        }
     }
 
     init() {
-        this.renderActiveUsers();
+        this.renderUsers();
         document.getElementById('userMenuBtn').onclick = () => this.showUserModal();
-        this.eventBus.on('board:refresh', () => this.renderActiveUsers());
+        this.eventBus.on('board:refresh', () => this.renderUsers());
+        
+        // Simulate random users coming online/offline
+        setInterval(() => {
+            const users = this.stateManager.get('users');
+            const currentUser = this.stateManager.getCurrentUser();
+            const otherUsers = users.filter(u => u.id !== currentUser?.id);
+            
+            if (otherUsers.length > 0 && Math.random() > 0.7) {
+                const randomUser = otherUsers[Math.floor(Math.random() * otherUsers.length)];
+                const isActive = this.stateManager.getActiveUsers().includes(randomUser.id);
+                
+                if (!isActive) {
+                    this.stateManager.toggleActiveUser(randomUser.id, true);
+                    this.renderUsers();
+                    
+                    setTimeout(() => {
+                        this.stateManager.toggleActiveUser(randomUser.id, false);
+                        this.renderUsers();
+                    }, 15000);
+                }
+            }
+        }, 20000);
     }
 
-    renderActiveUsers() {
+    renderUsers() {
         const container = document.getElementById('activeUsersList');
+        if (!container) return;
+        
         const users = this.stateManager.get('users');
         const activeUsers = this.stateManager.getActiveUsers();
         const currentUser = this.stateManager.getCurrentUser();
         
-        container.innerHTML = users.map(user => 
-            this.userAvatar.render(user, activeUsers.includes(user.id), currentUser?.id === user.id)
-        ).join('');
+        container.innerHTML = users.map(user => {
+            const isActive = activeUsers.includes(user.id);
+            const isCurrent = currentUser?.id === user.id;
+            return this.userAvatar.render(user, isActive, isCurrent);
+        }).join('');
         
+        // Add click handlers
         container.querySelectorAll('.user-chip').forEach(chip => {
-            chip.onclick = () => {
+            chip.addEventListener('click', (e) => {
+                e.stopPropagation();
                 const userId = chip.dataset.userId;
                 this.switchUser(userId);
-            };
+            });
         });
     }
 
     switchUser(userId) {
-        const oldUser = this.stateManager.getCurrentUser();
+        const currentUser = this.stateManager.getCurrentUser();
+        const newUser = this.stateManager.getUser(userId);
+        
+        if (currentUser?.id === userId) return;
+        
         this.stateManager.setCurrentUser(userId);
+        this.stateManager.toggleActiveUser(userId, true);
         
-        if (oldUser?.id !== userId) {
-            this.eventBus.emit('toast', { 
-                message: `Switched to ${this.stateManager.getCurrentUser().name}`, 
-                type: 'success' 
-            });
-            this.renderActiveUsers();
-            this.eventBus.emit('board:refresh');
-        }
-        
+        this.renderUsers();
+        this.eventBus.emit('toast', { 
+            message: `Switched to ${newUser?.name}`, 
+            type: 'success' 
+        });
+        this.eventBus.emit('board:refresh');
         this.closeModal();
     }
 
@@ -51,6 +86,8 @@ class UserManager {
         const container = document.getElementById('userList');
         const users = this.stateManager.get('users');
         const currentUser = this.stateManager.getCurrentUser();
+        
+        if (!container) return;
         
         container.innerHTML = users.map(user => `
             <div class="user-card ${currentUser?.id === user.id ? 'active' : ''}" data-user-id="${user.id}">
@@ -68,6 +105,7 @@ class UserManager {
             card.onclick = () => {
                 const userId = card.dataset.userId;
                 this.switchUser(userId);
+                this.closeModal();
             };
         });
         
@@ -75,7 +113,8 @@ class UserManager {
     }
 
     closeModal() {
-        document.getElementById('userModal').classList.remove('active');
+        const modal = document.getElementById('userModal');
+        if (modal) modal.classList.remove('active');
     }
 }
 
