@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard Pro | Multi-City Forecast</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-cloud-sun"></i>
+                    <span>Weather<span class="accent">Pro</span></span>
+                </div>
+                
+                <div class="search-container">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="citySearch" placeholder="Search city...">
+                        <button id="searchBtn" class="btn btn-primary">Add</button>
+                    </div>
+                </div>
+                
+                <div class="header-actions">
+                    <button id="refreshBtn" class="icon-btn">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <button id="unitsToggle" class="icon-btn">
+                        <i class="fas fa-thermometer-half"></i> °C
+                    </button>
+                    <button id="themeToggle" class="icon-btn">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Cities Bar -->
+            <div class="cities-bar" id="citiesBar">
+                <div class="cities-list" id="citiesList">
+                    <!-- City chips will be dynamically added -->
+                </div>
+            </div>
+
+            <!-- Current Weather Section -->
+            <div id="currentWeather" class="current-weather">
+                <!-- Current weather card will be dynamically loaded -->
+            </div>
+
+            <!-- Forecast Section -->
+            <div class="forecast-section">
+                <h2><i class="fas fa-calendar-week"></i> 5-Day Forecast</h2>
+                <div id="forecastGrid" class="forecast-grid">
+                    <!-- Forecast cards will be dynamically loaded -->
+                </div>
+            </div>
+
+            <!-- Weather Stats Section -->
+            <div class="stats-section">
+                <div class="stats-card">
+                    <i class="fas fa-tint"></i>
+                    <div>
+                        <div class="stat-label">Humidity</div>
+                        <div class="stat-value" id="humidity">--%</div>
+                    </div>
+                </div>
+                <div class="stats-card">
+                    <i class="fas fa-wind"></i>
+                    <div>
+                        <div class="stat-label">Wind Speed</div>
+                        <div class="stat-value" id="windSpeed">-- km/h</div>
+                    </div>
+                </div>
+                <div class="stats-card">
+                    <i class="fas fa-eye"></i>
+                    <div>
+                        <div class="stat-label">Visibility</div>
+                        <div class="stat-value" id="visibility">-- km</div>
+                    </div>
+                </div>
+                <div class="stats-card">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <div>
+                        <div class="stat-label">Pressure</div>
+                        <div class="stat-value" id="pressure">-- hPa</div>
+                    </div>
+                </div>
+                <div class="stats-card">
+                    <i class="fas fa-thermometer-half"></i>
+                    <div>
+                        <div class="stat-label">Feels Like</div>
+                        <div class="stat-value" id="feelsLike">--°C</div>
+                    </div>
+                </div>
+                <div class="stats-card">
+                    <i class="fas fa-sun"></i>
+                    <div>
+                        <div class="stat-label">UV Index</div>
+                        <div class="stat-value" id="uvIndex">--</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Temperature Chart -->
+            <div class="chart-section">
+                <h2><i class="fas fa-chart-line"></i> Temperature Trend</h2>
+                <canvas id="tempChart" class="temp-chart"></canvas>
+            </div>
+        </main>
+
+        <!-- Add City Modal -->
+        <div id="addCityModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add New City</h2>
+                    <button class="close-modal" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>City Name</label>
+                        <input type="text" id="newCityName" placeholder="Enter city name...">
+                    </div>
+                    <div id="searchResults" class="search-results"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <script src="js/core/StateManager.js"></script>
+    <script src="js/core/EventBus.js"></script>
+    <script src="js/core/StorageManager.js"></script>
+    <script src="js/components/WeatherCard.js"></script>
+    <script src="js/components/ForecastCard.js"></script>
+    <script src="js/components/CitySelector.js"></script>
+    <script src="js/components/WeatherAnimation.js"></script>
+    <script src="js/components/TemperatureChart.js"></script>
+    <script src="js/modules/APIManager.js"></script>
+    <script src="js/modules/WeatherManager.js"></script>
+    <script src="js/modules/CityManager.js"></script>
+    <script src="js/modules/ForecastManager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
