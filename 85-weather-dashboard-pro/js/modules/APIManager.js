@@ -1,6 +1,6 @@
 class APIManager {
     constructor() {
-        this.apiKey = 'YOUR_API_KEY'; // Replace with your OpenWeatherMap API key
+        this.apiKey = '2c0db66e7c222ed6110c31f3db429d00'; // Your API key
         this.baseUrl = 'https://api.openweathermap.org/data/2.5';
     }
 
@@ -17,15 +17,18 @@ class APIManager {
         if(!response.ok) throw new Error('City not found');
         const data = await response.json();
         const dailyForecasts = [];
-        for(let i=0;i<data.list.length;i+=8) if(dailyForecasts.length<5) dailyForecasts.push(data.list[i]);
+        for(let i=0;i<data.list.length;i+=8) {
+            if(dailyForecasts.length < 5) dailyForecasts.push(data.list[i]);
+        }
         return dailyForecasts;
     }
 
     async searchCity(query) {
-        const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5`;
+        // Using OpenWeatherMap's geocoding API
+        const url = `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(query)}&limit=5&appid=${this.apiKey}`;
         const response = await fetch(url);
         const data = await response.json();
-        return data.results || [];
+        return data.map(city => ({ name: city.name, country: city.country, lat: city.lat, lon: city.lon }));
     }
 }
 window.APIManager = APIManager;
