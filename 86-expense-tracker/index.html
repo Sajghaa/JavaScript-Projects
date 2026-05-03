@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker | Smart Analytics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-wallet"></i>
+                    <span>Expense<span class="accent">Tracker</span></span>
+                </div>
+                
+                <div class="date-range">
+                    <button id="prevPeriod" class="icon-btn"><i class="fas fa-chevron-left"></i></button>
+                    <span id="currentPeriod">March 2024</span>
+                    <button id="nextPeriod" class="icon-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                
+                <div class="period-selector">
+                    <button class="period-btn active" data-period="monthly">Monthly</button>
+                    <button class="period-btn" data-period="weekly">Weekly</button>
+                    <button class="period-btn" data-period="yearly">Yearly</button>
+                </div>
+                
+                <div class="header-actions">
+                    <button id="addExpenseBtn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Expense
+                    </button>
+                    <button id="themeToggle" class="icon-btn">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Summary Cards -->
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <div class="summary-icon"><i class="fas fa-dollar-sign"></i></div>
+                    <div class="summary-info">
+                        <span class="summary-label">Total Expenses</span>
+                        <span class="summary-value" id="totalExpenses">$0</span>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon"><i class="fas fa-chart-line"></i></div>
+                    <div class="summary-info">
+                        <span class="summary-label">Average Daily</span>
+                        <span class="summary-value" id="averageDaily">$0</span>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon"><i class="fas fa-trend-up"></i></div>
+                    <div class="summary-info">
+                        <span class="summary-label">Highest Spending</span>
+                        <span class="summary-value" id="highestDay">$0</span>
+                    </div>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-icon"><i class="fas fa-calendar"></i></div>
+                    <div class="summary-info">
+                        <span class="summary-label">Total Transactions</span>
+                        <span class="summary-value" id="transactionCount">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-row">
+                <div class="chart-card">
+                    <h3><i class="fas fa-chart-pie"></i> Expense by Category</h3>
+                    <canvas id="categoryChart" class="category-chart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3><i class="fas fa-chart-line"></i> Spending Trend</h3>
+                    <canvas id="trendChart" class="trend-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Category Breakdown -->
+            <div class="category-section">
+                <h3><i class="fas fa-layer-group"></i> Category Breakdown</h3>
+                <div id="categoryBreakdown" class="category-breakdown">
+                    <!-- Category breakdown will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="transactions-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-list"></i> Recent Transactions</h3>
+                    <div class="filter-controls">
+                        <select id="categoryFilter" class="filter-select">
+                            <option value="all">All Categories</option>
+                        </select>
+                        <input type="date" id="dateFilter" class="date-filter">
+                        <button id="clearFiltersBtn" class="btn btn-secondary btn-sm">Clear</button>
+                    </div>
+                </div>
+                <div id="expensesList" class="expenses-list">
+                    <!-- Expenses will be loaded here -->
+                </div>
+                <div id="noExpenses" class="no-expenses" style="display: none;">
+                    <i class="fas fa-receipt"></i>
+                    <p>No expenses found</p>
+                    <button class="btn btn-primary" onclick="app.expenseManager.showAddExpenseModal()">
+                        Add Your First Expense
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Add Expense Modal -->
+        <div id="expenseModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Add Expense</h2>
+                    <button class="close-modal" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="expenseForm">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="expenseTitle" placeholder="e.g., Grocery Shopping" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="number" id="expenseAmount" step="0.01" placeholder="0.00" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="expenseCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="Food">🍔 Food</option>
+                                <option value="Transport">🚗 Transport</option>
+                                <option value="Shopping">🛍️ Shopping</option>
+                                <option value="Entertainment">🎬 Entertainment</option>
+                                <option value="Bills">📄 Bills</option>
+                                <option value="Healthcare">🏥 Healthcare</option>
+                                <option value="Education">📚 Education</option>
+                                <option value="Other">📦 Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" id="expenseDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Notes (Optional)</label>
+                            <textarea id="expenseNotes" rows="2" placeholder="Additional notes..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button class="btn btn-primary" id="saveExpenseBtn">Save Expense</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Expense Modal -->
+        <div id="editExpenseModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Edit Expense</h2>
+                    <button class="close-modal" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="editExpenseForm">
+                        <input type="hidden" id="editExpenseId">
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input type="text" id="editExpenseTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="number" id="editExpenseAmount" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="editExpenseCategory" required>
+                                <option value="Food">🍔 Food</option>
+                                <option value="Transport">🚗 Transport</option>
+                                <option value="Shopping">🛍️ Shopping</option>
+                                <option value="Entertainment">🎬 Entertainment</option>
+                                <option value="Bills">📄 Bills</option>
+                                <option value="Healthcare">🏥 Healthcare</option>
+                                <option value="Education">📚 Education</option>
+                                <option value="Other">📦 Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Date</label>
+                            <input type="date" id="editExpenseDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Notes</label>
+                            <textarea id="editExpenseNotes" rows="2"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button class="btn btn-danger" id="deleteExpenseBtn">Delete</button>
+                    <button class="btn btn-primary" id="updateExpenseBtn">Update</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast"></div>
+    </div>
+
+    <script src="js/core/StateManager.js"></script>
+    <script src="js/core/EventBus.js"></script>
+    <script src="js/core/StorageManager.js"></script>
+    <script src="js/components/ExpenseList.js"></script>
+    <script src="js/components/ExpenseForm.js"></script>
+    <script src="js/components/ExpenseChart.js"></script>
+    <script src="js/components/CategorySummary.js"></script>
+    <script src="js/components/BudgetWidget.js"></script>
+    <script src="js/modules/ExpenseManager.js"></script>
+    <script src="js/modules/CategoryManager.js"></script>
+    <script src="js/modules/AnalyticsManager.js"></script>
+    <script src="js/modules/ChartManager.js"></script>
+    <script src="js/modules/BudgetManager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
