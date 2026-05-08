@@ -14,9 +14,11 @@ class NewsTicker {
         try {
             const response = await fetch('https://min-api.cryptocompare.com/data/v2/news/?lang=EN');
             const data = await response.json();
-            const articles = data.Data.slice(0, 10);
-            this.renderNews(articles);
-        } catch(err) { console.error(err); }
+            if(data && data.Data && Array.isArray(data.Data)) {
+                const articles = data.Data.slice(0, 10);
+                this.renderNews(articles);
+            }
+        } catch(err) { console.error('News fetch error:', err); }
     }
 
     renderNews(articles) {
