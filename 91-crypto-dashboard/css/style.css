@@ -355,6 +355,7 @@ body {
     display: none;
 }
 .toast.show { display: block; }
+.toast.visible { display: block; }
 .toast.success { border-left-color: var(--success); }
 .toast.error { border-left-color: var(--danger); }
 
