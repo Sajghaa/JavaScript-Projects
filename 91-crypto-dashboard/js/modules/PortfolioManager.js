@@ -16,14 +16,16 @@ class PortfolioManager {
 
     renderPortfolio() {
         const container = document.getElementById('portfolioList');
+        if(!container) return;
         const portfolio = this.stateManager.get('portfolio');
         const coins = this.stateManager.get('coins');
         
-        if(portfolio.length === 0) { container.innerHTML = '<div class="empty-state">No assets yet</div>'; return; }
+        if(!portfolio || portfolio.length === 0) { container.innerHTML = '<div class="empty-state">No assets yet</div>'; return; }
         
         container.innerHTML = portfolio.map(asset => {
             const coin = coins.find(c => c.id === asset.coinId);
-            const currentPrice = coin?.current_price || 0;
+            if(!coin) return '';
+            const currentPrice = coin.current_price || 0;
             const value = currentPrice * asset.amount;
             const buyValue = asset.buyPrice * asset.amount;
             const pnl = value - buyValue;
@@ -51,33 +53,55 @@ class PortfolioManager {
         const portfolio = this.stateManager.get('portfolio');
         const coins = this.stateManager.get('coins');
         let total = 0;
+        let totalPnL = 0;
         portfolio.forEach(asset => {
             const coin = coins.find(c => c.id === asset.coinId);
-            if(coin) total += coin.current_price * asset.amount;
+            if(coin) {
+                const currentValue = coin.current_price * asset.amount;
+                const buyValue = asset.buyPrice * asset.amount;
+                total += currentValue;
+                totalPnL += currentValue - buyValue;
+            }
         });
         document.getElementById('portfolioTotal').textContent = `$${total.toFixed(2)}`;
+        const pnlEl = document.getElementById('portfolioChange');
+        if(pnlEl) pnlEl.textContent = `${totalPnL >= 0 ? '+' : ''}$${totalPnL.toFixed(2)}`;
     }
 
     addAsset() {
-        const coinId = document.getElementById('assetSelect').value;
-        const amount = parseFloat(document.getElementById('assetAmount').value);
-        const buyPrice = parseFloat(document.getElementById('assetPrice').value);
-        if(!coinId || !amount || !buyPrice) { this.eventBus.emit('toast', { message: 'Fill all fields', type: 'error' }); return; }
+        const assetSelect = document.getElementById('assetSelect');
+        const assetAmount = document.getElementById('assetAmount');
+        const assetPrice = document.getElementById('assetPrice');
+        if(!assetSelect || !assetAmount || !assetPrice) { this.eventBus.emit('toast', { message: 'Form elements not found', type: 'error' }); return; }
+        
+        const coinId = assetSelect.value;
+        const amount = parseFloat(assetAmount.value);
+        const buyPrice = parseFloat(assetPrice.value);
+        if(!coinId || !amount || !buyPrice || isNaN(amount) || isNaN(buyPrice)) { this.eventBus.emit('toast', { message: 'Fill all fields with valid numbers', type: 'error' }); return; }
         this.stateManager.addToPortfolio({ coinId, amount, buyPrice });
+        this.eventBus.emit('portfolio:updated', this.stateManager.get('portfolio'));
         this.renderPortfolio();
         this.eventBus.emit('toast', { message: 'Asset added', type: 'success' });
-        document.getElementById('assetAmount').value = '';
-        document.getElementById('assetPrice').value = '';
+        assetAmount.value = '';
+        assetPrice.value = '';
     }
 
-    removeAsset(id) { this.stateManager.removeFromPortfolio(id); this.renderPortfolio(); }
+    removeAsset(id) { this.stateManager.removeFromPortfolio(id); this.eventBus.emit('portfolio:updated', this.stateManager.get('portfolio')); this.renderPortfolio(); }
 
     populateAssetSelect() {
         const coins = this.stateManager.get('coins');
         const select = document.getElementById('assetSelect');
+        if(!select || !coins) return;
         select.innerHTML = '<option value="">Select Coin</option>' + coins.map(c => `<option value="${c.id}">${c.name} (${c.symbol.toUpperCase()})</option>`).join('');
     }
 
-    showModal() { document.getElementById('portfolioModal').classList.add('active'); this.populateAssetSelect(); this.renderPortfolio(); }
+    showModal() { 
+        const modal = document.getElementById('portfolioModal');
+        if(modal) { 
+            modal.classList.add('active');
+            this.populateAssetSelect(); 
+            this.renderPortfolio(); 
+        } 
+    }
 }
 window.PortfolioManager = PortfolioManager;
