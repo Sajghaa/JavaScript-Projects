@@ -4,73 +4,245 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>3D Mars | Interactive Planet Visualization</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: #000;
+        }
+
+        /* UI Overlay */
+        .ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .ui-overlay > * {
+            pointer-events: auto;
+        }
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.5);
+            padding: 8px 16px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            font-family: inherit;
+        }
+        .logo i { color: #ff6633; font-size: 1.5rem; }
+        .logo .accent { color: #ff6633; }
+
+        .controls-info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 50px;
+            display: flex;
+            gap: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            font-size: 14px;
+        }
+        .control-group i { font-size: 16px; color: #ff6633; }
+
+        .planet-info {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 260px;
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: fadeInUp 0.6s ease;
+        }
+        .planet-info h2 {
+            font-size: 24px;
+            color: #ff6633;
+            margin-bottom: 5px;
+        }
+        .planet-info p {
+            font-size: 12px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 15px;
+        }
+        .planet-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .stat span {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+            display: block;
+        }
+        .stat strong {
+            font-size: 14px;
+            color: white;
+        }
+
+        .controls-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .control-btn {
+            width: 44px;
+            height: 44px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .control-btn:hover {
+            background: #ff6633;
+            transform: scale(1.05);
+        }
+
+        .loading-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+            z-index: 100;
+            transition: opacity 0.5s ease;
+        }
+        .loading-indicator.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: #ff6633;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loading-indicator p {
+            color: white;
+            font-size: 14px;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo { top: 10px; left: 10px; font-size: 1.2rem; padding: 6px 12px; }
+            .controls-info { bottom: 10px; left: 10px; padding: 8px 15px; gap: 10px; }
+            .control-group { font-size: 11px; }
+            .planet-info { bottom: 10px; right: 10px; padding: 12px; max-width: 220px; }
+            .planet-info h2 { font-size: 18px; }
+            .controls-panel { top: 10px; right: 10px; gap: 8px; }
+            .control-btn { width: 36px; height: 36px; font-size: 14px; }
+        }
+    </style>
 </head>
 <body>
-    <div class="app-container">
-        <!-- UI Overlay -->
-        <div class="ui-overlay">
-            <div class="logo">
-                <i class="fas fa-planet-ringed"></i>
-                <span>Mars<span class="accent">3D</span></span>
+    <div class="ui-overlay">
+        <div class="logo">
+            <i class="fas fa-planet-ringed"></i>
+            <span>Mars<span class="accent">3D</span></span>
+        </div>
+        
+        <div class="controls-info">
+            <div class="control-group">
+                <i class="fas fa-mouse"></i>
+                <span>Drag to rotate</span>
             </div>
-            
-            <div class="controls-info">
-                <div class="control-group">
-                    <i class="fas fa-mouse"></i>
-                    <span>Drag to rotate camera</span>
-                </div>
-                <div class="control-group">
-                    <i class="fas fa-scroll"></i>
-                    <span>Scroll to zoom</span>
-                </div>
+            <div class="control-group">
+                <i class="fas fa-scroll"></i>
+                <span>Scroll to zoom</span>
             </div>
-            
-            <div class="planet-info">
-                <h2>Mars</h2>
-                <p>The Red Planet - Fourth planet from the Sun</p>
-                <div class="planet-stats">
-                    <div class="stat">
-                        <span>Diameter</span>
-                        <strong>6,779 km</strong>
-                    </div>
-                    <div class="stat">
-                        <span>Distance from Sun</span>
-                        <strong>227.9M km</strong>
-                    </div>
-                    <div class="stat">
-                        <span>Orbit Period</span>
-                        <strong>687 days</strong>
-                    </div>
-                    <div class="stat">
-                        <span>Temperature</span>
-                        <strong>-60°C</strong>
-                    </div>
-                </div>
+        </div>
+        
+        <div class="planet-info">
+            <h2>Mars</h2>
+            <p>The Red Planet - Fourth planet from the Sun</p>
+            <div class="planet-stats">
+                <div class="stat"><span>Diameter</span><strong>6,779 km</strong></div>
+                <div class="stat"><span>Distance from Sun</span><strong>227.9M km</strong></div>
+                <div class="stat"><span>Orbit Period</span><strong>687 days</strong></div>
+                <div class="stat"><span>Temperature</span><strong>-60°C</strong></div>
             </div>
-            
-            <div class="controls-panel">
-                <button id="autoRotateBtn" class="control-btn" title="Auto Rotate">
-                    <i class="fas fa-sync-alt"></i>
-                </button>
-                <button id="resetViewBtn" class="control-btn" title="Reset Camera">
-                    <i class="fas fa-home"></i>
-                </button>
-                <button id="themeToggle" class="control-btn" title="Toggle Theme">
-                    <i class="fas fa-moon"></i>
-                </button>
-            </div>
-            
-            <div class="loading-indicator" id="loadingIndicator">
-                <div class="spinner"></div>
-                <p>Loading Mars textures...</p>
-            </div>
+        </div>
+        
+        <div class="controls-panel">
+            <button id="autoRotateBtn" class="control-btn" title="Auto Rotate">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+            <button id="resetViewBtn" class="control-btn" title="Reset Camera">
+                <i class="fas fa-home"></i>
+            </button>
+        </div>
+        
+        <div id="loadingIndicator" class="loading-indicator">
+            <div class="spinner"></div>
+            <p>Loading Mars...</p>
         </div>
     </div>
 
-    <!-- Three.js Libraries -->
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Three.js -->
     <script type="importmap">
         {
             "imports": {
@@ -80,6 +252,307 @@
         }
     </script>
 
-    <script type="module" src="js/app.js"></script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // ============ SETUP ============
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x050b1a);
+        scene.fog = new THREE.FogExp2(0x050b1a, 0.0005);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 1, 5);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.shadowMap.enabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        // Controls
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 1.2;
+        controls.enableZoom = true;
+        controls.enablePan = false;
+        controls.zoomSpeed = 1;
+        controls.rotateSpeed = 1;
+        controls.target.set(0, 0, 0);
+
+        // ============ CREATE PROCEDURAL TEXTURES (No external images needed) ============
+        
+        // Create canvas texture for Mars
+        const createMarsTexture = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1024;
+            canvas.height = 1024;
+            const ctx = canvas.getContext('2d');
+            
+            // Base color - reddish orange
+            ctx.fillStyle = '#c1440e';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Add variation - darker patches
+            for (let i = 0; i < 500; i++) {
+                ctx.fillStyle = `rgba(100, 40, 10, ${Math.random() * 0.5})`;
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const radius = Math.random() * 30 + 5;
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Add lighter patches
+            for (let i = 0; i < 300; i++) {
+                ctx.fillStyle = `rgba(200, 100, 50, ${Math.random() * 0.4})`;
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const radius = Math.random() * 20 + 3;
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Add dark spots (like Martian features)
+            const darkSpots = [
+                { x: 0.3, y: 0.4, r: 0.08 }, { x: 0.7, y: 0.6, r: 0.1 }, { x: 0.5, y: 0.8, r: 0.06 },
+                { x: 0.2, y: 0.7, r: 0.05 }, { x: 0.8, y: 0.3, r: 0.07 }, { x: 0.6, y: 0.2, r: 0.09 },
+                { x: 0.4, y: 0.5, r: 0.04 }, { x: 0.9, y: 0.7, r: 0.06 }, { x: 0.1, y: 0.2, r: 0.05 }
+            ];
+            darkSpots.forEach(spot => {
+                ctx.fillStyle = '#8B3A0E';
+                ctx.beginPath();
+                ctx.arc(spot.x * canvas.width, spot.y * canvas.height, spot.r * canvas.width, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            
+            return new THREE.CanvasTexture(canvas);
+        };
+        
+        // Create bump map texture
+        const createBumpTexture = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.fillStyle = '#808080';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Add noise for bumpiness
+            for (let i = 0; i < 2000; i++) {
+                const brightness = Math.random() * 255;
+                ctx.fillStyle = `rgb(${brightness}, ${brightness}, ${brightness})`;
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const size = Math.random() * 4 + 1;
+                ctx.fillRect(x, y, size, size);
+            }
+            
+            return new THREE.CanvasTexture(canvas);
+        };
+        
+        const marsColorMap = createMarsTexture();
+        const marsBumpMap = createBumpTexture();
+        
+        // Create Mars planet
+        const marsGeometry = new THREE.SphereGeometry(1.5, 128, 128);
+        const marsMaterial = new THREE.MeshStandardMaterial({
+            map: marsColorMap,
+            bumpMap: marsBumpMap,
+            bumpScale: 0.05,
+            roughness: 0.7,
+            metalness: 0.1,
+            emissive: new THREE.Color(0x331100),
+            emissiveIntensity: 0.1
+        });
+        
+        const mars = new THREE.Mesh(marsGeometry, marsMaterial);
+        mars.castShadow = true;
+        mars.receiveShadow = true;
+        scene.add(mars);
+        
+        // Atmosphere glow
+        const atmosphereGeometry = new THREE.SphereGeometry(1.53, 64, 64);
+        const atmosphereMaterial = new THREE.MeshPhongMaterial({
+            color: 0xff6633,
+            transparent: true,
+            opacity: 0.15,
+            side: THREE.BackSide
+        });
+        const atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+        scene.add(atmosphere);
+        
+        // ============ LIGHTING ============
+        // Ambient light
+        const ambientLight = new THREE.AmbientLight(0x222222);
+        scene.add(ambientLight);
+        
+        // Main directional light (Sun)
+        const sunLight = new THREE.DirectionalLight(0xffeedd, 1.5);
+        sunLight.position.set(10, 15, 5);
+        sunLight.castShadow = true;
+        sunLight.shadow.mapSize.width = 1024;
+        sunLight.shadow.mapSize.height = 1024;
+        scene.add(sunLight);
+        
+        // Fill light
+        const fillLight = new THREE.PointLight(0x442200, 0.3);
+        fillLight.position.set(0, -2, 0);
+        scene.add(fillLight);
+        
+        // Rim light
+        const rimLight = new THREE.PointLight(0xff6633, 0.4);
+        rimLight.position.set(-3, 1, -4);
+        scene.add(rimLight);
+        
+        // Back light
+        const backLight = new THREE.PointLight(0x3366ff, 0.15);
+        backLight.position.set(0, 1, -5);
+        scene.add(backLight);
+        
+        // ============ STARFIELD ============
+        // Create star particles
+        const starGeometry1 = new THREE.BufferGeometry();
+        const starCount1 = 3000;
+        const starPositions1 = new Float32Array(starCount1 * 3);
+        for (let i = 0; i < starCount1; i++) {
+            starPositions1[i * 3] = (Math.random() - 0.5) * 600;
+            starPositions1[i * 3 + 1] = (Math.random() - 0.5) * 600;
+            starPositions1[i * 3 + 2] = (Math.random() - 0.5) * 150 - 50;
+        }
+        starGeometry1.setAttribute('position', new THREE.BufferAttribute(starPositions1, 3));
+        const starMaterial1 = new THREE.PointsMaterial({ color: 0xffffff, size: 0.2, transparent: true, opacity: 0.8 });
+        const stars1 = new THREE.Points(starGeometry1, starMaterial1);
+        scene.add(stars1);
+        
+        // Distant stars - smaller and bluish
+        const starGeometry2 = new THREE.BufferGeometry();
+        const starCount2 = 5000;
+        const starPositions2 = new Float32Array(starCount2 * 3);
+        for (let i = 0; i < starCount2; i++) {
+            starPositions2[i * 3] = (Math.random() - 0.5) * 1200;
+            starPositions2[i * 3 + 1] = (Math.random() - 0.5) * 1200;
+            starPositions2[i * 3 + 2] = (Math.random() - 0.5) * 300 - 100;
+        }
+        starGeometry2.setAttribute('position', new THREE.BufferAttribute(starPositions2, 3));
+        const starMaterial2 = new THREE.PointsMaterial({ color: 0xaaccff, size: 0.12, transparent: true, opacity: 0.6 });
+        const stars2 = new THREE.Points(starGeometry2, starMaterial2);
+        scene.add(stars2);
+        
+        // Twinkling stars (few larger ones)
+        const starGeometry3 = new THREE.BufferGeometry();
+        const starCount3 = 500;
+        const starPositions3 = new Float32Array(starCount3 * 3);
+        for (let i = 0; i < starCount3; i++) {
+            starPositions3[i * 3] = (Math.random() - 0.5) * 800;
+            starPositions3[i * 3 + 1] = (Math.random() - 0.5) * 800;
+            starPositions3[i * 3 + 2] = (Math.random() - 0.5) * 200 - 50;
+        }
+        starGeometry3.setAttribute('position', new THREE.BufferAttribute(starPositions3, 3));
+        const starMaterial3 = new THREE.PointsMaterial({ color: 0xffeedd, size: 0.35, transparent: true, opacity: 0.9 });
+        const stars3 = new THREE.Points(starGeometry3, starMaterial3);
+        scene.add(stars3);
+        
+        // ============ SIMPLE ORBIT RING ============
+        const orbitPoints = [];
+        const orbitRadius = 2.2;
+        for (let i = 0; i <= 128; i++) {
+            const angle = (i / 128) * Math.PI * 2;
+            orbitPoints.push(new THREE.Vector3(Math.cos(angle) * orbitRadius, 0, Math.sin(angle) * orbitRadius));
+        }
+        const orbitGeometry = new THREE.BufferGeometry().setFromPoints(orbitPoints);
+        const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xff6633, transparent: true, opacity: 0.25 });
+        const orbitRing = new THREE.LineLoop(orbitGeometry, orbitMaterial);
+        scene.add(orbitRing);
+        
+        // ============ ANIMATION STATE ============
+        let autoRotate = true;
+        let time = 0;
+        
+        // ============ UI CONTROLS ============
+        const autoRotateBtn = document.getElementById('autoRotateBtn');
+        const resetViewBtn = document.getElementById('resetViewBtn');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        
+        // Hide loading indicator after a short delay
+        setTimeout(() => {
+            loadingIndicator.classList.add('hidden');
+        }, 1000);
+        
+        autoRotateBtn.addEventListener('click', () => {
+            autoRotate = !autoRotate;
+            controls.autoRotate = autoRotate;
+            autoRotateBtn.style.background = autoRotate ? '#ff6633' : 'rgba(0,0,0,0.6)';
+        });
+        
+        resetViewBtn.addEventListener('click', () => {
+            camera.position.set(0, 1, 5);
+            controls.target.set(0, 0, 0);
+            controls.update();
+        });
+        
+        // ============ MOUSE PARALLAX ============
+        let targetRotationX = 0;
+        let targetRotationY = 0;
+        let currentRotationX = 0;
+        let currentRotationY = 0;
+        
+        document.addEventListener('mousemove', (event) => {
+            if (!autoRotate) {
+                const mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+                const mouseY = (event.clientY / window.innerHeight) * 2 - 1;
+                targetRotationY = mouseX * 0.2;
+                targetRotationX = mouseY * 0.1;
+            }
+        });
+        
+        // ============ ANIMATION LOOP ============
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            time += 0.01;
+            
+            // Rotate Mars
+            mars.rotation.y += 0.003;
+            atmosphere.rotation.y += 0.002;
+            
+            // Parallax effect
+            if (!autoRotate) {
+                currentRotationX += (targetRotationX - currentRotationX) * 0.05;
+                currentRotationY += (targetRotationY - currentRotationY) * 0.05;
+                mars.rotation.x = currentRotationX;
+                mars.rotation.y += currentRotationY * 0.5;
+            }
+            
+            // Animate stars slightly
+            stars1.rotation.y += 0.0005;
+            stars2.rotation.x += 0.0003;
+            stars3.rotation.y -= 0.0002;
+            
+            // Update controls
+            controls.update();
+            
+            // Render
+            renderer.render(scene, camera);
+        }
+        
+        animate();
+        
+        // ============ WINDOW RESIZE ============
+        window.addEventListener('resize', onWindowResize);
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        console.log('3D Mars Planet Ready!');
+    </script>
 </body>
 </html>
