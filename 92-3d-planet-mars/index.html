@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>3D Mars | Interactive Planet Visualization</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- UI Overlay -->
+        <div class="ui-overlay">
+            <div class="logo">
+                <i class="fas fa-planet-ringed"></i>
+                <span>Mars<span class="accent">3D</span></span>
+            </div>
+            
+            <div class="controls-info">
+                <div class="control-group">
+                    <i class="fas fa-mouse"></i>
+                    <span>Drag to rotate camera</span>
+                </div>
+                <div class="control-group">
+                    <i class="fas fa-scroll"></i>
+                    <span>Scroll to zoom</span>
+                </div>
+            </div>
+            
+            <div class="planet-info">
+                <h2>Mars</h2>
+                <p>The Red Planet - Fourth planet from the Sun</p>
+                <div class="planet-stats">
+                    <div class="stat">
+                        <span>Diameter</span>
+                        <strong>6,779 km</strong>
+                    </div>
+                    <div class="stat">
+                        <span>Distance from Sun</span>
+                        <strong>227.9M km</strong>
+                    </div>
+                    <div class="stat">
+                        <span>Orbit Period</span>
+                        <strong>687 days</strong>
+                    </div>
+                    <div class="stat">
+                        <span>Temperature</span>
+                        <strong>-60°C</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="controls-panel">
+                <button id="autoRotateBtn" class="control-btn" title="Auto Rotate">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button id="resetViewBtn" class="control-btn" title="Reset Camera">
+                    <i class="fas fa-home"></i>
+                </button>
+                <button id="themeToggle" class="control-btn" title="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+            
+            <div class="loading-indicator" id="loadingIndicator">
+                <div class="spinner"></div>
+                <p>Loading Mars textures...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Three.js Libraries -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
