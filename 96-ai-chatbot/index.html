@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>AI Chatbot | Intelligent Conversational Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="chat-container">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+                <div>
+                    <h1>AI Assistant</h1>
+                    <p>Powered by Natural Language Processing</p>
+                </div>
+            </div>
+            <div class="status">
+                <i class="fas fa-circle"></i>
+                <span>Online</span>
+            </div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                    <div class="message-text">
+                        Hello! I'm your AI assistant. I can help you with:<br>
+                        • General questions and answers<br>
+                        • Jokes and fun facts<br>
+                        • Math calculations<br>
+                        • Weather information<br>
+                        • Recommendations<br>
+                        • And much more!<br><br>
+                        What would you like to talk about?
+                    </div>
+                    <div class="message-time">Just now</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="chat-input-container">
+            <div class="input-wrapper">
+                <textarea id="userInput" placeholder="Type your message here..." rows="1" maxlength="500"></textarea>
+                <button id="sendBtn" class="send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="input-actions">
+                <button class="action-btn" id="clearChatBtn" title="Clear Chat">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+                <button class="action-btn" id="helpBtn" title="Help">
+                    <i class="fas fa-question-circle"></i>
+                </button>
+                <div class="typing-indicator" id="typingIndicator">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suggestions -->
+        <div class="suggestions" id="suggestions">
+            <button class="suggestion-chip">Tell me a joke</button>
+            <button class="suggestion-chip">What's the weather?</button>
+            <button class="suggestion-chip">Calculate 15 * 8</button>
+            <button class="suggestion-chip">Recommend a movie</button>
+            <button class="suggestion-chip">What is AI?</button>
+            <button class="suggestion-chip">I'm feeling sad</button>
+        </div>
+    </div>
+
+    <script src="js/training-data.js"></script>
+    <script src="js/chatbot.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
