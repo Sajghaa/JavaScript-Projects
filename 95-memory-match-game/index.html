@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Memory Match | Premium Card Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header -->
+        <header class="game-header">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <span>Memory<span class="accent">Match</span></span>
+            </div>
+            <div class="stats">
+                <div class="stat-card">
+                    <i class="fas fa-clock"></i>
+                    <span id="timer">00:00</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-hand-peace"></i>
+                    <span id="moves">0</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-star"></i>
+                    <span id="score">0</span>
+                </div>
+            </div>
+            <button id="settingsBtn" class="icon-btn">
+                <i class="fas fa-cog"></i>
+            </button>
+        </header>
+
+        <!-- Game Board -->
+        <div class="game-board" id="gameBoard">
+            <!-- Cards will be dynamically generated here -->
+        </div>
+
+        <!-- Game Controls -->
+        <div class="game-controls">
+            <button id="newGameBtn" class="btn btn-primary">
+                <i class="fas fa-play"></i> New Game
+            </button>
+            <button id="difficultyBtn" class="btn btn-secondary">
+                <i class="fas fa-chart-line"></i> Easy
+            </button>
+        </div>
+
+        <!-- Victory Modal -->
+        <div id="victoryModal" class="modal">
+            <div class="modal-content victory">
+                <div class="modal-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h2>Victory!</h2>
+                <p>You completed the game!</p>
+                <div class="victory-stats">
+                    <div class="victory-stat">
+                        <span>Time</span>
+                        <strong id="victoryTime">00:00</strong>
+                    </div>
+                    <div class="victory-stat">
+                        <span>Moves</span>
+                        <strong id="victoryMoves">0</strong>
+                    </div>
+                    <div class="victory-stat">
+                        <span>Score</span>
+                        <strong id="victoryScore">0</strong>
+                    </div>
+                </div>
+                <div class="victory-rating" id="victoryRating"></div>
+                <button class="btn btn-primary" onclick="closeModalAndNewGame()">
+                    <i class="fas fa-redo"></i> Play Again
+                </button>
+            </div>
+        </div>
+
+        <!-- Game Over Modal -->
+        <div id="gameOverModal" class="modal">
+            <div class="modal-content gameover">
+                <div class="modal-icon">
+                    <i class="fas fa-skull"></i>
+                </div>
+                <h2>Game Over!</h2>
+                <p>Time's up! Better luck next time.</p>
+                <div class="gameover-stats">
+                    <div class="gameover-stat">
+                        <span>Cards Matched</span>
+                        <strong id="gameoverMatches">0</strong>
+                    </div>
+                    <div class="gameover-stat">
+                        <span>Moves Made</span>
+                        <strong id="gameoverMoves">0</strong>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="closeModalAndNewGame()">
+                    <i class="fas fa-redo"></i> Try Again
+                </button>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div id="settingsModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Game Settings</h2>
+                    <button class="close-modal" onclick="closeSettingsModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-group">
+                        <label>Difficulty Level</label>
+                        <div class="difficulty-options">
+                            <button class="difficulty-option" data-difficulty="easy">Easy (4x3)</button>
+                            <button class="difficulty-option" data-difficulty="medium">Medium (4x4)</button>
+                            <button class="difficulty-option" data-difficulty="hard">Hard (6x4)</button>
+                            <button class="difficulty-option" data-difficulty="expert">Expert (6x6)</button>
+                        </div>
+                    </div>
+                    <div class="setting-group">
+                        <label>Theme</label>
+                        <div class="theme-options">
+                            <button class="theme-option" data-theme="animals">🐶 Animals</button>
+                            <button class="theme-option" data-theme="food">🍕 Food</button>
+                            <button class="theme-option" data-theme="space">🚀 Space</button>
+                            <button class="theme-option" data-theme="sports">⚽ Sports</button>
+                        </div>
+                    </div>
+                    <div class="setting-group">
+                        <label>Sound Effects</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="soundToggle" checked>
+                            <label for="soundToggle"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="applySettingsAndClose()">Apply Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
