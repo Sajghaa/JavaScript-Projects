@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Face Recognition | Emotion Detection AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-face-smile"></i>
+                    <span>Face<span class="accent">AI</span></span>
+                </div>
+                <div class="header-info">
+                    <span id="modelStatus" class="status-badge loading">
+                        <i class="fas fa-spinner fa-pulse"></i> Loading Models...
+                    </span>
+                </div>
+                <button id="themeToggle" class="icon-btn">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Upload Section -->
+            <div class="upload-section">
+                <div class="upload-options">
+                    <div class="upload-card" id="uploadCard">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h3>Upload Image</h3>
+                        <p>Click or drag & drop an image</p>
+                        <input type="file" id="imageUpload" accept="image/*" hidden>
+                        <button class="btn btn-primary" id="uploadBtn">
+                            <i class="fas fa-upload"></i> Choose Image
+                        </button>
+                    </div>
+                    
+                    <div class="or-divider">OR</div>
+                    
+                    <div class="sample-card">
+                        <i class="fas fa-images"></i>
+                        <h3>Try Sample</h3>
+                        <p>Test with sample images</p>
+                        <div class="sample-buttons">
+                            <button class="sample-btn" data-sample="sample1">
+                                <img src="#" alt="Sample 1">
+                                <span>Group Photo</span>
+                            </button>
+                            <button class="sample-btn" data-sample="sample2">
+                                <span>Portrait</span>
+                            </button>
+                            <button class="sample-btn" data-sample="sample3">
+                                <span>Multi-face</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="camera-card">
+                        <i class="fas fa-camera"></i>
+                        <h3>Use Camera</h3>
+                        <p>Take a photo with your webcam</p>
+                        <button class="btn btn-secondary" id="cameraBtn">
+                            <i class="fas fa-camera"></i> Open Camera
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="image-container">
+                    <div class="image-wrapper">
+                        <canvas id="displayCanvas" class="display-canvas"></canvas>
+                        <canvas id="overlayCanvas" class="overlay-canvas"></canvas>
+                    </div>
+                    
+                    <div class="image-controls">
+                        <button id="resetZoomBtn" class="btn-icon">
+                            <i class="fas fa-search"></i> Reset Zoom
+                        </button>
+                        <a id="downloadBtn" class="btn-icon" download="face-analysis.png">
+                            <i class="fas fa-download"></i> Download
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="analysis-panel">
+                    <div class="panel-header">
+                        <h3><i class="fas fa-chart-bar"></i> Detection Results</h3>
+                        <span id="faceCount" class="face-count">0 faces detected</span>
+                    </div>
+                    
+                    <div id="facesList" class="faces-list">
+                        <!-- Face cards will be dynamically added here -->
+                    </div>
+                    
+                    <div class="emotion-summary" id="emotionSummary">
+                        <!-- Emotion summary will be shown here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Overlay -->
+            <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+                <div class="loading-content">
+                    <div class="spinner"></div>
+                    <h3>Analyzing Image...</h3>
+                    <p>Detecting faces and emotions</p>
+                </div>
+            </div>
+
+            <!-- Camera Modal -->
+            <div id="cameraModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2><i class="fas fa-camera"></i> Take a Photo</h2>
+                        <button class="close-modal" onclick="closeModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="camera-container">
+                            <video id="video" class="camera-preview" autoplay playsinline></video>
+                            <canvas id="photoCanvas" class="photo-canvas" style="display: none;"></canvas>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="captureBtn" class="btn btn-primary">
+                            <i class="fas fa-camera"></i> Capture
+                        </button>
+                        <button id="closeCameraBtn" class="btn btn-secondary">Close</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Info Panel -->
+        <div class="info-panel">
+            <div class="info-content">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <strong>Face Detection AI</strong>
+                    <p>Detects faces, facial landmarks, age, gender, and 7 emotions (happy, sad, angry, surprised, fearful, disgusted, neutral)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection"></script>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+    
+    <script src="js/modules/UIManager.js"></script>
+    <script src="js/modules/ImageProcessor.js"></script>
+    <script src="js/modules/EmotionAnalyzer.js"></script>
+    <script src="js/modules/FaceDetection.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
