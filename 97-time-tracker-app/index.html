@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Time Tracker | Smart Time Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-clock"></i>
+                <span>Time<span class="accent">Tracker</span></span>
+            </div>
+            <div class="date-display" id="dateDisplay"></div>
+            <button id="themeToggle" class="icon-btn">
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Active Timer Section -->
+            <div class="timer-section">
+                <div class="timer-card">
+                    <div class="timer-display">
+                        <span id="timerHours">00</span>
+                        <span>:</span>
+                        <span id="timerMinutes">00</span>
+                        <span>:</span>
+                        <span id="timerSeconds">00</span>
+                    </div>
+                    
+                    <div class="timer-controls">
+                        <input type="text" id="activityName" placeholder="What are you working on?" class="activity-input">
+                        <div class="button-group">
+                            <button id="startBtn" class="btn btn-success">
+                                <i class="fas fa-play"></i> Start
+                            </button>
+                            <button id="pauseBtn" class="btn btn-warning" disabled>
+                                <i class="fas fa-pause"></i> Pause
+                            </button>
+                            <button id="stopBtn" class="btn btn-danger" disabled>
+                                <i class="fas fa-stop"></i> Stop
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="current-activity" id="currentActivity" style="display: none;">
+                        <i class="fas fa-chart-line"></i>
+                        <span id="currentActivityName"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <i class="fas fa-tasks"></i>
+                    <div>
+                        <span class="stat-value" id="totalActivities">0</span>
+                        <span class="stat-label">Activities</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-hourglass-half"></i>
+                    <div>
+                        <span class="stat-value" id="totalTime">0h</span>
+                        <span class="stat-label">Total Time</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-chart-line"></i>
+                    <div>
+                        <span class="stat-value" id="avgSession">0m</span>
+                        <span class="stat-label">Avg Session</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-calendar-day"></i>
+                    <div>
+                        <span class="stat-value" id="todayTotal">0h</span>
+                        <span class="stat-label">Today</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="charts-row">
+                <div class="chart-card">
+                    <h3><i class="fas fa-chart-pie"></i> Time Distribution</h3>
+                    <canvas id="distributionChart" class="distribution-chart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3><i class="fas fa-chart-line"></i> Weekly Trend</h3>
+                    <canvas id="trendChart" class="trend-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Activities List -->
+            <div class="activities-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-list"></i> Recent Activities</h3>
+                    <div class="filter-controls">
+                        <select id="timeFilter" class="filter-select">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                        <button id="clearAllBtn" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-trash"></i> Clear All
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="activitiesList" class="activities-list">
+                    <!-- Activities will be dynamically loaded here -->
+                </div>
+                
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <i class="fas fa-clock"></i>
+                    <h3>No activities yet</h3>
+                    <p>Start tracking your time by naming an activity and clicking Start</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit Activity Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Activity</h2>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Activity Name</label>
+                    <input type="text" id="editActivityName" class="form-input">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" id="saveEditBtn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="js/modules/StorageManager.js"></script>
+    <script src="js/modules/Timer.js"></script>
+    <script src="js/modules/ActivityManager.js"></script>
+    <script src="js/modules/ChartManager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
