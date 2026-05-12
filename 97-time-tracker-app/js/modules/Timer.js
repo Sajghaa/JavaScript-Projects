@@ -1,4 +1,3 @@
-// Timer.js - Handles timer functionality
 class Timer {
     constructor() {
         this.seconds = 0;
@@ -28,21 +27,14 @@ class Timer {
             clearInterval(this.interval);
             this.interval = null;
         }
-        
         this.trigger('pause', this.seconds);
     }
     
     stop() {
-        this.isRunning = false;
-        if (this.interval) {
-            clearInterval(this.interval);
-            this.interval = null;
-        }
-        
+        this.pause();
         const finalSeconds = this.seconds;
         this.reset();
         this.trigger('stop', finalSeconds);
-        
         return finalSeconds;
     }
     
