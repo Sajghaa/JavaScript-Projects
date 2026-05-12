@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>AI Image Generator | Create Stunning Images with AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-magic"></i>
+                <span>AI<span class="accent">ImageGen</span></span>
+            </div>
+            <div class="api-status" id="apiStatus">
+                <i class="fas fa-circle"></i>
+                <span>API Ready</span>
+            </div>
+            <button id="themeToggle" class="icon-btn">
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
+
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1>Create Amazing Images with AI</h1>
+            <p>Describe your vision and watch AI bring it to life</p>
+        </div>
+
+        <!-- Generator Section -->
+        <div class="generator-section">
+            <div class="input-card">
+                <div class="model-selector">
+                    <label><i class="fas fa-brain"></i> Select Model</label>
+                    <select id="modelSelect" class="model-select">
+                        <option value="stabilityai/stable-diffusion-2-1">Stable Diffusion 2.1</option>
+                        <option value="stabilityai/stable-diffusion-xl-base-1.0">Stable Diffusion XL</option>
+                        <option value="prompthero/openjourney-v4">OpenJourney v4</option>
+                        <option value="wavymulder/Analog-Diffusion">Analog Diffusion</option>
+                        <option value="nitrosocke/redshift-diffusion">Redshift Diffusion</option>
+                    </select>
+                </div>
+                
+                <div class="prompt-input-container">
+                    <textarea id="promptInput" placeholder="Describe the image you want to generate... (e.g., a majestic mountain landscape at sunset, digital art, highly detailed)" rows="4"></textarea>
+                    <div class="prompt-suggestions">
+                        <button class="suggestion-chip">mountain landscape sunset</button>
+                        <button class="suggestion-chip">cyberpunk city neon</button>
+                        <button class="suggestion-chip">fantasy forest magic</button>
+                        <button class="suggestion-chip">space galaxy nebula</button>
+                        <button class="suggestion-chip">portrait painting oil</button>
+                        <button class="suggestion-chip">underwater coral reef</button>
+                    </div>
+                </div>
+                
+                <div class="generation-options">
+                    <div class="option-group">
+                        <label><i class="fas fa-image"></i> Style</label>
+                        <select id="styleSelect" class="style-select">
+                            <option value="none">No Style</option>
+                            <option value="cinematic">Cinematic</option>
+                            <option value="anime">Anime</option>
+                            <option value="oil painting">Oil Painting</option>
+                            <option value="watercolor">Watercolor</option>
+                            <option value="sketch">Pencil Sketch</option>
+                            <option value="vintage">Vintage Photo</option>
+                            <option value="cyberpunk">Cyberpunk</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label><i class="fas fa-sliders-h"></i> Quality</label>
+                        <select id="qualitySelect" class="quality-select">
+                            <option value="standard">Standard</option>
+                            <option value="enhanced">Enhanced</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label><i class="fas fa-arrows-alt"></i> Size</label>
+                        <select id="sizeSelect" class="size-select">
+                            <option value="512x512">Square (512x512)</option>
+                            <option value="768x768">Square HD (768x768)</option>
+                            <option value="1024x1024">Square 4K (1024x1024)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button id="generateBtn" class="btn btn-primary btn-generate">
+                    <i class="fas fa-sparkles"></i> Generate Image
+                </button>
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingOverlay" class="loading-overlay" style="display: none;">
+                <div class="loading-content">
+                    <div class="spinner"></div>
+                    <h3>AI is creating your image...</h3>
+                    <p>This may take a few seconds</p>
+                    <div class="progress-steps">
+                        <div class="step active"><i class="fas fa-microphone-alt"></i> Understanding prompt</div>
+                        <div class="step"><i class="fas fa-brain"></i> AI processing</div>
+                        <div class="step"><i class="fas fa-palette"></i> Generating image</div>
+                        <div class="step"><i class="fas fa-magic"></i> Finalizing</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Section -->
+        <div id="resultSection" class="result-section" style="display: none;">
+            <div class="result-card">
+                <div class="result-header">
+                    <h3><i class="fas fa-image"></i> Generated Image</h3>
+                    <div class="result-actions">
+                        <button id="downloadBtn" class="action-btn"><i class="fas fa-download"></i> Download</button>
+                        <button id="saveToGalleryBtn" class="action-btn"><i class="fas fa-bookmark"></i> Save to Gallery</button>
+                        <button id="regenerateBtn" class="action-btn"><i class="fas fa-sync-alt"></i> Regenerate</button>
+                    </div>
+                </div>
+                <div class="result-image-container">
+                    <img id="generatedImage" class="generated-image" alt="Generated Image">
+                    <div class="image-overlay">
+                        <span class="badge" id="imageModel"></span>
+                    </div>
+                </div>
+                <div class="result-prompt">
+                    <strong><i class="fas fa-quote-left"></i> Prompt:</strong>
+                    <p id="usedPrompt"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gallery Section -->
+        <div class="gallery-section">
+            <div class="gallery-header">
+                <h3><i class="fas fa-photo-video"></i> Your Gallery</h3>
+                <button id="clearGalleryBtn" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
+            </div>
+            <div id="galleryGrid" class="gallery-grid">
+                <!-- Gallery images will be displayed here -->
+            </div>
+            <div id="emptyGallery" class="empty-gallery">
+                <i class="fas fa-images"></i>
+                <h3>No images yet</h3>
+                <p>Generate your first AI image to see it here</p>
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="tips-section">
+            <h3><i class="fas fa-lightbulb"></i> Tips for Better Results</h3>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <i class="fas fa-align-left"></i>
+                    <h4>Be Descriptive</h4>
+                    <p>Include details about lighting, colors, mood, and style</p>
+                </div>
+                <div class="tip-card">
+                    <i class="fas fa-palette"></i>
+                    <h4>Specify Art Style</h4>
+                    <p>Try "digital art", "oil painting", "photorealistic", "anime"</p>
+                </div>
+                <div class="tip-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h4>Use Quality Keywords</h4>
+                    <p>Add "highly detailed", "4k", "award winning", "trending on artstation"</p>
+                </div>
+                <div class="tip-card">
+                    <i class="fas fa-undo-alt"></i>
+                    <h4>Iterate & Refine</h4>
+                    <p>Generate multiple variations and tweak your prompt</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Powered by Hugging Face Inference API | Free AI Image Generation</p>
+        </footer>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="js/modules/APIManager.js"></script>
+    <script src="js/modules/ImageGenerator.js"></script>
+    <script src="js/modules/GalleryManager.js"></script>
+    <script src="js/modules/UIManager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
