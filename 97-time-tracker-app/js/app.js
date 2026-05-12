@@ -12,57 +12,62 @@ document.addEventListener('DOMContentLoaded', () => {
     const activityNameInput = document.getElementById('activityName');
     const currentActivitySpan = document.getElementById('currentActivityName');
     const currentActivityDiv = document.getElementById('currentActivity');
-    const activitiesList = document.getElementById('activitiesList');
-    const emptyState = document.getElementById('emptyState');
     const timeFilter = document.getElementById('timeFilter');
     const clearAllBtn = document.getElementById('clearAllBtn');
     const themeToggle = document.getElementById('themeToggle');
+    const saveEditBtn = document.getElementById('saveEditBtn');
     
     let currentActivity = null;
     
-    // Update stats displays
-    function updateStats() {
-        const totalDuration = activityManager.getTotalDuration(activityManager.currentFilter);
-        const avgSession = activityManager.getAverageSessionDuration(activityManager.currentFilter);
-        const todayTotal = activityManager.getTodayTotal();
-        const totalActivities = activityManager.getActivities(activityManager.currentFilter).length;
-        
-        document.getElementById('totalActivities').textContent = totalActivities;
-        document.getElementById('totalTime').textContent = activityManager.formatDuration(totalDuration);
-        document.getElementById('avgSession').textContent = activityManager.formatDuration(avgSession);
-        document.getElementById('todayTotal').textContent = activityManager.formatDuration(todayTotal);
+    // Helper Functions
+    function formatDuration(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        if (hours > 0) return `${hours}h ${minutes}m`;
+        return `${minutes}m`;
     }
     
-    // Render activities list
-    function renderActivities() {
+    function updateStats() {
         const filter = activityManager.currentFilter;
-        const activities = activityManager.getActivities(filter);
         const totalDuration = activityManager.getTotalDuration(filter);
+        const avgSession = activityManager.getAverageSessionDuration(filter);
+        const todayTotal = activityManager.getTodayTotal();
+        const totalActivities = activityManager.getActivities(filter).length;
+        
+        document.getElementById('totalActivities').textContent = totalActivities;
+        document.getElementById('totalTime').textContent = formatDuration(totalDuration);
+        document.getElementById('avgSession').textContent = formatDuration(avgSession);
+        document.getElementById('todayTotal').textContent = formatDuration(todayTotal);
+    }
+    
+    function renderActivities() {
+        const activities = activityManager.getActivities();
+        const totalDuration = activityManager.getTotalDuration();
+        const container = document.getElementById('activitiesList');
+        const emptyState = document.getElementById('emptyState');
         
         if (activities.length === 0) {
-            activitiesList.style.display = 'none';
+            container.style.display = 'none';
             emptyState.style.display = 'block';
             return;
         }
         
-        activitiesList.style.display = 'flex';
+        container.style.display = 'flex';
         emptyState.style.display = 'none';
         
-        activitiesList.innerHTML = activities.map(activity => {
+        container.innerHTML = activities.map(activity => {
             const percentage = totalDuration > 0 ? (activity.duration / totalDuration) * 100 : 0;
-            const durationFormatted = activityManager.formatDuration(activity.duration);
-            
             return `
                 <div class="activity-item" data-id="${activity.id}">
                     <div class="activity-info">
                         <div class="activity-name">${escapeHtml(activity.name)}</div>
                         <div class="activity-duration">
-                            ${durationFormatted}
+                            ${formatDuration(activity.duration)}
                             <span class="activity-date">${activity.date}</span>
                         </div>
                     </div>
                     <div class="activity-time">
-                        <div class="activity-hours">${durationFormatted}</div>
+                        <div class="activity-hours">${formatDuration(activity.duration)}</div>
                         <div class="activity-percent">${percentage.toFixed(1)}%</div>
                     </div>
                     <div class="activity-actions">
@@ -97,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function escapeHtml(str) {
         if (!str) return '';
-        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
     }
     
     function editActivity(id) {
@@ -126,12 +131,12 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => toast.classList.remove('show'), 3000);
     }
     
-    // Timer event handlers
-    timer.on('tick', (seconds) => {
-        // Update current activity display
+    // Timer Event Handlers
+    timer.on('tick', () => {
         if (currentActivity) {
             const time = timer.getFormattedTime();
             currentActivitySpan.textContent = `${currentActivity.name} - ${time.hours}:${time.minutes}:${time.seconds}`;
+            updateStats();
         }
     });
     
@@ -140,14 +145,13 @@ document.addEventListener('DOMContentLoaded', () => {
             activityManager.addActivity(currentActivity.name, duration);
             renderActivities();
             updateStats();
-            showToast(`Saved ${currentActivity.name} - ${activityManager.formatDuration(duration)}`, 'success');
+            showToast(`Saved ${currentActivity.name} - ${formatDuration(duration)}`, 'success');
             
             currentActivity = null;
             currentActivityDiv.style.display = 'none';
             activityNameInput.value = '';
         }
         
-        // Reset button states
         startBtn.disabled = false;
         pauseBtn.disabled = true;
         stopBtn.disabled = true;
@@ -165,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
         stopBtn.disabled = false;
     });
     
-    // Button click handlers
+    // Button Click Handlers
     startBtn.addEventListener('click', () => {
         const activityName = activityNameInput.value.trim();
         if (!activityName) {
@@ -187,14 +191,14 @@ document.addEventListener('DOMContentLoaded', () => {
         timer.stop();
     });
     
-    // Filter change
+    // Filter Change
     timeFilter.addEventListener('change', () => {
         activityManager.setFilter(timeFilter.value);
         renderActivities();
         updateStats();
     });
     
-    // Clear all activities
+    // Clear All Activities
     clearAllBtn.addEventListener('click', () => {
         if (confirm('Delete all activities? This cannot be undone.')) {
             activityManager.deleteAllActivities();
@@ -204,8 +208,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Save edit
-    document.getElementById('saveEditBtn').addEventListener('click', () => {
+    // Save Edit
+    saveEditBtn.addEventListener('click', () => {
         const modal = document.getElementById('editModal');
         const id = parseInt(modal.dataset.editId);
         const newName = document.getElementById('editActivityName').value.trim();
@@ -213,14 +217,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (newName) {
             activityManager.updateActivity(id, newName);
             renderActivities();
-            updateStats();
             showToast('Activity updated', 'success');
         }
         
         modal.classList.remove('active');
     });
     
-    // Theme toggle
+    // Theme Toggle
     themeToggle.addEventListener('click', () => {
         const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
         const newTheme = currentTheme === 'light' ? 'dark' : 'light';
@@ -230,27 +233,28 @@ document.addEventListener('DOMContentLoaded', () => {
         icon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     });
     
-    // Update date display
+    // Update Date Display
     function updateDateDisplay() {
         const now = new Date();
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         document.getElementById('dateDisplay').textContent = now.toLocaleDateString(undefined, options);
     }
     
-    // Initial load
+    // Initial Load
     updateDateDisplay();
     renderActivities();
     updateStats();
     
-    // Load saved theme
+    // Load Saved Theme
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', savedTheme);
-    const icon = themeToggle.querySelector('i');
-    icon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    const themeIcon = themeToggle.querySelector('i');
+    themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     
     console.log('Time Tracker App Ready!');
 });
 
+// Global close modal function
 window.closeModal = function() {
     document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
 };
