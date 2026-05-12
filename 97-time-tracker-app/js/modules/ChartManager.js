@@ -1,4 +1,3 @@
-// ChartManager.js - Manages charts and data visualization
 class ChartManager {
     constructor(activityManager) {
         this.activityManager = activityManager;
@@ -21,7 +20,7 @@ class ChartManager {
     
     updateDistributionChart() {
         const ctx = document.getElementById('distributionChart').getContext('2d');
-        const chartData = this.activityManager.getChartData();
+        const data = this.activityManager.getChartData();
         
         if (this.distributionChart) {
             this.distributionChart.destroy();
@@ -30,13 +29,10 @@ class ChartManager {
         this.distributionChart = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: chartData.labels,
+                labels: data.labels,
                 datasets: [{
-                    data: chartData.data,
-                    backgroundColor: [
-                        '#6366f1', '#10b981', '#f59e0b', '#ef4444',
-                        '#8b5cf6', '#06b6d4', '#ec4899', '#6b7280'
-                    ],
+                    data: data.data,
+                    backgroundColor: ['#f97316', '#22c55e', '#eab308', '#ef4444', '#8b5cf6', '#06b6d4', '#ec4899', '#6b7280'],
                     borderWidth: 0,
                     hoverOffset: 10
                 }]
@@ -45,13 +41,7 @@ class ChartManager {
                 responsive: true,
                 maintainAspectRatio: true,
                 plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            font: { size: 11 },
-                            boxWidth: 10
-                        }
-                    },
+                    legend: { position: 'bottom', labels: { font: { size: 11 } } },
                     tooltip: {
                         callbacks: {
                             label: (context) => {
@@ -70,7 +60,7 @@ class ChartManager {
     
     updateTrendChart() {
         const ctx = document.getElementById('trendChart').getContext('2d');
-        const trendData = this.activityManager.getWeeklyTrend();
+        const data = this.activityManager.getWeeklyTrend();
         
         if (this.trendChart) {
             this.trendChart.destroy();
@@ -79,18 +69,18 @@ class ChartManager {
         this.trendChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: trendData.labels,
+                labels: data.labels,
                 datasets: [{
                     label: 'Time Spent (minutes)',
-                    data: trendData.data,
-                    borderColor: '#6366f1',
-                    backgroundColor: 'rgba(99,102,241,0.1)',
+                    data: data.data,
+                    borderColor: '#f97316',
+                    backgroundColor: 'rgba(249,115,22,0.1)',
                     borderWidth: 3,
                     fill: true,
                     tension: 0.4,
                     pointRadius: 4,
                     pointHoverRadius: 6,
-                    pointBackgroundColor: '#6366f1',
+                    pointBackgroundColor: '#f97316',
                     pointBorderColor: 'white'
                 }]
             },
@@ -98,31 +88,12 @@ class ChartManager {
                 responsive: true,
                 maintainAspectRatio: true,
                 plugins: {
-                    legend: {
-                        position: 'top'
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: (context) => `${context.raw} minutes`
-                        }
-                    }
+                    legend: { position: 'top' },
+                    tooltip: { callbacks: { label: (ctx) => `${ctx.raw} minutes` } }
                 },
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Minutes',
-                            font: { size: 11 }
-                        }
-                    },
-                    x: {
-                        title: {
-                            display: true,
-                            text: 'Day of Week',
-                            font: { size: 11 }
-                        }
-                    }
+                    y: { beginAtZero: true, title: { display: true, text: 'Minutes' } },
+                    x: { title: { display: true, text: 'Day of Week' } }
                 }
             }
         });
