@@ -1,4 +1,3 @@
-// StorageManager.js - Handles localStorage operations
 class StorageManager {
     static save(key, data) {
         try {
