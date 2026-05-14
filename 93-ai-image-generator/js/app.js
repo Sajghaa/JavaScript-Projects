@@ -1,4 +1,4 @@
-// AI Image Generator - Complete Working Version
+// AI Image Generator - Real Image Generation
 document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
     const generateBtn = document.getElementById('generateBtn');
@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const toast = document.getElementById('toast');
     
     let gallery = [];
-    let currentImageBlob = null;
     let currentImageUrl = null;
     let currentPrompt = null;
     let currentModel = null;
@@ -67,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!e.target.closest('.gallery-item-delete')) {
                     const index = parseInt(item.dataset.index);
                     const image = gallery[index];
-                    showResult(image.url, image.prompt, image.model, image.blob);
+                    showResult(image.url, image.prompt, image.model);
                 }
             });
         });
@@ -84,21 +83,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Show result
-    function showResult(imageUrl, prompt, model, blob = null) {
+    function showResult(imageUrl, prompt, model) {
         generatedImage.src = imageUrl;
         usedPrompt.textContent = prompt;
         imageModel.textContent = model;
         resultSection.style.display = 'block';
         resultSection.scrollIntoView({ behavior: 'smooth' });
         currentImageUrl = imageUrl;
-        currentImageBlob = blob;
         currentPrompt = prompt;
         currentModel = model;
         
         // Handle image load error
         generatedImage.onerror = () => {
             console.error('Image failed to load');
-            showToast('Image loading failed. Please try regenerating.', 'error');
+            showToast('Image failed to load. Please try again.', 'error');
         };
     }
     
@@ -109,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => toast.classList.remove('show'), 3000);
     }
     
-    // Generate image using multiple fallback APIs
+    // Generate image using Pollinations.ai (Working URL format)
     async function generateImage() {
         let prompt = promptInput.value.trim();
         if (!prompt) {
@@ -123,48 +121,62 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Enhance prompt with style
         let enhancedPrompt = prompt;
-        const styleMap = {
-            'anime': 'anime style, studio ghibli, vibrant colors',
-            'digital-art': 'digital art, concept art, illustration',
-            'oil-painting': 'oil painting, renaissance style, masterpiece',
-            'watercolor': 'watercolor painting, soft colors, artistic',
-            'sketch': 'pencil sketch, drawing, line art',
-            'cyberpunk': 'cyberpunk, neon lights, futuristic city',
-            'fantasy': 'fantasy art, magical, ethereal',
-            'realistic': 'photorealistic, highly detailed, 4k'
+        
+        // Style-specific enhancements
+        const stylePrefixes = {
+            'anime': 'anime style, anime art, japanese animation, ',
+            'digital-art': 'digital art, concept art, illustration, ',
+            'oil-painting': 'oil painting, renaissance painting, masterpiece, ',
+            'watercolor': 'watercolor painting, watercolor art, ',
+            'sketch': 'pencil sketch, drawing, line art, ',
+            'cyberpunk': 'cyberpunk style, futuristic, neon lights, ',
+            'fantasy': 'fantasy art, magical, ethereal, ',
+            'realistic': 'photorealistic, real photo, 4k, highly detailed, '
         };
         
-        if (styleMap[style]) {
-            enhancedPrompt += `, ${styleMap[style]}`;
+        if (stylePrefixes[style]) {
+            enhancedPrompt = stylePrefixes[style] + enhancedPrompt;
         }
         
         if (quality === 'high') {
-            enhancedPrompt += ', 8k, ultra hd, masterpiece, award winning';
+            enhancedPrompt += ', masterpiece, award winning, trending on artstation';
         }
         
         loadingOverlay.style.display = 'flex';
         
         try {
-            // Method 1: Pollinations.ai
+            // Pollinations.ai working URL format
             const width = size;
             const height = size;
             const encodedPrompt = encodeURIComponent(enhancedPrompt);
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${width}&height=${height}&nologo=true`;
+            
+            // Use the correct Pollinations endpoint
+            const imageUrl = `https://pollinations.ai/p/${encodedPrompt}?width=${width}&height=${height}&seed=${Date.now()}&nologo=true`;
+            
+            console.log('Generating image with URL:', imageUrl);
             
             // Test if image loads
             const img = new Image();
             img.crossOrigin = 'Anonymous';
             
             const imageLoadPromise = new Promise((resolve, reject) => {
-                img.onload = () => resolve(img);
-                img.onerror = () => reject(new Error('Image failed to load'));
-                setTimeout(() => reject(new Error('Timeout')), 15000);
+                img.onload = () => {
+                    console.log('Image loaded successfully');
+                    resolve(img);
+                };
+                img.onerror = (err) => {
+                    console.error('Image load error:', err);
+                    reject(new Error('Image failed to load'));
+                };
+                setTimeout(() => {
+                    reject(new Error('Request timeout'));
+                }, 30000);
             });
             
             img.src = imageUrl;
             await imageLoadPromise;
             
-            // Convert image to blob for gallery
+            // Convert to blob for gallery
             const canvas = document.createElement('canvas');
             canvas.width = img.width;
             canvas.height = img.height;
@@ -174,65 +186,103 @@ document.addEventListener('DOMContentLoaded', () => {
             const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
             const localUrl = URL.createObjectURL(blob);
             
-            showResult(localUrl, enhancedPrompt, style, blob);
+            showResult(localUrl, enhancedPrompt, style);
             loadingOverlay.style.display = 'none';
             showToast('Image generated successfully!', 'success');
             
         } catch (error) {
-            console.error('Pollinations error:', error);
+            console.error('Generation error:', error);
+            loadingOverlay.style.display = 'none';
+            showToast('Failed to generate image. Please try again with a different prompt.', 'error');
             
-            // Method 2: Use placeholder with canvas generation as fallback
-            try {
-                const canvas = document.createElement('canvas');
-                canvas.width = parseInt(size);
-                canvas.height = parseInt(size);
-                const ctx = canvas.getContext('2d');
-                
-                // Create beautiful gradient background
-                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-                gradient.addColorStop(0, '#8b5cf6');
-                gradient.addColorStop(0.5, '#ec4899');
-                gradient.addColorStop(1, '#f59e0b');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                // Draw shapes based on prompt
-                ctx.fillStyle = 'white';
-                ctx.font = `bold ${Math.floor(canvas.width / 15)}px Inter`;
-                ctx.textAlign = 'center';
-                ctx.fillText('🎨 AI Generated', canvas.width/2, canvas.height/2 - 60);
-                
-                ctx.font = `${Math.floor(canvas.width / 25)}px Inter`;
-                ctx.fillStyle = 'rgba(255,255,255,0.9)';
-                
-                // Display prompt on image
-                const displayPrompt = enhancedPrompt.length > 50 ? enhancedPrompt.substring(0, 50) + '...' : enhancedPrompt;
-                ctx.fillText(displayPrompt, canvas.width/2, canvas.height/2 + 20);
-                
-                ctx.font = `${Math.floor(canvas.width / 35)}px Inter`;
-                ctx.fillStyle = 'rgba(255,255,255,0.7)';
-                ctx.fillText('AI Image Generator', canvas.width/2, canvas.height/2 + 80);
-                
-                // Add decorative elements
-                for (let i = 0; i < 30; i++) {
-                    ctx.fillStyle = `rgba(255,255,255,${Math.random() * 0.3})`;
-                    ctx.beginPath();
-                    ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, Math.random() * 20 + 5, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-                
-                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-                const localUrl = URL.createObjectURL(blob);
-                
-                showResult(localUrl, enhancedPrompt, `${style} (Demo Mode)`, blob);
-                loadingOverlay.style.display = 'none';
-                showToast('Demo image generated (API unavailable). Try again later for AI images.', 'warning');
-                
-            } catch (fallbackError) {
-                loadingOverlay.style.display = 'none';
-                showToast('Failed to generate image. Please try again.', 'error');
+            // Fallback: Create a styled image with the prompt text
+            createFallbackImage(enhancedPrompt, style, size);
+        }
+    }
+    
+    // Fallback: Create a styled placeholder with the prompt text
+    function createFallbackImage(prompt, style, size) {
+        const canvas = document.createElement('canvas');
+        const width = parseInt(size);
+        const height = parseInt(size);
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        
+        // Create a beautiful gradient background
+        const gradient = ctx.createLinearGradient(0, 0, width, height);
+        gradient.addColorStop(0, '#1a1a2e');
+        gradient.addColorStop(0.5, '#16213e');
+        gradient.addColorStop(1, '#0f3460');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, width, height);
+        
+        // Draw stars
+        for (let i = 0; i < 100; i++) {
+            ctx.fillStyle = `rgba(255,255,255,${Math.random() * 0.5})`;
+            ctx.beginPath();
+            ctx.arc(Math.random() * width, Math.random() * height, Math.random() * 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        // Draw a stylized icon based on style
+        ctx.fillStyle = '#8b5cf6';
+        ctx.font = `${Math.floor(width / 4)}px "Font Awesome 6 Free"`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        let icon = '🎨';
+        if (style === 'anime') icon = '🎨';
+        else if (style === 'digital-art') icon = '💻';
+        else if (style === 'oil-painting') icon = '🖼️';
+        else if (style === 'watercolor') icon = '🎨';
+        else if (style === 'sketch') icon = '✏️';
+        else if (style === 'cyberpunk') icon = '🤖';
+        else if (style === 'fantasy') icon = '🐉';
+        else icon = '🎨';
+        
+        ctx.fillStyle = 'rgba(139, 92, 246, 0.3)';
+        ctx.fillText(icon, width / 2, height / 2 - 50);
+        
+        // Draw the prompt text
+        ctx.fillStyle = 'white';
+        ctx.font = `bold ${Math.floor(width / 25)}px Inter`;
+        ctx.textAlign = 'center';
+        
+        // Wrap long text
+        const words = prompt.split(' ');
+        let lines = [];
+        let currentLine = '';
+        
+        for (let word of words) {
+            const testLine = currentLine + (currentLine ? ' ' : '') + word;
+            const metrics = ctx.measureText(testLine);
+            if (metrics.width > width - 40 && currentLine) {
+                lines.push(currentLine);
+                currentLine = word;
+            } else {
+                currentLine = testLine;
             }
         }
+        lines.push(currentLine);
+        
+        const lineHeight = Math.floor(width / 20);
+        const startY = height / 2 + 20;
+        
+        for (let i = 0; i < Math.min(lines.length, 4); i++) {
+            ctx.fillText(lines[i], width / 2, startY + i * lineHeight);
+        }
+        
+        // Add AI attribution
+        ctx.font = `${Math.floor(width / 35)}px Inter`;
+        ctx.fillStyle = 'rgba(255,255,255,0.5)';
+        ctx.fillText('AI Image Generator (Demo Mode)', width / 2, height - 20);
+        
+        canvas.toBlob((blob) => {
+            const url = URL.createObjectURL(blob);
+            showResult(url, prompt, `${style} (Demo Mode)`);
+            showToast('Demo image generated (API unavailable). Try again later.', 'warning');
+        }, 'image/png');
     }
     
     // Download image
