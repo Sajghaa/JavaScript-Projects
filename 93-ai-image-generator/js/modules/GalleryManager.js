@@ -1,51 +1,63 @@
+// GalleryManager.js - Manages saved images gallery
 class GalleryManager {
     constructor() {
         this.images = [];
-        this.loadGallery();
+        this.listeners = [];
+        this.load();
     }
-
-    loadGallery() {
-        const saved = localStorage.getItem('ai_gallery');
+    
+    load() {
+        const saved = localStorage.getItem('ai_image_gallery');
         if (saved) {
-            this.images = JSON.parse(saved);
+            try {
+                this.images = JSON.parse(saved);
+            } catch (e) {
+                console.error('Failed to load gallery', e);
+                this.images = [];
+            }
         }
     }
-
-    saveGallery() {
-        localStorage.setItem('ai_gallery', JSON.stringify(this.images));
-        this.trigger('galleryUpdated', this.images);
+    
+    save() {
+        localStorage.setItem('ai_image_gallery', JSON.stringify(this.images));
+        this.notifyListeners();
     }
-
-    addImage(imageData) {
+    
+    add(imageData) {
         this.images.unshift(imageData);
-        this.saveGallery();
+        this.save();
         return imageData;
     }
-
-    removeImage(index) {
-        this.images.splice(index, 1);
-        this.saveGallery();
-    }
-
-    clearGallery() {
-        this.images = [];
-        this.saveGallery();
-    }
-
-    getImages() {
-        return this.images;
-    }
-
-    on(event, callback) {
-        if (!this._callbacks) this._callbacks = {};
-        if (!this._callbacks[event]) this._callbacks[event] = [];
-        this._callbacks[event].push(callback);
-    }
-
-    trigger(event, data) {
-        if (this._callbacks && this._callbacks[event]) {
-            this._callbacks[event].forEach(cb => cb(data));
+    
+    remove(index) {
+        if (index >= 0 && index < this.images.length) {
+            this.images.splice(index, 1);
+            this.save();
+            return true;
         }
+        return false;
+    }
+    
+    clear() {
+        this.images = [];
+        this.save();
+    }
+    
+    getAll() {
+        return [...this.images];
+    }
+    
+    addListener(callback) {
+        this.listeners.push(callback);
+    }
+    
+    removeListener(callback) {
+        const index = this.listeners.indexOf(callback);
+        if (index > -1) this.listeners.splice(index, 1);
+    }
+    
+    notifyListeners() {
+        this.listeners.forEach(callback => callback(this.images));
     }
 }
 
