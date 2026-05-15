@@ -3,6 +3,7 @@ const cors = require('cors');
 const http = require('http');
 const socketIO = require('socket.io');
 const { v4: uuidv4 } = require('uuid');
+const axios = require('axios'); // Only declare ONCE
 require('dotenv').config();
 
 const app = express();
@@ -22,6 +23,92 @@ app.use(express.json());
 const rooms = new Map();
 const documents = new Map();
 
+// Language configuration for code execution
+const LANGUAGE_MAP = {
+  javascript: { language: 'javascript', version: '18.15.0' },
+  python: { language: 'python', version: '3.10.0' },
+  java: { language: 'java', version: '15.0.2' },
+  cpp: { language: 'cpp', version: '10.2.0' },
+  html: { language: 'html', version: '5.0' },
+  css: { language: 'css', version: '3.0' }
+};
+
+// API Routes
+app.post('/api/rooms/create', (req, res) => {
+  const roomId = uuidv4().slice(0, 8);
+  res.json({ roomId });
+});
+
+app.get('/api/rooms/:roomId', (req, res) => {
+  const { roomId } = req.params;
+  const room = rooms.get(roomId);
+  if (room) {
+    res.json({ exists: true, users: room.users.length });
+  } else {
+    res.json({ exists: false });
+  }
+});
+
+// Code execution endpoint
+app.post('/api/execute', async (req, res) => {
+  const { code, language } = req.body;
+  
+  try {
+    const langConfig = LANGUAGE_MAP[language];
+    if (!langConfig) {
+      return res.json({ error: `Language ${language} not supported for execution` });
+    }
+    
+    const response = await axios.post('https://emkc.org/api/v2/piston/execute', {
+      language: langConfig.language,
+      version: langConfig.version,
+      files: [{ content: code }]
+    });
+    
+    const output = response.data.run.output;
+    const error = response.data.run.stderr;
+    
+    res.json({
+      success: true,
+      output: output || (error ? `Error: ${error}` : 'No output'),
+      executionTime: response.data.run.time
+    });
+  } catch (error) {
+    console.error('Execution error:', error);
+    res.json({ 
+      success: false, 
+      error: error.response?.data?.message || 'Execution failed. Please try again.' 
+    });
+  }
+});
+
+// Get supported languages
+app.get('/api/languages', async (req, res) => {
+  try {
+    const response = await axios.get('https://emkc.org/api/v2/piston/runtimes');
+    const languages = response.data.map(r => ({ language: r.language, version: r.version }));
+    res.json(languages);
+  } catch (error) {
+    res.json(LANGUAGE_MAP);
+  }
+});
+
+// AI Code Generation
+async function generateAICode(prompt, language) {
+  const codeTemplates = {
+    javascript: `// Generated JavaScript code for: ${prompt}\n\nfunction solution() {\n  // Your code here\n  console.log("Hello World");\n}\n\nsolution();`,
+    python: `# Generated Python code for: ${prompt}\n\ndef solution():\n    # Your code here\n    print("Hello World")\n\nif __name__ == "__main__":\n    solution()`,
+    java: `// Generated Java code for: ${prompt}\n\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello World");\n    }\n}`,
+    cpp: `// Generated C++ code for: ${prompt}\n\n#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "Hello World" << endl;\n    return 0;\n}`
+  };
+  
+  return codeTemplates[language] || codeTemplates.javascript;
+}
+
+async function explainCode(code) {
+  return "This code defines a function that prints 'Hello World' to the console.";
+}
+
 // Socket.io connection handling
 io.on('connection', (socket) => {
   console.log(`User connected: ${socket.id}`);
@@ -30,7 +117,6 @@ io.on('connection', (socket) => {
   socket.on('join-room', ({ roomId, username, userId }) => {
     socket.join(roomId);
     
-    // Initialize room if not exists
     if (!rooms.has(roomId)) {
       rooms.set(roomId, {
         id: roomId,
@@ -42,13 +128,8 @@ io.on('connection', (socket) => {
     const room = rooms.get(roomId);
     room.users.push({ id: socket.id, userId, username });
     
-    // Send current document to the user
     socket.emit('document-load', room.document);
-    
-    // Notify other users
     socket.to(roomId).emit('user-joined', { userId, username });
-    
-    // Send updated user list to everyone
     io.to(roomId).emit('users-update', room.users);
     
     console.log(`${username} joined room ${roomId}`);
@@ -77,14 +158,38 @@ io.on('connection', (socket) => {
     }
   });
   
-  // Handle AI code generation request
+  // Handle code execution
+  socket.on('execute-code', async ({ roomId, code, language }) => {
+    try {
+      const langConfig = LANGUAGE_MAP[language];
+      if (!langConfig) {
+        socket.emit('execution-result', { error: `Language ${language} not supported` });
+        return;
+      }
+      
+      const response = await axios.post('https://emkc.org/api/v2/piston/execute', {
+        language: langConfig.language,
+        version: langConfig.version,
+        files: [{ content: code }]
+      });
+      
+      socket.emit('execution-result', {
+        output: response.data.run.output || 'No output',
+        error: response.data.run.stderr,
+        executionTime: response.data.run.time
+      });
+    } catch (error) {
+      socket.emit('execution-result', { error: 'Execution failed. Please try again.' });
+    }
+  });
+  
+  // Handle AI generation
   socket.on('ai-generate', async ({ prompt, language, roomId }) => {
-    // AI response simulation (will connect to real AI later)
     const generatedCode = await generateAICode(prompt, language);
     socket.emit('ai-response', { code: generatedCode });
   });
   
-  // Handle AI explanation request
+  // Handle AI explanation
   socket.on('ai-explain', async ({ code, roomId }) => {
     const explanation = await explainCode(code);
     socket.emit('ai-explanation', { explanation });
@@ -102,7 +207,6 @@ io.on('connection', (socket) => {
         io.to(roomId).emit('user-left', { userId: user.userId });
       }
       
-      // Delete room if empty
       if (room.users.length === 0) {
         rooms.delete(roomId);
       }
@@ -112,7 +216,6 @@ io.on('connection', (socket) => {
   // Disconnect
   socket.on('disconnect', () => {
     console.log(`User disconnected: ${socket.id}`);
-    // Remove user from all rooms
     for (const [roomId, room] of rooms) {
       const user = room.users.find(u => u.id === socket.id);
       if (user) {
@@ -126,40 +229,6 @@ io.on('connection', (socket) => {
       }
     }
   });
-});
-
-// AI Code Generation Simulation (will integrate real AI)
-async function generateAICode(prompt, language) {
-  // This is a placeholder - we'll integrate OpenAI/Gemini later
-  const codeTemplates = {
-    javascript: `// Generated JavaScript code for: ${prompt}\n\nfunction solution() {\n  // Your code here\n  console.log("Hello World");\n}\n\nsolution();`,
-    python: `# Generated Python code for: ${prompt}\n\ndef solution():\n    # Your code here\n    print("Hello World")\n\nif __name__ == "__main__":\n    solution()`,
-    java: `// Generated Java code for: ${prompt}\n\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello World");\n    }\n}`,
-    cpp: `// Generated C++ code for: ${prompt}\n\n#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "Hello World" << endl;\n    return 0;\n}`
-  };
-  
-  return codeTemplates[language] || codeTemplates.javascript;
-}
-
-async function explainCode(code) {
-  // Placeholder for AI explanation
-  return "This code defines a function that prints 'Hello World' to the console.";
-}
-
-// API Routes
-app.post('/api/rooms/create', (req, res) => {
-  const roomId = uuidv4().slice(0, 8);
-  res.json({ roomId });
-});
-
-app.get('/api/rooms/:roomId', (req, res) => {
-  const { roomId } = req.params;
-  const room = rooms.get(roomId);
-  if (room) {
-    res.json({ exists: true, users: room.users.length });
-  } else {
-    res.json({ exists: false });
-  }
 });
 
 const PORT = process.env.PORT || 5000;
