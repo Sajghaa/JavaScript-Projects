@@ -1,25 +1,110 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 import Editor from '@monaco-editor/react';
-import { Users, Send, Sparkles, Copy, Download, Moon, Sun } from 'lucide-react';
-import './App.css';
+import { Play, Terminal, X, Loader } from 'lucide-react';
+import './App.css';  
 
-const App: React.FC = () => {
+// Types
+interface User {
+  id: string;
+  userId: string;
+  username: string;
+}
+
+interface Document {
+  content: string;
+  language: string;
+}
+
+interface ExecutionResult {
+  output?: string;
+  error?: string;
+  executionTime?: number;
+}
+
+function App() {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [roomId, setRoomId] = useState<string>('');
   const [username, setUsername] = useState<string>('');
-  const [isJoined, setIsJoined] = useState(false);
-  const [code, setCode] = useState<string>('// Welcome to Collaborative Code Editor\n// Start coding with your team!\n\nfunction hello() {\n  console.log("Hello, World!");\n}\n\nhello();');
-  const [language, setLanguage] = useState<string>('javascript');
-  const [users, setUsers] = useState<any[]>([]);
-  const [cursors, setCursors] = useState<Map<string, any>>(new Map());
-  const [aiPrompt, setAiPrompt] = useState('');
-  const [aiResponse, setAiResponse] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isJoined, setIsJoined] = useState<boolean>(false);
+  const [code, setCode] = useState<string>(`// Welcome to Collaborative Code Editor
+// Write your code and click RUN to execute!
+// Support: JavaScript, Python, Java, C++
 
-  // Create a new room
-  const createRoom = async () => {
+function fibonacci(n) {
+  if (n <= 1) return n;
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+console.log("Fibonacci(10):", fibonacci(10));
+console.log("Hello from Collaborative Editor!");`);
+  
+  const [language, setLanguage] = useState<string>('javascript');
+  const [users, setUsers] = useState<User[]>([]);
+  const [aiPrompt, setAiPrompt] = useState<string>('');
+  const [aiResponse, setAiResponse] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(true);
+  const [output, setOutput] = useState<string>('');
+  const [isExecuting, setIsExecuting] = useState<boolean>(false);
+  const [showOutput, setShowOutput] = useState<boolean>(false);
+
+  // Language extensions for download
+  const extensions: Record<string, string> = {
+    javascript: 'js', python: 'py', java: 'java', cpp: 'cpp', html: 'html', css: 'css'
+  };
+
+  // Sample code templates
+  const templates: Record<string, string> = {
+    javascript: `// JavaScript Sample
+function fibonacci(n) {
+  if (n <= 1) return n;
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+console.log("Fibonacci(10):", fibonacci(10));
+console.log("Hello from Collaborative Editor!");`,
+    
+    python: `# Python Sample
+def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+print(f"Fibonacci(10): {fibonacci(10)}")
+print("Hello from Collaborative Editor!")`,
+    
+    java: `// Java Sample
+public class Main {
+    public static int fibonacci(int n) {
+        if (n <= 1) return n;
+        return fibonacci(n-1) + fibonacci(n-2);
+    }
+    
+    public static void main(String[] args) {
+        System.out.println("Fibonacci(10): " + fibonacci(10));
+        System.out.println("Hello from Collaborative Editor!");
+    }
+}`,
+    
+    cpp: `// C++ Sample
+#include <iostream>
+using namespace std;
+
+int fibonacci(int n) {
+    if (n <= 1) return n;
+    return fibonacci(n-1) + fibonacci(n-2);
+}
+
+int main() {
+    cout << "Fibonacci(10): " << fibonacci(10) << endl;
+    cout << "Hello from Collaborative Editor!" << endl;
+    return 0;
+}`
+  };
+
+  // Create room
+  const createRoom = async (): Promise<void> => {
     try {
       const response = await fetch('http://localhost:5000/api/rooms/create', {
         method: 'POST',
@@ -31,64 +116,52 @@ const App: React.FC = () => {
     }
   };
 
-  // Join a room
-  const joinRoom = () => {
+  // Join room
+  const joinRoom = (): void => {
     if (!roomId || !username) return;
     
-    const newSocket = io('http://localhost:5000');
+    const newSocket: Socket = io('http://localhost:5000');
     setSocket(newSocket);
     
     newSocket.emit('join-room', { roomId, username, userId: `user_${Date.now()}` });
     
-    newSocket.on('document-load', (document: any) => {
+    newSocket.on('document-load', (document: Document) => {
       setCode(document.content);
       setLanguage(document.language);
     });
     
-    newSocket.on('code-update', ({ content }: any) => {
+    newSocket.on('code-update', ({ content }: { content: string }) => {
       setCode(content);
     });
     
-    newSocket.on('language-update', ({ language: newLang }: any) => {
-      setLanguage(newLang);
-    });
-    
-    newSocket.on('users-update', (usersList: any[]) => {
+    newSocket.on('users-update', (usersList: User[]) => {
       setUsers(usersList);
     });
     
-    newSocket.on('cursor-update', ({ userId, username, position }: any) => {
-      setCursors(prev => new Map(prev).set(userId, { username, position }));
-    });
-    
-    newSocket.on('user-joined', ({ username: joinedUser }) => {
-      showToast(`${joinedUser} joined the room`);
-    });
-    
-    newSocket.on('user-left', ({ userId }) => {
-      setCursors(prev => {
-        const newMap = new Map(prev);
-        newMap.delete(userId);
-        return newMap;
-      });
-      showToast(`A user left the room`);
-    });
-    
-    newSocket.on('ai-response', ({ code: generatedCode }) => {
+    newSocket.on('ai-response', ({ code: generatedCode }: { code: string }) => {
       setAiResponse(generatedCode);
       setIsLoading(false);
     });
     
-    newSocket.on('ai-explanation', ({ explanation }) => {
-      setAiResponse(explanation);
-      setIsLoading(false);
+    newSocket.on('execution-result', (result: ExecutionResult) => {
+      if (result.error) {
+        setOutput(`❌ Error:\n${result.error}`);
+      } else {
+        let outputText = '';
+        if (result.output) outputText += `📤 Output:\n${result.output}\n`;
+        if (result.error) outputText += `⚠️ Error:\n${result.error}\n`;
+        if (result.executionTime) outputText += `\n⏱️ Execution time: ${result.executionTime}s`;
+        setOutput(outputText);
+      }
+      setIsExecuting(false);
+      setShowOutput(true);
     });
     
     setIsJoined(true);
   };
 
   // Handle code change
-  const handleCodeChange = (value: string | undefined) => {
+  const handleCodeChange = (value: string | undefined): void => {
     if (value && socket) {
       setCode(value);
       socket.emit('code-change', { roomId, content: value, language });
@@ -96,54 +169,77 @@ const App: React.FC = () => {
   };
 
   // Handle language change
-  const handleLanguageChange = (newLanguage: string) => {
+  const handleLanguageChange = (newLanguage: string): void => {
     setLanguage(newLanguage);
     if (socket) {
       socket.emit('language-change', { roomId, language: newLanguage });
     }
+    setOutput('');
+    setShowOutput(false);
   };
 
-  // Handle cursor movement
-  const handleEditorMount = (editor: any) => {
-    editor.onDidChangeCursorPosition((e: any) => {
-      if (socket) {
-        socket.emit('cursor-move', {
-          roomId,
-          position: { line: e.position.lineNumber, column: e.position.column },
-          userId: `user_${username}`,
-          username
-        });
+  // Execute code
+  const executeCode = async (): Promise<void> => {
+    setIsExecuting(true);
+    setOutput('🚀 Executing code...');
+    setShowOutput(true);
+    
+    try {
+      const response = await fetch('http://localhost:5000/api/execute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, language })
+      });
+      const result = await response.json();
+      
+      if (result.success) {
+        let outputText = '';
+        if (result.output) outputText += `📤 Output:\n${result.output}\n`;
+        if (result.error) outputText += `⚠️ Error:\n${result.error}\n`;
+        if (result.executionTime) outputText += `\n⏱️ Execution time: ${result.executionTime}s`;
+        setOutput(outputText);
+      } else {
+        setOutput(`❌ Error: ${result.error}`);
       }
-    });
+    } catch (error) {
+      if (socket) {
+        socket.emit('execute-code', { roomId, code, language });
+      } else {
+        setOutput('❌ Connection error. Please check if server is running.');
+      }
+    } finally {
+      setIsExecuting(false);
+    }
   };
 
   // AI Code Generation
-  const handleAIGenerate = () => {
+  const handleAIGenerate = (): void => {
     if (!aiPrompt.trim() || !socket) return;
     setIsLoading(true);
     socket.emit('ai-generate', { prompt: aiPrompt, language, roomId });
   };
 
   // Copy to clipboard
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(aiResponse);
+  const copyToClipboard = (text: string): void => {
+    navigator.clipboard.writeText(text);
     showToast('Copied to clipboard!');
   };
 
   // Download code
-  const downloadCode = () => {
+  const downloadCode = (): void => {
+    const ext = extensions[language] || 'txt';
     const blob = new Blob([code], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `code.${language === 'javascript' ? 'js' : language === 'python' ? 'py' : 'txt'}`;
+    a.download = `code.${ext}`;
     a.click();
     URL.revokeObjectURL(url);
     showToast('Code downloaded!');
   };
 
-  // Toast notification
-  const showToast = (message: string) => {
+  // Show toast notification
+  const showToast = (message: string): void => {
     const toast = document.createElement('div');
     toast.className = 'toast';
     toast.textContent = message;
@@ -151,12 +247,22 @@ const App: React.FC = () => {
     setTimeout(() => toast.remove(), 3000);
   };
 
+  // Insert sample code
+  const insertSampleCode = (): void => {
+    const sampleCode = templates[language] || templates.javascript;
+    setCode(sampleCode);
+    if (socket) {
+      socket.emit('code-change', { roomId, content: sampleCode, language });
+    }
+    showToast('Sample code inserted!');
+  };
+
   if (!isJoined) {
     return (
       <div className="join-screen">
         <div className="join-card">
           <h1>🚀 Collaborative Code Editor</h1>
-          <p>Code together in real-time with AI assistance</p>
+          <p>Code together in real-time with AI assistance & Code Execution</p>
           <input
             type="text"
             placeholder="Enter your username"
@@ -186,12 +292,12 @@ const App: React.FC = () => {
         <div className="sidebar-header">
           <h2>💬 Room: {roomId}</h2>
           <button onClick={() => setIsDarkMode(!isDarkMode)} className="theme-toggle">
-            {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+            {isDarkMode ? '☀️' : '🌙'}
           </button>
         </div>
         
         <div className="users-section">
-          <h3><Users size={16} /> Online ({users.length})</h3>
+          <h3>👥 Online ({users.length})</h3>
           <div className="users-list">
             {users.map((user, idx) => (
               <div key={idx} className="user-item">
@@ -203,7 +309,7 @@ const App: React.FC = () => {
         </div>
         
         <div className="ai-section">
-          <h3><Sparkles size={16} /> AI Assistant</h3>
+          <h3>🤖 AI Assistant</h3>
           <textarea
             placeholder="Describe what code you want to generate..."
             value={aiPrompt}
@@ -218,7 +324,7 @@ const App: React.FC = () => {
             <div className="ai-response">
               <div className="ai-response-header">
                 <span>AI Response</span>
-                <button onClick={copyToClipboard}><Copy size={14} /></button>
+                <button onClick={() => copyToClipboard(aiResponse)}>📋 Copy</button>
               </div>
               <pre>{aiResponse}</pre>
             </div>
@@ -226,8 +332,11 @@ const App: React.FC = () => {
         </div>
         
         <div className="actions-section">
+          <button onClick={insertSampleCode} className="sample-btn">
+            📝 Insert Sample
+          </button>
           <button onClick={downloadCode} className="download-btn">
-            <Download size={16} /> Download Code
+            💾 Download Code
           </button>
         </div>
       </div>
@@ -241,23 +350,18 @@ const App: React.FC = () => {
             <option value="cpp">C++</option>
             <option value="html">HTML</option>
             <option value="css">CSS</option>
-            <option value="json">JSON</option>
           </select>
-          <div className="cursor-info">
-            {Array.from(cursors.values()).map((cursor, idx) => (
-              <div key={idx} className="cursor-badge">
-                {cursor.username}: L{cursor.position.line}, C{cursor.position.column}
-              </div>
-            ))}
-          </div>
+          <button onClick={executeCode} className="run-btn" disabled={isExecuting}>
+            {isExecuting ? <Loader size={16} className="spin" /> : <Play size={16} />}
+            {isExecuting ? 'Running...' : 'Run Code'}
+          </button>
         </div>
         
         <Editor
-          height="calc(100vh - 60px)"
+          height={showOutput ? "calc(100vh - 300px)" : "calc(100vh - 60px)"}
           language={language}
           value={code}
           onChange={handleCodeChange}
-          onMount={handleEditorMount}
           theme={isDarkMode ? 'vs-dark' : 'light'}
           options={{
             fontSize: 14,
@@ -269,9 +373,22 @@ const App: React.FC = () => {
             tabSize: 2,
           }}
         />
+        
+        {showOutput && (
+          <div className="output-panel">
+            <div className="output-header">
+              <Terminal size={16} />
+              <span>Execution Output</span>
+              <button onClick={() => setShowOutput(false)} className="close-output">
+                <X size={14} />
+              </button>
+            </div>
+            <pre className="output-content">{output}</pre>
+          </div>
+        )}
       </div>
     </div>
   );
-};
+}
 
 export default App;
