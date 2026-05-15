@@ -1,2 +1,16 @@
-package.json
-package-lock.json
+package.json*
+package-lock.json*
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.*
+
+# Build folders
+dist/
+build/
+.next/
+out/
+
+
