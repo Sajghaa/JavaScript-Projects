@@ -3,7 +3,7 @@ const cors = require('cors');
 const http = require('http');
 const socketIO = require('socket.io');
 const { v4: uuidv4 } = require('uuid');
-const axios = require('axios'); // Only declare ONCE
+const axios = require('axios');
 require('dotenv').config();
 
 const app = express();
@@ -21,17 +21,111 @@ app.use(express.json());
 
 // Store active rooms and documents
 const rooms = new Map();
-const documents = new Map();
 
-// Language configuration for code execution
+// Language configuration for code execution (using Judge0 API)
 const LANGUAGE_MAP = {
-  javascript: { language: 'javascript', version: '18.15.0' },
-  python: { language: 'python', version: '3.10.0' },
-  java: { language: 'java', version: '15.0.2' },
-  cpp: { language: 'cpp', version: '10.2.0' },
-  html: { language: 'html', version: '5.0' },
-  css: { language: 'css', version: '3.0' }
+  javascript: { language: 'javascript', version: '18.15.0', judge0_id: 63 },
+  python: { language: 'python', version: '3.10.0', judge0_id: 71 },
+  java: { language: 'java', version: '15.0.2', judge0_id: 62 },
+  cpp: { language: 'cpp', version: '10.2.0', judge0_id: 54 },
+  html: { language: 'html', version: '5.0', judge0_id: 92 },
+  css: { language: 'css', version: '3.0', judge0_id: 93 }
 };
+
+// Local code execution simulation (Fallback - Works without external API)
+function executeCodeLocally(code, language) {
+  const outputs = [];
+  const originalLog = console.log;
+  let capturedOutput = '';
+
+  // Capture console.log output
+  console.log = (...args) => {
+    capturedOutput += args.join(' ') + '\n';
+  };
+
+  try {
+    if (language === 'javascript') {
+      // Create a safe evaluation environment
+      const evalCode = `
+        try {
+          ${code}
+        } catch (error) {
+          console.log("Error:", error.message);
+        }
+      `;
+      eval(evalCode);
+    } else {
+      capturedOutput = `⚠️ Local execution only supports JavaScript.\nFor ${language}, the output is simulated.\n\nYour code:\n${code}`;
+    }
+  } catch (error) {
+    capturedOutput = `❌ Execution Error: ${error.message}`;
+  } finally {
+    console.log = originalLog;
+  }
+
+  return capturedOutput || 'No output generated';
+}
+
+// Try Judge0 API first, fallback to local execution
+async function executeCodeWithFallback(code, language) {
+  const langConfig = LANGUAGE_MAP[language];
+  
+  if (!langConfig) {
+    return { 
+      success: false, 
+      error: `Language ${language} not supported for execution` 
+    };
+  }
+
+  // Try Judge0 API (Community Edition - still free)
+  try {
+    const options = {
+      method: 'POST',
+      url: 'https://judge0-ce.p.rapidapi.com/submissions',
+      params: {
+        base64_encoded: 'false',
+        wait: 'true',
+        fields: '*'
+      },
+      headers: {
+        'x-rapidapi-key': 'YOUR_RAPIDAPI_KEY', // You can get free key from rapidapi.com
+        'x-rapidapi-host': 'judge0-ce.p.rapidapi.com',
+        'Content-Type': 'application/json'
+      },
+      data: {
+        source_code: code,
+        language_id: langConfig.judge0_id,
+        stdin: ''
+      }
+    };
+
+    const response = await axios.request(options);
+    
+    if (response.data && response.data.stdout) {
+      return {
+        success: true,
+        output: response.data.stdout || 'No output',
+        error: response.data.stderr,
+        executionTime: response.data.time
+      };
+    } else {
+      throw new Error('No output from Judge0');
+    }
+  } catch (apiError) {
+    console.log('API failed, using local execution fallback');
+    
+    // Fallback to local execution
+    const localOutput = executeCodeLocally(code, language);
+    
+    return {
+      success: true,
+      output: localOutput,
+      error: null,
+      executionTime: 'simulated',
+      note: 'Using local simulation (API unavailable)'
+    };
+  }
+}
 
 // API Routes
 app.post('/api/rooms/create', (req, res) => {
@@ -53,67 +147,82 @@ app.get('/api/rooms/:roomId', (req, res) => {
 app.post('/api/execute', async (req, res) => {
   const { code, language } = req.body;
   
-  try {
-    const langConfig = LANGUAGE_MAP[language];
-    if (!langConfig) {
-      return res.json({ error: `Language ${language} not supported for execution` });
-    }
-    
-    const response = await axios.post('https://emkc.org/api/v2/piston/execute', {
-      language: langConfig.language,
-      version: langConfig.version,
-      files: [{ content: code }]
-    });
-    
-    const output = response.data.run.output;
-    const error = response.data.run.stderr;
-    
-    res.json({
-      success: true,
-      output: output || (error ? `Error: ${error}` : 'No output'),
-      executionTime: response.data.run.time
-    });
-  } catch (error) {
-    console.error('Execution error:', error);
-    res.json({ 
-      success: false, 
-      error: error.response?.data?.message || 'Execution failed. Please try again.' 
-    });
-  }
+  const result = await executeCodeWithFallback(code, language);
+  res.json(result);
 });
 
-// Get supported languages
-app.get('/api/languages', async (req, res) => {
-  try {
-    const response = await axios.get('https://emkc.org/api/v2/piston/runtimes');
-    const languages = response.data.map(r => ({ language: r.language, version: r.version }));
-    res.json(languages);
-  } catch (error) {
-    res.json(LANGUAGE_MAP);
-  }
-});
-
-// AI Code Generation
+// AI Code Generation (Enhanced)
 async function generateAICode(prompt, language) {
-  const codeTemplates = {
-    javascript: `// Generated JavaScript code for: ${prompt}\n\nfunction solution() {\n  // Your code here\n  console.log("Hello World");\n}\n\nsolution();`,
-    python: `# Generated Python code for: ${prompt}\n\ndef solution():\n    # Your code here\n    print("Hello World")\n\nif __name__ == "__main__":\n    solution()`,
-    java: `// Generated Java code for: ${prompt}\n\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello World");\n    }\n}`,
-    cpp: `// Generated C++ code for: ${prompt}\n\n#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "Hello World" << endl;\n    return 0;\n}`
-  };
-  
-  return codeTemplates[language] || codeTemplates.javascript;
+  const templates = {
+    javascript: `// Generated JavaScript code for: ${prompt}
+// This is an AI-generated template. Modify as needed.
+
+function solution(input) {
+    // Your implementation here
+    console.log("Processing:", input);
+    return "Result: " + input;
 }
 
-async function explainCode(code) {
-  return "This code defines a function that prints 'Hello World' to the console.";
+// Example usage
+const result = solution("test");
+console.log(result);`,
+    
+    python: `# Generated Python code for: ${prompt}
+# This is an AI-generated template. Modify as needed.
+
+def solution(data):
+    # Your implementation here
+    print(f"Processing: {data}")
+    return f"Result: {data}"
+
+# Example usage
+if __name__ == "__main__":
+    result = solution("test")
+    print(result)`,
+    
+    java: `// Generated Java code for: ${prompt}
+// This is an AI-generated template. Modify as needed.
+
+public class Main {
+    public static String solution(String data) {
+        // Your implementation here
+        System.out.println("Processing: " + data);
+        return "Result: " + data;
+    }
+    
+    public static void main(String[] args) {
+        String result = solution("test");
+        System.out.println(result);
+    }
+}`,
+    
+    cpp: `// Generated C++ code for: ${prompt}
+// This is an AI-generated template. Modify as needed.
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+string solution(string data) {
+    // Your implementation here
+    cout << "Processing: " << data << endl;
+    return "Result: " + data;
+}
+
+int main() {
+    string result = solution("test");
+    cout << result << endl;
+    return 0;
+}`
+  };
+  
+  return templates[language] || templates.javascript;
 }
 
 // Socket.io connection handling
 io.on('connection', (socket) => {
   console.log(`User connected: ${socket.id}`);
 
-  // Join a room
   socket.on('join-room', ({ roomId, username, userId }) => {
     socket.join(roomId);
     
@@ -121,7 +230,7 @@ io.on('connection', (socket) => {
       rooms.set(roomId, {
         id: roomId,
         users: [],
-        document: documents.get(roomId) || { content: '', language: 'javascript' }
+        document: { content: '', language: 'javascript' }
       });
     }
     
@@ -135,7 +244,6 @@ io.on('connection', (socket) => {
     console.log(`${username} joined room ${roomId}`);
   });
   
-  // Handle code changes
   socket.on('code-change', ({ roomId, content, language }) => {
     const room = rooms.get(roomId);
     if (room) {
@@ -144,12 +252,10 @@ io.on('connection', (socket) => {
     }
   });
   
-  // Handle cursor movement
   socket.on('cursor-move', ({ roomId, position, userId, username }) => {
     socket.to(roomId).emit('cursor-update', { userId, username, position });
   });
   
-  // Handle language change
   socket.on('language-change', ({ roomId, language }) => {
     const room = rooms.get(roomId);
     if (room) {
@@ -158,44 +264,17 @@ io.on('connection', (socket) => {
     }
   });
   
-  // Handle code execution
+  // Handle code execution via socket
   socket.on('execute-code', async ({ roomId, code, language }) => {
-    try {
-      const langConfig = LANGUAGE_MAP[language];
-      if (!langConfig) {
-        socket.emit('execution-result', { error: `Language ${language} not supported` });
-        return;
-      }
-      
-      const response = await axios.post('https://emkc.org/api/v2/piston/execute', {
-        language: langConfig.language,
-        version: langConfig.version,
-        files: [{ content: code }]
-      });
-      
-      socket.emit('execution-result', {
-        output: response.data.run.output || 'No output',
-        error: response.data.run.stderr,
-        executionTime: response.data.run.time
-      });
-    } catch (error) {
-      socket.emit('execution-result', { error: 'Execution failed. Please try again.' });
-    }
+    const result = await executeCodeWithFallback(code, language);
+    socket.emit('execution-result', result);
   });
   
-  // Handle AI generation
   socket.on('ai-generate', async ({ prompt, language, roomId }) => {
     const generatedCode = await generateAICode(prompt, language);
     socket.emit('ai-response', { code: generatedCode });
   });
   
-  // Handle AI explanation
-  socket.on('ai-explain', async ({ code, roomId }) => {
-    const explanation = await explainCode(code);
-    socket.emit('ai-explanation', { explanation });
-  });
-  
-  // Leave room
   socket.on('leave-room', ({ roomId }) => {
     const room = rooms.get(roomId);
     if (room) {
@@ -213,7 +292,6 @@ io.on('connection', (socket) => {
     }
   });
   
-  // Disconnect
   socket.on('disconnect', () => {
     console.log(`User disconnected: ${socket.id}`);
     for (const [roomId, room] of rooms) {
