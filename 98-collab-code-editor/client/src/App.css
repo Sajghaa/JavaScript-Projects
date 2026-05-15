@@ -268,6 +268,28 @@ body {
   margin-top: auto;
 }
 
+.sample-btn {
+  width: 100%;
+  padding: 10px;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  transition: transform 0.2s;
+}
+
+.sample-btn:hover {
+  transform: translateY(-2px);
+  background: #4f46e5;
+}
+
 .download-btn {
   width: 100%;
   padding: 10px;
@@ -303,6 +325,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .editor-toolbar select {
@@ -314,6 +338,97 @@ body {
   cursor: pointer;
 }
 
+/* Run Button */
+.run-btn {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.run-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.run-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Output Panel */
+.output-panel {
+  background: #1e1e1e;
+  border-top: 2px solid #333;
+  height: 240px;
+  display: flex;
+  flex-direction: column;
+}
+
+.app.light .output-panel {
+  background: #f8f9fa;
+  border-top-color: #dee2e6;
+}
+
+.output-header {
+  padding: 8px 16px;
+  background: #252526;
+  color: #ccc;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border-bottom: 1px solid #333;
+}
+
+.app.light .output-header {
+  background: #e9ecef;
+  color: #495057;
+  border-bottom-color: #dee2e6;
+}
+
+.close-output {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.close-output:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.output-content {
+  flex: 1;
+  padding: 16px;
+  margin: 0;
+  overflow-y: auto;
+  font-family: 'Fira Code', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  color: #d4d4d4;
+}
+
+.app.light .output-content {
+  color: #1e1e1e;
+}
+
+/* Cursor Info */
 .cursor-info {
   display: flex;
   gap: 10px;
@@ -349,5 +464,19 @@ body {
   to {
     transform: translateX(0);
     opacity: 1;
+  }
+}
+
+/* Animations */
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
