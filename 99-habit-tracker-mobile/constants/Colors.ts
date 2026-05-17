@@ -1,0 +1,45 @@
+export const Colors = {
+  primary: '#6366f1',
+  primaryDark: '#4f46e5',
+  primaryLight: '#818cf8',
+  success: '#10b981',
+  danger: '#ef4444',
+  warning: '#f59e0b',
+  info: '#8b5cf6',
+  dark: '#1f2937',
+  gray: '#6b7280',
+  lightGray: '#9ca3af',
+  lighterGray: '#e5e7eb',
+  background: '#f3f4f6',
+  white: '#ffffff',
+  black: '#000000',
+};
+
+export const ICONS = [
+  'checkmark-circle',
+  'fitness',
+  'book',
+  'bed',
+  'water',
+  'cafe',
+  'walk',
+  'meditate',
+  'code-slash',
+  'school',
+  'barbell',
+  'heart',
+  'star',
+  'flash',
+  'leaf',
+];
+
+export const COLORS = [
+  '#6366f1',
+  '#10b981',
+  '#f59e0b',
+  '#ef4444',
+  '#8b5cf6',
+  '#06b6d4',
+  '#ec4899',
+  '#84cc16',
+];
