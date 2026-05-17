@@ -1,98 +1,172 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import React, { useState, useCallback } from 'react';
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  RefreshControl,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
+import { useFocusEffect, router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import * as Haptics from 'expo-haptics';
+import HabitCard from '../../components/HabitCard';
+import StatsCard from '../../components/StatsCard';
+import EmptyState from '../../components/EmptyState';
+import { loadHabits, deleteHabit, updateHabit } from '../../utils/storage';
+import { Habit, HabitStats } from '../../types';
+import { Colors } from '../../constants/Colors';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const [habits, setHabits] = useState<Habit[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [stats, setStats] = useState<HabitStats>({
+    totalHabits: 0,
+    totalItems: 0,
+    completedItems: 0,
+    completionRate: 0,
+    streak: 0,
+  });
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  const calculateStats = (habitsData: Habit[]) => {
+    const totalHabits = habitsData.length;
+    let totalItems = 0;
+    let completedItems = 0;
+
+    habitsData.forEach(habit => {
+      totalItems += habit.items.length;
+      completedItems += habit.items.filter(item => item.completed).length;
+    });
+
+    const completionRate = totalItems > 0 
+      ? Math.round((completedItems / totalItems) * 100) 
+      : 0;
+
+    const today = new Date().toDateString();
+    let streak = 0;
+    const todayHabits = habitsData.filter(habit => 
+      new Date(habit.lastUpdated).toDateString() === today
+    );
+    streak = todayHabits.length > 0 ? Math.min(todayHabits.length, 7) : 0;
+
+    setStats({
+      totalHabits,
+      totalItems,
+      completedItems,
+      completionRate,
+      streak,
+    });
+  };
+
+  const loadData = async () => {
+    const loadedHabits = await loadHabits();
+    setHabits(loadedHabits);
+    calculateStats(loadedHabits);
+  };
+
+  const handleDeleteHabit = (id: string) => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    Alert.alert(
+      'Delete Habit',
+      'Are you sure? This action cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteHabit(id);
+            await loadData();
+          },
+        },
+      ]
+    );
+  };
+
+  const handleToggleComplete = async (id: string) => {
+    const habit = habits.find(h => h.id === id);
+    if (habit) {
+      const allCompleted = habit.items.every(item => item.completed);
+      const updatedItems = habit.items.map(item => ({
+        ...item,
+        completed: !allCompleted,
+      }));
+      await updateHabit(id, {
+        items: updatedItems,
+        lastUpdated: new Date().toISOString(),
+      });
+      await loadData();
+    }
+  };
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await loadData();
+    setRefreshing(false);
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [])
+  );
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={habits}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <HabitCard
+            habit={item}
+            onDelete={handleDeleteHabit}
+            onToggleComplete={handleToggleComplete}
+          />
+        )}
+        ListHeaderComponent={<StatsCard stats={stats} />}
+        ListEmptyComponent={
+          <EmptyState
+            title="No habits yet"
+            message="Tap the + button to create your first habit tracker"
+            icon="list-outline"
+          />
+        }
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        showsVerticalScrollIndicator={false}
+      />
+      
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => router.push('/habit/new')}
+        activeOpacity={0.8}
+      >
+        <Ionicons name="add" size={28} color={Colors.white} />
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: Colors.background,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
+  fab: {
     position: 'absolute',
+    bottom: 20,
+    right: 20,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: Colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: Colors.black,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });
